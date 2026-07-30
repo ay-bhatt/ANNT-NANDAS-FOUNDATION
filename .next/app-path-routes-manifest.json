@@ -1,0 +1,16 @@
+{
+  "/_not-found/page": "/_not-found",
+  "/about/page": "/about",
+  "/donate/page": "/donate",
+  "/employee-registration/page": "/employee-registration",
+  "/contact/page": "/contact",
+  "/gallery/page": "/gallery",
+  "/events/page": "/events",
+  "/general-registration/page": "/general-registration",
+  "/our-work/page": "/our-work",
+  "/news/page": "/news",
+  "/programs/page": "/programs",
+  "/page": "/",
+  "/running-registration/page": "/running-registration",
+  "/volunteer-registration/page": "/volunteer-registration"
+}
