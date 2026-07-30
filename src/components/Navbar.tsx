@@ -1,9 +1,13 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { siteConfig } from "@/lib/data";
+
+// Import your new logo
+import logoImg from "@/assets/logo.jpeg";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -100,8 +104,12 @@ export default function Navbar() {
           <nav className="flex items-center justify-between h-16 md:h-[72px]">
             {/* Logo */}
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-10 h-10 rounded-lg bg-primary-500 flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
-                <span className="text-white font-bold text-lg font-poppins">AN</span>
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow overflow-hidden relative">
+                <Image 
+                  src={logoImg} 
+                  alt="Annt Nandas Foundation Logo" 
+                  className="w-full h-full object-cover"
+                />
               </div>
               <div className="hidden sm:block">
                 <p className="text-sm font-bold font-poppins text-gray-900 leading-tight">

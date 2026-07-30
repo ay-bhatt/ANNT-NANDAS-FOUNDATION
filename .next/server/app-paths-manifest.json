@@ -1,16 +1,6 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/about/page": "app/about/page.js",
-  "/donate/page": "app/donate/page.js",
-  "/employee-registration/page": "app/employee-registration/page.js",
-  "/contact/page": "app/contact/page.js",
-  "/gallery/page": "app/gallery/page.js",
-  "/events/page": "app/events/page.js",
-  "/general-registration/page": "app/general-registration/page.js",
-  "/our-work/page": "app/our-work/page.js",
-  "/news/page": "app/news/page.js",
-  "/programs/page": "app/programs/page.js",
   "/page": "app/page.js",
-  "/running-registration/page": "app/running-registration/page.js",
-  "/volunteer-registration/page": "app/volunteer-registration/page.js"
+  "/events/page": "app/events/page.js",
+  "/gallery/page": "app/gallery/page.js",
+  "/donate/page": "app/donate/page.js"
 }

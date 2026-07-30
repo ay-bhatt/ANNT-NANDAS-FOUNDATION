@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-import LoadingScreen from "@/components/LoadingScreen";
 import Hero from "@/components/Hero";
 import AboutSection from "@/components/AboutSection";
 import OurWorkSection from "@/components/OurWorkSection";
@@ -15,18 +13,9 @@ import DonateSection from "@/components/DonateSection";
 import ContactSection from "@/components/ContactSection";
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-
   return (
     <>
-      {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
-      <div
-        className={
-          isLoading
-            ? "opacity-0 h-0 overflow-hidden"
-            : "opacity-100 transition-opacity duration-700"
-        }
-      >
+      <div className="opacity-100 transition-opacity duration-700">
         <Hero />
         <AboutSection />
         <OurWorkSection />

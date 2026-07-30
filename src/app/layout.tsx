@@ -30,9 +30,11 @@ export default function RootLayout({
         <link rel="canonical" href="https://annt-1.com" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
-      <body className="min-h-screen bg-white antialiased">
+      <body className="min-h-screen bg-slate-50 text-slate-950 antialiased">
         <Navbar />
-        <main>{children}</main>
+        <main className="relative">
+          {children}
+        </main>
         <Footer />
         <ScrollToTop />
       </body>

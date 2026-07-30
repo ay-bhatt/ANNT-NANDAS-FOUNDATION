@@ -1,7 +1,9 @@
-"use client";
+﻿"use client";
 
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 import { useEffect, useState } from "react";
+import logo from "@/assets/logo.jpeg";
 
 interface LoadingScreenProps {
   onComplete?: () => void;
@@ -11,103 +13,61 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const [visible, setVisible] = useState(true);
 
   useEffect(() => {
-    // Auto-hide after animations complete
+    let exitTimer: ReturnType<typeof setTimeout> | null = null;
     const timer = setTimeout(() => {
       setVisible(false);
-      onComplete?.();
-    }, 4500);
+      exitTimer = setTimeout(() => {
+        onComplete?.();
+      }, 450);
+    }, 2600);
 
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(timer);
+      if (exitTimer) {
+        clearTimeout(exitTimer);
+      }
+    };
   }, [onComplete]);
 
-  if (!visible) return null;
-
   return (
-    <motion.div
-      className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-white overflow-hidden"
-      initial={{ opacity: 1 }}
-      animate={{ opacity: 1 }}
-      exit={{
-        opacity: 0,
-        scale: 1.08,
-        transition: {
-          duration: 0.8,
-        },
-      }}
-    >
-      {/* Glowing background orb */}
-      <motion.div
-        className="absolute w-[450px] h-[450px] rounded-full bg-blue-500/10 blur-[120px]"
-        animate={{
-          scale: [0.8, 1.2, 1],
-          opacity: [0.3, 0.6, 0.3],
-        }}
-        transition={{
-          duration: 4,
-          repeat: Infinity,
-        }}
-      />
-
-      {/* Logo */}
-      <motion.div
-        className="relative w-24 h-24 flex items-center justify-center"
-        initial={{ scale: 0, rotate: -180, opacity: 0 }}
-        animate={{ scale: 1, rotate: 0, opacity: 1 }}
-        transition={{ duration: 1.4, ease: "easeOut" }}
-      >
+    <AnimatePresence>
+      {visible && (
         <motion.div
-          className="w-20 h-20 rounded-2xl bg-blue-700 flex items-center justify-center shadow-lg"
-          initial={{ rotate: -10 }}
-          animate={{ rotate: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-950 text-white overflow-hidden px-4"
+          initial={{ opacity: 0, scale: 0.96 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.98, transition: { duration: 0.35 } }}
         >
-          <span className="text-white font-bold text-2xl font-poppins">AN</span>
+          <div className="relative z-10 flex flex-col items-center justify-center gap-6 rounded-[32px] border border-white/10 bg-slate-950/95 p-8 shadow-glow max-w-[420px] w-full">
+            <div className="relative flex h-24 w-24 items-center justify-center rounded-full bg-white/10 ring-1 ring-white/10">
+              <Image src={logo} alt="Foundation Logo" fill className="object-contain" />
+            </div>
+            <div className="space-y-2 text-center">
+              <motion.h1
+                className="text-3xl font-black tracking-tight text-white"
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, ease: "easeOut" }}
+              >
+                ANNT NANDAS FOUNDATION
+              </motion.h1>
+              <motion.p
+                className="text-sm text-slate-300"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1, duration: 0.45, ease: "easeOut" }}
+              >
+                Building a seamless experience for every visitor.
+              </motion.p>
+            </div>
+
+            <div className="flex items-center gap-3 rounded-full bg-white/10 px-4 py-3 text-sm text-slate-200">
+              <span className="h-3 w-3 rounded-full bg-success-400 animate-pulse" />
+              Loading your community stories...
+            </div>
+          </div>
         </motion.div>
-
-        {/* Green leaf accent */}
-        <motion.div
-          className="absolute -top-2 -right-2 text-2xl"
-          initial={{ scale: 0, rotate: -30 }}
-          animate={{ scale: 1, rotate: 0 }}
-          transition={{ duration: 0.5, delay: 0.6 }}
-        >
-          <svg className="w-6 h-6 text-green-500" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 008 20c4 0 6-2 9-7 0 0-3 1-5 1s-4-1-4-1c2-4 6-5 9-5z" />
-          </svg>
-        </motion.div>
-      </motion.div>
-
-      {/* Title */}
-      <motion.h1
-        className="mt-8 text-4xl font-bold tracking-wide text-blue-700"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1, duration: 0.8 }}
-      >
-        ANNT NANDAS FOUNDATION
-      </motion.h1>
-
-      {/* Tagline */}
-      <motion.p
-        className="mt-2 text-green-600 text-lg"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.3 }}
-      >
-        हमारा प्रयास, हुनर की तलाश
-      </motion.p>
-
-      {/* Progress bar */}
-      <div className="w-72 mt-12">
-        <div className="h-2 rounded-full bg-blue-100 overflow-hidden">
-          <motion.div
-            className="h-full bg-gradient-to-r from-blue-600 via-sky-500 to-green-500"
-            initial={{ width: 0 }}
-            animate={{ width: "100%" }}
-            transition={{ duration: 3, delay: 0.5 }}
-          />
-        </div>
-      </div>
-    </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
