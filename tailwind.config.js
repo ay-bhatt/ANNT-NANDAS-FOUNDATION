@@ -96,6 +96,7 @@ module.exports = {
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
         inter: ["Inter", "sans-serif"],
+        devanagari: ["Noto Sans Devanagari", "sans-serif"],
       },
       boxShadow: {
         panel: "0 20px 60px rgba(15, 23, 42, 0.12)",

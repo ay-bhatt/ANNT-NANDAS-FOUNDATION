@@ -1,12 +1,16 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { newsItems } from "@/lib/data";
-import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
+import news01 from "@/assets/news/news-001.jpg.jpeg";
+import news02 from "@/assets/news/news-002.jpg.jpeg";
+import news03 from "@/assets/news/news-003.jpg.jpeg";
 
 export default function NewsSection() {
   const items = newsItems.slice(0, 3);
+  const newsImages = [news01, news02, news03];
 
   return (
     <section className="section-padding bg-white">
@@ -31,8 +35,8 @@ export default function NewsSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
-              <div className="aspect-video">
-                <ImagePlaceholder label={item.category} aspectRatio="video" />
+              <div className="relative aspect-video overflow-hidden">
+                <Image src={newsImages[i]} alt={item.category} fill className="object-cover" />
               </div>
               <div className="p-5">
                 <p className="text-xs text-gray-400 font-inter mb-2">{item.date}</p>

@@ -1,39 +1,45 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
+import work01 from "@/assets/programs/program-001.png";
+import work02 from "@/assets/programs/program-002.png";
+import work03 from "@/assets/programs/program-003.png";
+import work04 from "@/assets/programs/program-004.png";
+import work05 from "@/assets/programs/program-005.png";
+import work06 from "@/assets/programs/program-006.png";
 
 const workItems = [
   {
     title: "Sports Development",
     description: "Building champions through athletics, cycling, running, mountaineering, and adventure sports. Creating opportunities for rural children to compete at national levels.",
-    image: "Sports Training",
+    image: work01,
   },
   {
     title: "Education",
     description: "Academic support, digital literacy, computer education, spoken English, career counselling, and competitive exam preparation for rural youth.",
-    image: "Education Program",
+    image: work02,
   },
   {
     title: "Healthcare",
     description: "Free health camps, medical awareness, nutrition education, hygiene awareness, women's health programmes, and mental health support.",
-    image: "Health Camp",
+    image: work03,
   },
   {
     title: "Environment",
     description: "Tree plantation drives, forest conservation, plastic-free campaigns, waste management, climate awareness, and eco-friendly practices.",
-    image: "Environment",
+    image: work04,
   },
   {
     title: "Women Empowerment",
     description: "Women's empowerment programmes, self-defence training, leadership development, gender equality campaigns, and skill development initiatives.",
-    image: "Women Empowerment",
+    image: work05,
   },
   {
     title: "Livelihood",
     description: "Skill development, employment readiness, entrepreneurship support, financial literacy, and rural enterprise promotion for self-reliance.",
-    image: "Livelihood",
+    image: work06,
   },
 ];
 
@@ -64,8 +70,8 @@ export default function OurWorkSection() {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
             >
-              <div className="aspect-video overflow-hidden">
-                <ImagePlaceholder label={item.image} aspectRatio="video" />
+              <div className="relative aspect-video overflow-hidden">
+                <Image src={item.image} alt={item.title} fill className="object-cover" />
               </div>
               <div className="p-6">
                 <h3 className="text-lg font-bold font-poppins text-gray-900 mb-2">{item.title}</h3>

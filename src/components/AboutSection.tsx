@@ -1,8 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
+import communityImg from "@/assets/gallery/gallery-001.png";
+import educationImg from "@/assets/gallery/gallery-002.png";
+import sportsImg from "@/assets/gallery/gallery-003.png";
+import plantationImg from "@/assets/gallery/gallery-004.png";
 
 const features = [
   {
@@ -58,19 +62,19 @@ export default function AboutSection() {
           >
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-4">
-                <div className="rounded-xl overflow-hidden shadow-md">
-                  <ImagePlaceholder label="Himalayan Community" aspectRatio="square" />
+                <div className="rounded-xl overflow-hidden shadow-md relative aspect-square">
+                  <Image src={communityImg} alt="Himalayan Community" fill className="object-cover" />
                 </div>
-                <div className="rounded-xl overflow-hidden shadow-md">
-                  <ImagePlaceholder label="Children Education" aspectRatio="video" />
+                <div className="rounded-xl overflow-hidden shadow-md relative aspect-video">
+                  <Image src={educationImg} alt="Children Education" fill className="object-cover" />
                 </div>
               </div>
               <div className="space-y-4 pt-8">
-                <div className="rounded-xl overflow-hidden shadow-md">
-                  <ImagePlaceholder label="Sports Training" aspectRatio="portrait" />
+                <div className="rounded-xl overflow-hidden shadow-md relative aspect-[3/4]">
+                  <Image src={sportsImg} alt="Sports Training" fill className="object-cover" />
                 </div>
-                <div className="rounded-xl overflow-hidden shadow-md">
-                  <ImagePlaceholder label="Tree Plantation" aspectRatio="square" />
+                <div className="rounded-xl overflow-hidden shadow-md relative aspect-square">
+                  <Image src={plantationImg} alt="Tree Plantation" fill className="object-cover" />
                 </div>
               </div>
             </div>

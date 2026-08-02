@@ -1,12 +1,16 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { upcomingEvents } from "@/lib/data";
-import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
+import event01 from "@/assets/events/event-001.jpg.jpeg";
+import event02 from "@/assets/events/event-002.jpg.jpeg";
+import event03 from "@/assets/events/event-003.jpg.jpeg";
 
 export default function EventsSection() {
   const events = upcomingEvents.slice(0, 3);
+  const eventImages = [event01, event02, event03];
 
   return (
     <section className="section-padding bg-white">
@@ -36,8 +40,8 @@ export default function EventsSection() {
             >
               {/* Image */}
               <div className="md:w-56 flex-shrink-0">
-                <div className="h-48 md:h-full">
-                  <ImagePlaceholder label={event.title} aspectRatio="landscape" />
+                <div className="relative h-48 md:h-full overflow-hidden">
+                  <Image src={eventImages[i]} alt={event.title} fill className="object-cover" />
                 </div>
               </div>
 

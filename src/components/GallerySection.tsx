@@ -1,22 +1,30 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
+import gallery01 from "@/assets/gallery/gallery-001.png";
+import gallery02 from "@/assets/gallery/gallery-002.png";
+import gallery03 from "@/assets/gallery/gallery-003.png";
+import gallery04 from "@/assets/gallery/gallery-004.png";
+import gallery05 from "@/assets/gallery/gallery-005.png";
+import gallery06 from "@/assets/gallery/gallery-006.png";
+import gallery07 from "@/assets/gallery/gallery-007.png";
+import gallery08 from "@/assets/gallery/gallery-008.png";
 
 const galleryItems = [
-  { category: "All", label: "Sports Event", img: "Sports Event" },
-  { category: "All", label: "Community Program", img: "Community Program" },
-  { category: "All", label: "Education Camp", img: "Education Camp" },
-  { category: "All", label: "Tree Plantation", img: "Tree Plantation" },
-  { category: "All", label: "Health Camp", img: "Health Camp" },
-  { category: "All", label: "Cultural Event", img: "Cultural Event" },
-  { category: "All", label: "Sports Training", img: "Sports Training" },
-  { category: "All", label: "Village Visit", img: "Village Visit" },
-  { category: "All", label: "Women Empowerment", img: "Women Empowerment" },
-  { category: "All", label: "Award Ceremony", img: "Award Ceremony" },
-  { category: "All", label: "Marathon", img: "Marathon" },
-  { category: "All", label: "Awareness Camp", img: "Awareness Camp" },
+  { category: "All", label: "Sports Event", img: gallery01 },
+  { category: "All", label: "Community Program", img: gallery02 },
+  { category: "All", label: "Education Camp", img: gallery03 },
+  { category: "All", label: "Tree Plantation", img: gallery04 },
+  { category: "All", label: "Health Camp", img: gallery05 },
+  { category: "All", label: "Cultural Event", img: gallery06 },
+  { category: "All", label: "Sports Training", img: gallery07 },
+  { category: "All", label: "Village Visit", img: gallery08 },
+  { category: "All", label: "Women Empowerment", img: gallery01 },
+  { category: "All", label: "Award Ceremony", img: gallery02 },
+  { category: "All", label: "Marathon", img: gallery03 },
+  { category: "All", label: "Awareness Camp", img: gallery04 },
 ];
 
 export default function GallerySection() {
@@ -67,7 +75,9 @@ export default function GallerySection() {
               transition={{ duration: 0.4, delay: i * 0.05 }}
               onClick={() => setSelectedImage(i)}
             >
-              <ImagePlaceholder label={item.label} aspectRatio="square" />
+              <div className="relative aspect-square overflow-hidden">
+                <Image src={item.img} alt={item.label} fill className="object-cover" />
+              </div>
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all duration-300 flex items-center justify-center">
                 <svg
                   className="w-10 h-10 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -111,13 +121,18 @@ export default function GallerySection() {
             onClick={() => setSelectedImage(null)}
           >
             <motion.div
-              className="max-w-3xl w-full rounded-2xl overflow-hidden"
+              className="max-w-3xl w-full rounded-2xl overflow-hidden relative aspect-video"
               initial={{ scale: 0.9 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.9 }}
               onClick={(e) => e.stopPropagation()}
             >
-              <ImagePlaceholder label={galleryItems[selectedImage]?.label || "Gallery"} aspectRatio="landscape" />
+              <Image
+                src={galleryItems[selectedImage]?.img}
+                alt={galleryItems[selectedImage]?.label || "Gallery"}
+                fill
+                className="object-cover"
+              />
             </motion.div>
             <button
               className="absolute top-6 right-6 text-white text-2xl hover:opacity-70"
