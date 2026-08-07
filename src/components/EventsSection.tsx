@@ -4,9 +4,9 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { upcomingEvents } from "@/lib/data";
-import event01 from "@/assets/events/event-001.jpg.jpeg";
-import event02 from "@/assets/events/event-002.jpg.jpeg";
-import event03 from "@/assets/events/event-003.jpg.jpeg";
+import event01 from "@/assets/events/event (1).jpeg";
+import event02 from "@/assets/events/event (2).jpeg";
+import event03 from "@/assets/events/event (3).jpeg";
 
 export default function EventsSection() {
   const events = upcomingEvents.slice(0, 3);

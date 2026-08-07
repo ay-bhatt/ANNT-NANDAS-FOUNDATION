@@ -3,10 +3,10 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import communityImg from "@/assets/gallery/gallery-001.png";
-import educationImg from "@/assets/gallery/gallery-002.png";
-import sportsImg from "@/assets/gallery/gallery-003.png";
-import plantationImg from "@/assets/gallery/gallery-004.png";
+import communityImg from "@/assets/gallery/gallery-014.jpg.jpeg";
+import educationImg from "@/assets/gallery/gallery-015.jpg.jpeg";
+import sportsImg from "@/assets/gallery/gallery-016.jpg.jpeg";
+import plantationImg from "@/assets/gallery/gallery-017.jpg.jpeg";
 
 const features = [
   {

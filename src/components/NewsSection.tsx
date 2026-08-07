@@ -4,9 +4,9 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { newsItems } from "@/lib/data";
-import news01 from "@/assets/news/news-001.jpg.jpeg";
-import news02 from "@/assets/news/news-002.jpg.jpeg";
-import news03 from "@/assets/news/news-003.jpg.jpeg";
+import news01 from "@/assets/news/news (1).jpeg";
+import news02 from "@/assets/news/news (2).jpeg";
+import news03 from "@/assets/news/news (3).jpeg";
 
 export default function NewsSection() {
   const items = newsItems.slice(0, 3);

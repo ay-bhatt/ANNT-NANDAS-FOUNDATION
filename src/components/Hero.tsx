@@ -1,30 +1,88 @@
 ﻿"use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { impactStats } from "@/lib/data";
 
+// 1. Import all images directly from your src/assets/hero folder
+// Make sure the file names match exactly what is in your folder (including spaces and parentheses)
+import img1 from "../assets/hero/gallery (3).jpeg";
+import img2 from "../assets/hero/hero-002.png";
+import img3 from "../assets/hero/HERO ().png";
+import img4 from "../assets/hero/HERO (1).jpeg";
+import img5 from "../assets/hero/HERO (4).jpeg";
+import img6 from "../assets/hero/HERO.jpeg";
+import img7 from "../assets/hero/HERO (2).jpeg";
+import img8 from "../assets/hero/HERO (3).jpeg";
+
 const stats = impactStats.slice(0, 5);
 
+// 2. Extract the .src property from the imported Next.js image objects
+const backgroundImages = [
+  img1.src,
+  img2.src,
+  img3.src,
+  img4.src,
+  img5.src,
+  img6.src,
+  img7.src,
+  img8.src,
+];
+
 export default function Hero() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Effect to handle the 3-second slide transition
+  useEffect(() => {
+    const slideInterval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) =>
+        prevIndex === backgroundImages.length - 1 ? 0 : prevIndex + 1
+      );
+    }, 3000);
+
+    return () => clearInterval(slideInterval);
+  }, []);
+
   return (
-    <section className="relative overflow-hidden bg-slate-950 text-white">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.16),_transparent_33%),radial-gradient(circle_at_35%_20%,_rgba(22,163,74,0.16),_transparent_25%),linear-gradient(180deg,_rgba(15,23,42,0.95)_0%,_rgba(15,23,42,0.92)_35%,_rgba(15,23,42,0.8)_100%)]" />
-      <div className="relative z-10 container-premium pt-24 pb-28 lg:pt-32 lg:pb-32">
+    <section className="relative flex min-h-[90vh] flex-col justify-end overflow-hidden bg-slate-950 text-white">
+      {/* --- Background Slideshow --- */}
+      <div className="absolute inset-0 z-0">
+        <AnimatePresence mode="popLayout">
+          <motion.div
+            key={currentImageIndex}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{
+              backgroundImage: `url('${backgroundImages[currentImageIndex]}')`,
+            }}
+          />
+        </AnimatePresence>
+        
+        {/* Overlays for text readability and blending */}
+        <div className="absolute inset-0 bg-black/40" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent" />
+      </div>
+
+      {/* --- Hero Content --- */}
+      <div className="container-premium relative z-10 pb-12 pt-24 lg:pb-16 lg:pt-32">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.75, ease: "easeOut" }}
           >
-            <div className="inline-flex items-center gap-3 rounded-full border border-white/10 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-slate-200 shadow-lg shadow-slate-950/10 backdrop-blur-sm">
-              <span className="block h-2.5 w-2.5 rounded-full bg-success-400 shadow-glow" />
+            <div className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-black/30 px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] text-slate-200 shadow-lg backdrop-blur-md">
+              <span className="shadow-glow block h-2.5 w-2.5 rounded-full bg-success-400" />
               From the Heart of the Himalayas
             </div>
-            <h1 className="mt-8 text-4xl font-black tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl leading-[0.95]">
-              Building Futures <span className="text-success-400">Without Limits</span>
+            <h1 className="mt-8 text-4xl font-black leading-[0.95] tracking-tight text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">
+              Building Futures <span className="text-success-400 drop-shadow-md">Without Limits</span>
             </h1>
-            <p className="mt-6 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">
+            <p className="mt-6 max-w-2xl text-base leading-8 text-slate-200 drop-shadow-md sm:text-lg">
               Empowering communities through sports, education, healthcare, and environment initiatives that help every talent thrive.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
@@ -55,35 +113,22 @@ export default function Hero() {
             transition={{ duration: 0.75, delay: 0.15, ease: "easeOut" }}
             className="relative hidden lg:block"
           >
-            <div className="relative overflow-hidden rounded-[32px] border border-white/10 bg-white/5 p-2 shadow-glow">
-              <div className="aspect-[4/3] w-full overflow-hidden rounded-[28px] bg-gradient-to-br from-primary-600 via-slate-900 to-slate-800">
-                <div className="flex h-full w-full items-center justify-center px-8">
-                  <div className="text-center">
-                    <div className="mx-auto mb-5 flex h-20 w-20 items-center justify-center rounded-full bg-white/10 text-white shadow-lg shadow-slate-950/20">
-                      <svg className="h-10 w-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <p className="text-lg font-bold text-white">Himalayan Vision</p>
-                    <p className="mt-2 text-sm leading-6 text-slate-300">A premium narrative for a movement that believes in every child's potential.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+
           </motion.div>
         </div>
       </div>
 
-      <div className="relative z-10 container-premium">
+      {/* --- Stats Section --- */}
+      <div className="container-premium relative z-10 pb-12">
         <motion.div
-          className="mx-auto grid max-w-5xl gap-4 rounded-[28px] border border-white/10 bg-white/95 p-6 shadow-xl shadow-slate-950/10 backdrop-blur-xl sm:p-8"
+          className="mx-auto grid max-w-5xl gap-4 rounded-[28px] border border-white/20 bg-white/90 p-6 shadow-2xl backdrop-blur-xl sm:p-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.75, delay: 0.3, ease: "easeOut" }}
         >
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-5">
             {stats.map((stat) => (
-              <div key={stat.label} className="rounded-3xl bg-slate-950/5 p-4 text-center">
+              <div key={stat.label} className="rounded-3xl bg-slate-100 p-4 text-center transition hover:bg-slate-200">
                 <p className="text-2xl font-bold text-slate-950 sm:text-3xl">{stat.value.toLocaleString()}{stat.suffix}</p>
                 <p className="mt-2 text-xs uppercase tracking-[0.18em] text-slate-500 sm:text-sm">{stat.label}</p>
               </div>

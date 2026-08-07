@@ -3,12 +3,12 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import work01 from "@/assets/programs/program-001.png";
-import work02 from "@/assets/programs/program-002.png";
-import work03 from "@/assets/programs/program-003.png";
-import work04 from "@/assets/programs/program-004.png";
-import work05 from "@/assets/programs/program-005.png";
-import work06 from "@/assets/programs/program-006.png";
+import work01 from "@/assets/gallery/gallery-014.jpg.jpeg";
+import work02 from "@/assets/gallery/gallery-015.jpg.jpeg";
+import work03 from "@/assets/gallery/gallery-016.jpg.jpeg";
+import work04 from "@/assets/gallery/gallery-017.jpg.jpeg";
+import work05 from "@/assets/gallery/gallery-018.jpg.jpeg";
+import work06 from "@/assets/gallery/gallery-019.jpg.jpeg";
 
 const workItems = [
   {

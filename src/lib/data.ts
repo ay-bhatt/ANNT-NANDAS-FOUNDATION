@@ -4,7 +4,7 @@ export const siteConfig = {
   tagline: "From the Heart of the Himalayas, Building Futures Without Limits",
   motto: "Our Effort, In Search of Hidden Talent.",
   description: "Empowering Communities | Discovering Talent | Creating Opportunities",
-  email: "info@annt-1.com",
+  email: "info@anntnandasfoundation.com",
   phone1: "+91 9639263202",
   phone2: "+91 7579004581",
   address: "Mundoli, Chamoli, Uttarakhand, India",
@@ -17,12 +17,11 @@ export const siteConfig = {
   registration12A: "ABFCA8056ME2026101",
   registration80G: "ABFCA8056MF2026102",
   social: {
-    facebook: "#",
-    instagram: "#",
-    youtube: "#",
-    linkedin: "#",
-    twitter: "#",
-  }
+    email: "mailto:info@anntnandasfoundation.com",
+    facebook: "https://www.facebook.com/anita.bisht.549436/videos/anant-nanda-foundation-ki-team/1159831703008107/",
+    instagram: "https://www.instagram.com/klamsnghbisht?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDC0MzIxMw==",
+    youtube: "https://www.youtube.com/@ANNTNANDASFOUNDATION",
+  },
 };
 
 export const navigationItems = [
@@ -48,24 +47,14 @@ export const impactStats = [
 
 export const journeyMilestones = [
   {
-    year: "2021",
-    title: "The Beginning",
-    description: "Started as Mundoli Riders Club with 2 bicycles and 12 children in the heart of the Himalayas.",
-  },
-  {
-    year: "2022",
-    title: "Growth Phase",
-    description: "Expanded sports training and community outreach across multiple villages in Chamoli district.",
-  },
-  {
     year: "2023",
-    title: "Building Vision",
-    description: "Launched talent discovery model, environmental programmes, and the AVIRALL Nannda Run.",
+    title: "The Beginning",
+    description: "Founded on 1st May 2023 in the small Himalayan village of Mundoli, Chamoli, Uttarakhand, as Mundoli Riders Club with two bicycles and twelve children.",
   },
   {
-    year: "2024",
-    title: "Expanding Horizon",
-    description: "Registered as Section 8 Company, scaling impact across the Himalayan region.",
+    year: "2026",
+    title: "Becoming ANNT NANDAS FOUNDATION",
+    description: "Registered as ANNT NANDAS FOUNDATION (Section 8 COY, CIN U85410UT2026NPL021583) on 27 May 2026, evolving from a local club into a movement for social transformation across the Himalayas.",
   },
 ];
 
@@ -80,12 +69,13 @@ export const coreValues = [
 ];
 
 export const partners = [
-  { name: "Partner Organization 1", category: "Education" },
-  { name: "Partner Organization 2", category: "Sports" },
-  { name: "Partner Organization 3", category: "Healthcare" },
-  { name: "Partner Organization 4", category: "Environment" },
-  { name: "Partner Organization 5", category: "Community" },
-  { name: "Partner Organization 6", category: "Youth Development" },
+  { name: "Government Departments", category: "Public Sector" },
+  { name: "Educational Institutions", category: "Education" },
+  { name: "Sports Organizations & Federations", category: "Sports" },
+  { name: "NGOs & Development Organisations", category: "Community" },
+  { name: "Corporate Social Responsibility Partners", category: "CSR" },
+  { name: "Corporate Organizations", category: "Industry" },
+  { name: "Researchers & International Agencies", category: "Research" },
 ];
 
 export const donationImpacts = [
