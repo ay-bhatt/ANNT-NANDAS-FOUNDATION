@@ -1,165 +1,212 @@
 ﻿"use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-
-// Import your new logo
 import logoImg from "@/assets/logo.jpeg";
+import type { NavItem } from "@/lib/types";
 
-export default function Navbar() {
+interface NavbarProps {
+  navigationItems: NavItem[];
+}
+
+export default function Navbar({ navigationItems }: NavbarProps) {
+  const pathname = usePathname();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const pathname = usePathname();
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Lock background scroll when mobile menu is open
   useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [mobileOpen]);
 
+  // Close menu on route change
   useEffect(() => {
     setMobileOpen(false);
   }, [pathname]);
 
-  const navLinks = [
-    { label: "Home", href: "/" },
-    { label: "About", href: "/about" },
-    { label: "Our Work", href: "/our-work" },
-    { label: "Programs", href: "/programs" },
-    { label: "Events", href: "/events" },
-    { label: "Gallery", href: "/gallery" },
-    { label: "News", href: "/news" },
-    { label: "Contact", href: "/contact" },
-  ];
+  // Handle ESC key to close mobile menu
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [mobileOpen]);
 
   return (
-    <>
-      {/* Main Sticky Navbar */}
-      <header
-        className={`sticky top-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-white shadow-md"
-            : "bg-white"
-        }`}
-      >
-        {/* Expanded width container with larger side paddings */}
-        <div className="w-full mx-auto px-4 sm:px-6 lg:px-16 xl:px-24">
-          <nav className="flex items-center justify-between h-16 md:h-[80px]">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-12 h-12 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow overflow-hidden relative">
-                <Image 
-                  src={logoImg} 
-                  alt="Annt Nandas Foundation Logo" 
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <div className="hidden sm:block">
-                <p className="text-base font-bold font-poppins text-gray-900 leading-tight">
-                  ANNT NANDAS
-                </p>
-                <p className="text-[11px] font-medium text-gray-500 tracking-wider">
-                  FOUNDATION
-                </p>
-              </div>
-            </Link>
+    <header
+      className={`sticky top-0 z-50 w-full border-b transition-colors duration-200 ${
+        scrolled
+          ? "border-slate-200/90 bg-white shadow-md"
+          : "border-slate-200 bg-white"
+      }`}
+    >
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-white focus:z-50">
+        Skip to main content
+      </a>
 
-            {/* Desktop Nav - Increased gaps for better spacing */}
-            <div className="hidden lg:flex items-center gap-4 xl:gap-8">
-              {navLinks.map((item) => (
+      <div className="container-premium mx-auto px-4 sm:px-6 lg:px-8">
+        <nav aria-label="Primary navigation" className="flex h-[72px] items-center justify-between gap-4">
+          
+          {/* Logo & Brand Name */}
+          <Link
+            href="/"
+            className="flex min-w-0 items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+          >
+            <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-slate-50 sm:h-12 sm:w-12">
+              <Image
+                src={logoImg}
+                alt="ANNT NANDAS Foundation Logo"
+                fill
+                priority
+                sizes="48px"
+                className="object-cover"
+              />
+            </div>
+            <div className="hidden min-w-0 min-[380px]:block">
+              <p className="truncate text-sm font-extrabold uppercase tracking-wide text-slate-900 sm:text-base">
+                ANNT NANDAS
+              </p>
+              <p className="truncate text-[10px] font-semibold uppercase tracking-widest text-emerald-700 sm:text-xs">
+                Foundation
+              </p>
+            </div>
+          </Link>
+
+          {/* Desktop Navigation Links */}
+          <div className="hidden items-center gap-1 lg:flex">
+            {navigationItems.map((item) => {
+              const active = pathname === item.href;
+              return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    pathname === item.href
-                      ? "text-primary-600 bg-primary-50"
-                      : "text-gray-600 hover:text-primary-600 hover:bg-gray-50"
+                  aria-current={active ? "page" : undefined}
+                  className={`rounded-full px-3.5 py-2 text-xs font-semibold transition-all duration-150 xl:px-4 xl:text-sm ${
+                    active
+                      ? "bg-blue-950 text-white shadow-sm"
+                      : "text-slate-700 hover:bg-slate-100 hover:text-blue-950"
                   }`}
                 >
                   {item.label}
                 </Link>
-              ))}
-            </div>
+              );
+            })}
+          </div>
 
-            {/* Right Actions */}
-            <div className="flex items-center gap-4">
+          {/* Action Buttons & Mobile Hamburger */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              href="/donate"
+              className="rounded-full bg-blue-950 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-blue-900 transition active:scale-95 sm:px-5 sm:text-sm"
+            >
+              Donate Now
+            </Link>
+
+            <button
+              ref={menuButtonRef}
+              type="button"
+              aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-navigation"
+              onClick={() => setMobileOpen((value) => !value)}
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 transition active:scale-95 lg:hidden hover:bg-slate-50"
+            >
+              <div className="relative flex h-4 w-5 flex-col justify-between">
+                <span
+                  className={`h-0.5 w-full rounded-full bg-slate-900 transition-all duration-300 origin-center ${
+                    mobileOpen ? "translate-y-[7px] rotate-45" : ""
+                  }`}
+                />
+                <span
+                  className={`h-0.5 w-full rounded-full bg-slate-900 transition-all duration-200 ${
+                    mobileOpen ? "opacity-0" : ""
+                  }`}
+                />
+                <span
+                  className={`h-0.5 w-full rounded-full bg-slate-900 transition-all duration-300 origin-center ${
+                    mobileOpen ? "-translate-y-[7px] -rotate-45" : ""
+                  }`}
+                />
+              </div>
+            </button>
+          </div>
+        </nav>
+      </div>
+
+      {/* Mobile Drawer Navigation */}
+      {mobileOpen && (
+        <div
+          id="mobile-navigation"
+          className="fixed inset-x-0 bottom-0 top-[72px] z-50 flex flex-col justify-between overflow-y-auto bg-white px-4 py-6 shadow-2xl lg:hidden"
+        >
+          <div className="space-y-1.5">
+            {navigationItems.map((item) => {
+              const active = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className={`flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-semibold transition ${
+                    active
+                      ? "bg-blue-950 text-white"
+                      : "text-slate-800 hover:bg-slate-100 active:bg-slate-100"
+                  }`}
+                >
+                  <span>{item.label}</span>
+                  <span aria-hidden="true" className="text-lg">→</span>
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="mt-6 border-t border-slate-200 pt-6 space-y-4">
+            <div className="grid gap-3 sm:grid-cols-2">
               <Link
                 href="/volunteer-registration"
-                className="hidden md:inline-flex items-center gap-2 px-6 py-2.5 rounded-lg border-2 border-primary-500 text-primary-500 font-semibold text-sm hover:bg-primary-500 hover:text-white transition-all duration-200"
+                className="flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-800 hover:bg-slate-50 transition"
               >
-                Volunteer
+                Become a Volunteer
               </Link>
               <Link
-                href="/donate"
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-nature-500 text-white font-semibold text-sm hover:bg-nature-600 transition-all duration-200 shadow-sm"
+                href="/contact"
+                className="flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-800 hover:bg-slate-50 transition"
               >
-                Donate Now
+                Contact Us
               </Link>
-
-              {/* Mobile Hamburger */}
-              <button
-                onClick={() => setMobileOpen(!mobileOpen)}
-                className="lg:hidden p-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors"
-                aria-label="Toggle menu"
-              >
-                <div className="w-5 h-5 flex flex-col justify-center items-center gap-1">
-                  <span className={`block w-5 h-0.5 bg-current rounded-full transition-all duration-300 ${mobileOpen ? "rotate-45 translate-y-1.5" : ""}`} />
-                  <span className={`block w-5 h-0.5 bg-current rounded-full transition-all duration-300 ${mobileOpen ? "opacity-0" : ""}`} />
-                  <span className={`block w-5 h-0.5 bg-current rounded-full transition-all duration-300 ${mobileOpen ? "-rotate-45 -translate-y-1.5" : ""}`} />
-                </div>
-              </button>
             </div>
-          </nav>
-        </div>
 
-        {/* Mobile Menu */}
-        {mobileOpen && (
-          <div className="lg:hidden border-t border-gray-100 bg-white">
-            <div className="w-full mx-auto px-4 sm:px-6">
-              <div className="py-4 space-y-1">
-                {navLinks.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setMobileOpen(false)}
-                    className={`block px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                      pathname === item.href
-                        ? "text-primary-600 bg-primary-50"
-                        : "text-gray-600 hover:bg-gray-50 hover:text-primary-600"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-              <div className="pb-4 space-y-3">
-                <Link
-                  href="/volunteer-registration"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg border-2 border-primary-500 text-primary-500 font-semibold text-sm"
-                >
-                  Become a Volunteer
-                </Link>
-                <Link
-                  href="/donate"
-                  onClick={() => setMobileOpen(false)}
-                  className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg bg-nature-500 text-white font-semibold text-sm"
-                >
-                  Donate Now
-                </Link>
-              </div>
+            <div className="rounded-2xl bg-slate-100 p-4 text-xs text-slate-600">
+              <p className="font-bold text-slate-900">From the heart of the Himalayas</p>
+              <p className="mt-1 leading-5">
+                Creating opportunity through education, health, sports, environment, and community action.
+              </p>
             </div>
           </div>
-        )}
-      </header>
-    </>
+        </div>
+      )}
+    </header>
   );
 }

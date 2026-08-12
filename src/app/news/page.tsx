@@ -1,56 +1,65 @@
-"use client";
+import Image from "next/image";
+import type { Metadata } from "next";
+import { getAllData } from "@/lib/api";
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
-import { newsItems } from "@/lib/data";
+export const metadata: Metadata = {
+  title: "News & Updates | ANNT NANDAS FOUNDATION",
+  description: "Follow recent foundation activities, field updates, achievements, and stories from Himalayan communities.",
+  alternates: { canonical: "/news" },
+};
+import { CTASection, PageHero, SectionHeading } from "@/components/site/SectionBlocks";
 
-export default function NewsPage() {
+export default async function NewsPage() {
+  const data = await getAllData();
+  const { heroContent, newsHeroImage, newsItems } = data;
   return (
-    <>
-      <section className="relative bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 text-white py-24 md:py-32">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-primary-200 font-semibold text-sm tracking-wider uppercase mb-4 font-inter">News & Updates</p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-poppins leading-tight mb-4">
-            Latest{" "}
-            <span className="text-nature-400">News</span>
-          </h1>
-          <p className="text-primary-200 max-w-2xl mx-auto font-inter text-lg">
-            Stay updated with our latest stories and announcements.
-          </p>
-        </div>
-      </section>
+    <div className="pb-8">
+      <PageHero
+        eyebrow="Latest News"
+        title="Stories, updates, and progress from the field"
+        description="Stay connected with the foundation’s latest activities, milestones, village outreach, and programme moments."
+        image={newsHeroImage}
+        actions={[
+          { label: "Contact the Team", href: "/contact" },
+          { label: "Explore Gallery", href: "/gallery", variant: "secondary" },
+        ]}
+      />
 
-      <section className="section-padding bg-white">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {newsItems.map((item, i) => (
-              <motion.div
-                key={item.title}
-                className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-lg hover:-translate-y-2"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-              >
-                <ImagePlaceholder label={item.category} aspectRatio="video" />
-                <div className="p-5">
-                  <span className="text-xs text-primary-500 font-semibold bg-primary-50 px-3 py-1 rounded-full">{item.category}</span>
-                  <p className="text-xs text-gray-400 font-inter mt-3 mb-2">{item.date}</p>
-                  <h3 className="text-base font-bold font-poppins text-gray-900 mb-2">{item.title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed mb-4 font-inter">{item.summary}</p>
-                  <Link href="#" className="inline-flex items-center gap-1 text-sm font-semibold text-primary-500 hover:text-primary-600 transition-colors">
-                    Read More
-                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </Link>
+      <section className="section-padding px-3 sm:px-5">
+        <div className="container-premium">
+          <SectionHeading
+            eyebrow="News & Updates"
+            title="A closer look at recent momentum"
+            description="A curated collection of stories that reflect the foundation’s grassroots work across communities and programmes."
+            centered
+          />
+          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            {newsItems.map((item) => (
+              <article key={item.title} className="surface-card overflow-hidden">
+                <div className="relative aspect-[16/10]">
+                  <Image src={item.image} alt={item.title} fill sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw" className="object-cover" />
                 </div>
-              </motion.div>
+                <div className="p-6">
+                  <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em]">
+                    <span className="rounded-full bg-emerald-50 px-3 py-1 text-emerald-700">{item.category}</span>
+                    <span className="text-slate-400">{item.date}</span>
+                  </div>
+                  <h2 className="mt-4 text-xl font-semibold text-slate-950">{item.title}</h2>
+                  <p className="mt-3 text-sm leading-7 text-slate-600">{item.summary}</p>
+                </div>
+              </article>
             ))}
           </div>
         </div>
       </section>
-    </>
+
+      <CTASection
+        title="Want more updates from the foundation?"
+        description="Reach out, follow our channels, or visit upcoming events to stay closely connected to the work happening on the ground."
+        primary={{ label: "Contact Us", href: "/contact" }}
+        secondary={{ label: "View Events", href: "/events" }}
+        image={heroContent.supportingVisuals[2]}
+      />
+    </div>
   );
 }

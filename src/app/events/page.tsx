@@ -1,79 +1,78 @@
-"use client";
-
-import { motion } from "framer-motion";
+﻿import Image from "next/image";
+import type { Metadata } from "next";
 import Link from "next/link";
-import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
-import { upcomingEvents } from "@/lib/data";
+import { getAllData } from "@/lib/api";
 
-export default function EventsPage() {
+export const metadata: Metadata = {
+  title: "Events | ANNT NANDAS FOUNDATION",
+  description: "Join upcoming community, sports, health, education, and environmental initiatives across Uttarakhand.",
+  alternates: { canonical: "/events" },
+};
+import { CTASection, PageHero, SectionHeading } from "@/components/site/SectionBlocks";
+
+export default async function EventsPage() {
+  const data = await getAllData();
+  const { heroContent, upcomingEvents } = data;
+
   return (
-    <>
-      <section className="relative bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 text-white py-24 md:py-32">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-primary-200 font-semibold text-sm tracking-wider uppercase mb-4 font-inter">Events</p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-poppins leading-tight mb-4">
-            Our{" "}
-            <span className="text-nature-400">Events</span>
-          </h1>
-          <p className="text-primary-200 max-w-2xl mx-auto font-inter text-lg">
-            Join us in making a difference through our events and programs.
-          </p>
-        </div>
-      </section>
+    <div className="pb-8">
+      <PageHero
+        eyebrow="Events"
+        title="Join the next wave of action"
+        description="Our events bring people together through participation, service, learning, health outreach, and community-building experiences."
+        image={heroContent.supportingVisuals[0]}
+        actions={[
+          { label: "Register for Events", href: "/general-registration" },
+          { label: "Volunteer With Us", href: "/volunteer-registration", variant: "secondary" },
+        ]}
+      />
 
-      <section className="section-padding bg-white">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-6">
-            {upcomingEvents.map((event, i) => (
-              <motion.div
-                key={event.title}
-                className="flex flex-col md:flex-row bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 transition-all duration-300 hover:shadow-lg"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08 }}
-              >
-                <div className="md:w-56 flex-shrink-0">
-                  <div className="h-48 md:h-full">
-                    <ImagePlaceholder label={event.title} aspectRatio="landscape" />
+      <section className="section-padding px-3 sm:px-5">
+        <div className="container-premium">
+          <SectionHeading
+            eyebrow="Upcoming Events"
+            title="Be part of our next initiatives"
+            description="Every event is designed to create connection, participation, and positive momentum in and around the communities we serve."
+            centered
+          />
+          <div className="grid gap-5 xl:grid-cols-2">
+            {upcomingEvents.map((event) => (
+              <div key={event.title} className="surface-card overflow-hidden">
+                <div className="grid gap-0 md:grid-cols-[0.9fr_1.1fr]">
+                  <div className="relative min-h-[280px]">
+                    <Image src={event.image} alt={event.title} fill sizes="(max-width: 767px) 100vw, 50vw" className="object-cover" />
                   </div>
-                </div>
-                <div className="p-6 flex flex-col justify-between flex-1">
-                  <div>
-                    <div className="flex flex-wrap items-center gap-3 mb-3">
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-50 text-primary-600 text-xs font-semibold">
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        {event.date}
-                      </span>
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gray-50 text-gray-500 text-xs">
-                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        </svg>
-                        {event.location}
-                      </span>
-                      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-gray-50 text-gray-500 text-xs">
-                        {event.type}
-                      </span>
+                  <div className="p-6 sm:p-8">
+                    <div className="mb-4 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
+                      <span>{event.type}</span>
+                      <span className="text-slate-300">•</span>
+                      <span>{event.date}</span>
                     </div>
-                    <h3 className="text-lg font-bold font-poppins text-gray-900 mb-2">{event.title}</h3>
-                    <p className="text-gray-500 text-sm leading-relaxed font-inter">{event.description}</p>
-                  </div>
-                  <div className="mt-4">
-                    <Link href="/volunteer-registration" className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary-500 text-white font-semibold text-sm hover:bg-primary-600 transition-all duration-200">
-                      Register Now
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </Link>
+                    <h2 className="text-2xl font-bold text-slate-950">{event.title}</h2>
+                    <p className="mt-3 text-sm leading-7 text-slate-600">{event.description}</p>
+                    <div className="mt-5 grid gap-3 text-sm text-slate-700 sm:grid-cols-2">
+                      <div className="rounded-2xl bg-slate-50 p-4">📍 {event.location}</div>
+                      <div className="rounded-2xl bg-slate-50 p-4">🕒 {event.time}</div>
+                    </div>
+                    <div className="mt-6 flex flex-wrap gap-3">
+                      <Link href={event.href} className="btn-primary">Register now</Link>
+                      <Link href="/contact" className="btn-outline-dark">Ask a question</Link>
+                    </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </section>
-    </>
+
+      <CTASection
+        title="Bring your energy to the movement"
+        description="Take part in upcoming events as a runner, supporter, learner, volunteer, or community partner."
+        primary={{ label: "General Registration", href: "/general-registration" }}
+        secondary={{ label: "Volunteer Registration", href: "/volunteer-registration" }}
+        image={heroContent.supportingVisuals[1]}
+      />
+    </div>
   );
 }

@@ -1,215 +1,161 @@
-"use client";
+﻿import Image from "next/image";
+import type { Metadata } from "next";
+import { getAllData } from "@/lib/api";
 
-import { motion } from "framer-motion";
-import Link from "next/link";
-import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
-import { founderInfo, coreValues, journeyMilestones } from "@/lib/data";
+export const metadata: Metadata = {
+  title: "About Us | ANNT NANDAS FOUNDATION",
+  description: "Discover the foundation’s grassroots journey, values, leadership, and commitment to Himalayan communities.",
+  alternates: { canonical: "/about" },
+};
+import { CTASection, PageHero, SectionHeading } from "@/components/site/SectionBlocks";
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const data = await getAllData();
+
+  const {
+    siteConfig,
+    foundersGallery,
+    founderInfo,
+    coreValues,
+    journeyMilestones,
+  } = data;
+
   return (
-    <>
-      {/* Hero Banner */}
-      <section className="relative bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 text-white py-24 md:py-32">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-primary-200 font-semibold text-sm tracking-wider uppercase mb-4 font-inter">
-            About Us
-          </p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-poppins leading-tight mb-4">
-            A Movement for{" "}
-            <span className="text-nature-400">Generations to Come</span>
-          </h1>
-          <p className="text-primary-200 max-w-2xl mx-auto font-inter text-lg">
-            From the Heart of the Himalayas, Building Futures Without Limits
-          </p>
-        </div>
-      </section>
+    <div className="pb-8">
+      <PageHero
+        eyebrow="About Us"
+        title="A movement for generations to come"
+        description="Founded in Mundoli, ANNT NANDAS FOUNDATION is rooted in service, discipline, and the belief that every child deserves a genuine opportunity to grow."
+        image={foundersGallery[0]}
+        actions={[
+          { label: "Explore Programs", href: "/programs" },
+          { label: "Support the Mission", href: "/donate", variant: "secondary" },
+        ]}
+      />
 
-      {/* Who We Are */}
-      <section className="section-padding bg-white">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-            >
-              <p className="text-primary-500 font-semibold text-sm tracking-wider uppercase mb-3 font-inter">
-                Who We Are
+      <section className="section-padding px-3 sm:px-5">
+        <div className="container-premium grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-start">
+          <div>
+            <SectionHeading
+              eyebrow="Who We Are"
+              title="Born in the Himalayas, built with purpose"
+              description="The foundation works with children, youth, women, and underserved communities through programmes that strengthen confidence, opportunity, health, and resilience."
+            />
+            <div className="space-y-4 text-base leading-8 text-slate-600">
+              <p>
+                ANNT NANDAS FOUNDATION is a registered non-profit organisation committed to long-term social impact through education, sports, healthcare, environment, women empowerment, and community development.
               </p>
-              <h2 className="text-3xl md:text-4xl font-bold font-poppins text-gray-900 leading-tight mb-6">
-                Born in the{" "}
-                <span className="text-primary-500">Himalayas</span>
-              </h2>
-              <div className="space-y-4 text-gray-600 leading-relaxed font-inter">
-                <p>
-                  ANNT NANDAS FOUNDATION is a registered non-profit organization committed to creating lasting social impact through sports, education, skill development, environmental conservation, healthcare, and sustainable community development.
-                </p>
-                <p>
-                  Our work is guided by one simple belief: Every child deserves an opportunity. Regardless of financial background, caste, religion, gender, or geographical location, every individual deserves access to education, mentorship, health, opportunity, and hope.
-                </p>
-                <p>
-                  We work directly with children, youth, women, senior citizens, and rural communities to identify potential, nurture talent, and create pathways towards self-reliance.
-                </p>
+              <p>
+                Our work is guided by a simple belief: every child deserves access to encouragement, mentorship, and a fair chance to pursue a stronger future.
+              </p>
+              <p>
+                We believe real transformation happens when programmes are locally rooted, deeply human, and shaped with communities instead of for them.
+              </p>
+            </div>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              <div className="surface-card p-5">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">Founded</p>
+                <p className="mt-2 text-2xl font-bold text-slate-950">{siteConfig.founded}</p>
               </div>
-            </motion.div>
-
-            <motion.div
-              className="relative"
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-            >
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-4">
-                  <ImagePlaceholder label="Himalayan Community" aspectRatio="square" />
-                  <ImagePlaceholder label="Children Education" aspectRatio="video" />
-                </div>
-                <div className="space-y-4 pt-8">
-                  <ImagePlaceholder label="Sports Training" aspectRatio="portrait" />
-                </div>
+              <div className="surface-card p-5">
+                <p className="text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">Registered</p>
+                <p className="mt-2 text-2xl font-bold text-slate-950">{siteConfig.registered}</p>
               </div>
-            </motion.div>
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* Journey Timeline */}
-      <section className="section-padding bg-gray-50">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <p className="text-primary-500 font-semibold text-sm tracking-wider uppercase mb-3 font-inter">
-              Our Journey
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold font-poppins text-gray-900 leading-tight">
-              Every Great Movement{" "}
-              <span className="text-primary-500">Begins With a Step</span>
-            </h2>
-          </div>
-
-          <div className="max-w-3xl mx-auto space-y-8">
-            {journeyMilestones.map((item, i) => (
-              <motion.div
-                key={item.year}
-                className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-full bg-primary-50 flex items-center justify-center flex-shrink-0">
-                    <span className="text-sm font-black font-poppins text-primary-500">{item.year.slice(2)}</span>
-                  </div>
-                  <div>
-                    <span className="text-primary-500 font-bold text-sm font-poppins">{item.year}</span>
-                    <h4 className="font-bold font-poppins text-gray-900 mt-1">{item.title}</h4>
-                    <p className="text-gray-500 text-sm font-inter mt-1">{item.description}</p>
-                  </div>
-                </div>
-              </motion.div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {foundersGallery.map((image, index) => (
+              <div key={index} className={`relative overflow-hidden rounded-[28px] ${index === 0 ? "sm:col-span-2 aspect-[16/10]" : "aspect-[4/5]"}`}>
+                <Image src={image} alt={`Foundation community story ${index + 1}`} fill sizes="(max-width: 767px) 50vw, 25vw" className="object-cover" />
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Core Values */}
-      <section className="section-padding bg-white">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14">
-            <p className="text-primary-500 font-semibold text-sm tracking-wider uppercase mb-3 font-inter">
-              Our Foundation
-            </p>
-            <h2 className="text-3xl md:text-4xl font-bold font-poppins text-gray-900 leading-tight">
-              Core{" "}
-              <span className="text-primary-500">Values</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {coreValues.map((value) => (
-              <motion.div
-                key={value.title}
-                className="bg-white rounded-xl p-5 text-center shadow-sm border border-gray-100 hover:shadow-md hover:-translate-y-1 transition-all duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-              >
-                <span className="text-3xl mb-2 block">{value.icon}</span>
-                <h4 className="text-xs font-bold font-poppins text-gray-800">{value.title}</h4>
-                <p className="text-[10px] text-gray-500 mt-1 leading-tight font-inter">{value.desc}</p>
-              </motion.div>
+      <section className="section-padding bg-white/70 px-3 sm:px-5">
+        <div className="container-premium">
+          <SectionHeading
+            eyebrow="Our Journey"
+            title="Every great movement begins with a step"
+            description="A brief timeline of how a local effort evolved into a wider mission for Himalayan communities."
+            centered
+          />
+          <div className="mx-auto max-w-4xl space-y-4">
+            {journeyMilestones.map((item) => (
+              <div key={item.year} className="surface-card flex gap-4 p-5">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 font-bold text-emerald-700">
+                  {item.year}
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-slate-950">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-7 text-slate-600">{item.description}</p>
+                </div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Founder */}
-      <section className="section-padding bg-gray-50">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary-900 via-primary-800 to-primary-900 p-8 md:p-12 text-white">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-              <div>
-                <p className="text-primary-200 font-semibold text-xs tracking-wider uppercase mb-3 font-inter">
-                  Meet Our Founder
-                </p>
-                <h2 className="text-3xl md:text-4xl font-bold font-poppins mb-2">
-                  {founderInfo.name}
-                </h2>
-                <p className="text-primary-200 font-medium mb-6 font-inter">{founderInfo.title}</p>
-                <p className="text-white/75 leading-relaxed mb-4 font-inter">{founderInfo.fullBio}</p>
-                <blockquote className="border-l-2 border-nature-400 pl-5 py-1 mb-6">
-                  <p className="text-white/80 italic text-sm font-inter">
-                    &ldquo;{founderInfo.quote}&rdquo;
-                  </p>
-                </blockquote>
-                <div className="flex flex-wrap gap-2">
-                  {founderInfo.achievements.map((a) => (
-                    <span key={a} className="px-3 py-1.5 rounded-full bg-white/10 text-xs font-inter">
-                      {a}
-                    </span>
-                  ))}
+      <section className="section-padding px-3 sm:px-5">
+        <div className="container-premium grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <div className="surface-dark relative overflow-hidden p-8 sm:p-10">
+            <div className="absolute inset-0">
+              <Image src={founderInfo.image} alt="" fill sizes="100vw" className="object-cover opacity-20" />
+              <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(2,6,23,0.95),rgba(15,23,42,0.78),rgba(30,64,175,0.34))]" />
+            </div>
+            <div className="relative z-10">
+              <span className="section-label-dark">Founder</span>
+              <h2 className="text-3xl font-bold text-white sm:text-4xl">{founderInfo.name}</h2>
+              <p className="mt-2 text-emerald-200">{founderInfo.title}</p>
+              <p className="mt-6 text-base leading-8 text-slate-200">{founderInfo.fullBio}</p>
+              <blockquote className="mt-6 border-l-2 border-emerald-300 pl-4 text-lg italic leading-8 text-white/90">
+                “{founderInfo.quote}”
+              </blockquote>
+            </div>
+          </div>
+          <div>
+            <SectionHeading
+              eyebrow="Leadership &amp; Vision"
+              title="Grounded in experience, driven by service"
+              description={founderInfo.description}
+            />
+            <div className="grid gap-3">
+              {founderInfo.achievements.map((achievement) => (
+                <div key={achievement} className="surface-card flex items-start gap-3 p-4">
+                  <div className="mt-1 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">✓</div>
+                  <p className="text-sm leading-7 text-slate-600">{achievement}</p>
                 </div>
-              </div>
-              <div>
-                <ImagePlaceholder label="Founder - Kalam Singh Bisht" aspectRatio="portrait" />
-              </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="section-padding bg-white">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h3 className="text-2xl md:text-3xl font-bold font-poppins text-gray-900 mb-4">
-            Ready to Be Part of Our Story?
-          </h3>
-          <p className="text-gray-500 mb-8 font-inter max-w-xl mx-auto">
-            Join us as a volunteer, donor, or partner and help build futures without limits.
-          </p>
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Link
-              href="/volunteer-registration"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary-500 text-white font-semibold text-sm hover:bg-primary-600 transition-all duration-300 shadow-sm"
-            >
-              Become a Volunteer
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-            <Link
-              href="/donate"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-nature-500 text-white font-semibold text-sm hover:bg-nature-600 transition-all duration-300 shadow-sm"
-            >
-              Donate Now
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
+      <section className="section-padding bg-white/70 px-3 sm:px-5">
+        <div className="container-premium">
+          <SectionHeading eyebrow="Core Values" title="The principles behind every initiative" centered />
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {coreValues.map((value) => (
+              <div key={value.title} className="surface-card p-6 text-center">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-400/15 to-blue-500/15 text-3xl">
+                  {value.icon}
+                </div>
+                <h3 className="mt-5 text-lg font-semibold text-slate-950">{value.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{value.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
-    </>
+
+      <CTASection
+        title="Ready to become part of our story?"
+        description="Join the foundation as a volunteer, donor, or supporter and help create meaningful change across Himalayan communities."
+        primary={{ label: "Become a Volunteer", href: "/volunteer-registration" }}
+        secondary={{ label: "Donate Now", href: "/donate" }}
+        image={founderInfo.image}
+      />
+    </div>
   );
 }

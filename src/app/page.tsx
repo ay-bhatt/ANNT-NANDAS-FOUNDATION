@@ -1,46 +1,63 @@
-"use client";
+import { getAllData } from "@/lib/api";
+import { CTASection } from "@/components/site/SectionBlocks";
+import HeroSection from "@/components/sections/HeroSection";
+import FeatureCardsSection from "@/components/sections/FeatureCardsSection";
+import AboutStatsSection from "@/components/sections/AboutStatsSection";
+import StoryJourneySection from "@/components/sections/StoryJourneySection";
+import ImpactStatsSection from "@/components/sections/ImpactStatsSection";
+import EventsTestimonialsSection from "@/components/sections/EventsTestimonialsSection";
+import NewsGalleryPreviewSection from "@/components/sections/NewsGalleryPreviewSection";
+import HomeDonationSection from "@/components/sections/HomeDonationSection";
 
-import { useCallback, useEffect, useState } from "react";
-import LoadingScreen from "@/components/LoadingScreen";
-import Hero from "@/components/Hero";
-import AboutSection from "@/components/AboutSection";
-import OurWorkSection from "@/components/OurWorkSection";
-import ImpactSection from "@/components/ImpactSection";
-import EventsSection from "@/components/EventsSection";
-import DonationStrip from "@/components/DonationStrip";
-import GallerySection from "@/components/GallerySection";
-import NewsSection from "@/components/NewsSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
-import DonateSection from "@/components/DonateSection";
-import ContactSection from "@/components/ContactSection";
+export default async function Home() {
+  const data = await getAllData();
 
-export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-  const handleLoadingComplete = useCallback(() => {
-    setIsLoading(false);
-  }, []);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setIsLoading(false), 4000);
-    return () => clearTimeout(timeout);
-  }, []);
+  const {
+    heroContent,
+    impactStats,
+    featureCards,
+    founderInfo,
+    storyChapters,
+    upcomingEvents,
+    testimonials,
+    newsItems,
+    collageImages,
+    homeVisualGrid,
+    donationInfo,
+  } = data;
 
   return (
     <>
-      {isLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
-      <div className={isLoading ? "pointer-events-none opacity-0" : "transition-opacity duration-700 opacity-100"}>
-        <Hero />
-        <AboutSection />
-        <OurWorkSection />
-        <ImpactSection />
-        <EventsSection />
-        <DonationStrip />
-        <GallerySection />
-        <NewsSection />
-        <TestimonialsSection />
-        <DonateSection />
-        <ContactSection />
-      </div>
+      <HeroSection heroContent={heroContent} impactStats={impactStats} />
+      <FeatureCardsSection featureCards={featureCards} />
+      <AboutStatsSection
+        heroContent={heroContent}
+        founderInfo={founderInfo}
+        impactStats={impactStats}
+        collageImages={collageImages}
+      />
+      <StoryJourneySection
+        storyChapters={storyChapters}
+        homeVisualGrid={homeVisualGrid}
+      />
+      <ImpactStatsSection impactStats={impactStats} />
+      <EventsTestimonialsSection
+        upcomingEvents={upcomingEvents}
+        testimonials={testimonials}
+      />
+      <NewsGalleryPreviewSection
+        newsItems={newsItems}
+        collageImages={collageImages}
+        homeVisualGrid={homeVisualGrid}
+      />
+      <HomeDonationSection donation={donationInfo} />
+      <CTASection
+        title="Help us build brighter futures in the Himalayas"
+        description="Whether you volunteer, donate, or collaborate, your support helps create meaningful long-term change."
+        primary={{ label: "Become a Volunteer", href: "/volunteer-registration" }}
+        secondary={{ label: "Donate Today", href: "/donate" }}
+        image={heroContent.image}
+      />
     </>
   );
 }

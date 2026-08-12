@@ -1,124 +1,180 @@
-﻿"use client";
-
-import Link from "next/link";
-import Image from "next/image"; // Import Next.js Image
-import { siteConfig, navigationItems } from "@/lib/data";
-
-// Import your new logo
+﻿import Link from "next/link";
+import Image from "next/image";
 import logoImg from "@/assets/logo.jpeg";
+import type { SiteConfig, NavItem } from "@/lib/types";
+import type { ImpactArea } from "@/lib/types";
 
 const supportLinks = [
   { label: "Donate", href: "/donate" },
   { label: "Volunteer", href: "/volunteer-registration" },
   { label: "Partner With Us", href: "/contact" },
-  { label: "FAQ", href: "/contact" },
+  { label: "General Registration", href: "/general-registration" },
 ];
 
-const programs = [
-  "Sports",
-  "Education",
-  "Healthcare",
-  "Environment",
-  "Women Empowerment",
-  "Livelihood",
-];
+interface FooterProps {
+  siteConfig: SiteConfig;
+  navigationItems: NavItem[];
+  impactAreas: ImpactArea[];
+}
 
-const socialLinks = [
-  { name: "Email", icon: "M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" },
-  { name: "Facebook", icon: "M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" },
-  { name: "Instagram", icon: "M16 4H8a4 4 0 00-4 4v8a4 4 0 004 4h8a4 4 0 004-4V8a4 4 0 00-4-4zm-4 11a3 3 0 110-6 3 3 0 010 6zm3.5-6.5a1 1 0 110-2 1 1 0 010 2z" },
-  { name: "YouTube", icon: "M23.498 6.186a3.016 3.016 0 00-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 00.502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 002.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 002.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" },
-];
-
-export default function Footer() {
+export default function Footer({ siteConfig, navigationItems, impactAreas }: FooterProps) {
   return (
-    <footer className="bg-slate-950 text-slate-200">
-      <div className="container-premium py-16">
-        <div className="grid gap-10 xl:grid-cols-[1.5fr_1fr_1fr_1fr]">
-          <div>
-            <Link href="/" className="inline-flex items-center gap-3 mb-5">
-              {/* Logo Container updated with Image component */}
-              <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-white shadow-lg overflow-hidden relative">
+    <footer className="mt-16 bg-slate-950 text-slate-200 border-t border-white/10">
+      <div className="container-premium py-14">
+        {/* --- MAIN GRID --- */}
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+          
+          {/* COLUMN 1: BRAND & CONTACT */}
+          <div className="space-y-4">
+            <Link href="/" className="inline-flex items-center gap-3 group">
+              <div className="relative h-14 w-14 overflow-hidden rounded-2xl border border-white/15 bg-white shrink-0 group-hover:scale-105 transition-transform">
                 <Image
                   src={logoImg}
-                  alt="Annt Nandas Foundation Logo"
-                  className="w-full h-full object-cover"
-                  placeholder="blur" // Optional: gives a nice blur-up effect
+                  alt="ANNT NANDAS FOUNDATION logo"
+                  fill
+                  sizes="56px"
+                  className="object-cover"
                 />
               </div>
               <div>
-                <p className="text-sm font-bold font-poppins text-white leading-tight">अनंत नन्दा फाउंडेशन</p>
-                <p className="text-[10px] text-slate-400 font-medium tracking-widest uppercase">ANNT NANDAS FOUNDATION</p>
+                <p className="text-base font-bold uppercase tracking-[0.08em] text-white">
+                  ANNT NANDAS
+                </p>
+                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-success-400">
+                  Foundation
+                </p>
               </div>
             </Link>
-            <p className="max-w-md text-sm leading-7 text-slate-400 font-inter">
-              From the Heart of the Himalayas, Building Futures Without Limits. Empowering communities through sports, education, healthcare, and sustainable development.
+
+            <p className="max-w-sm text-sm leading-relaxed text-slate-400">
+              {siteConfig.tagline}. We support children and communities through education, health, environment, sports, and opportunity.
             </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={siteConfig.social[social.name.toLowerCase() as keyof typeof siteConfig.social]}
-                  className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/5 text-slate-200 transition hover:bg-primary-500 hover:text-white"
-                  aria-label={social.name}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d={social.icon} />
-                  </svg>
-                </a>
-              ))}
+
+            {/* Contact Info */}
+            <div className="space-y-1.5 pt-2 text-sm text-slate-300">
+              <p className="flex items-center gap-2">
+                <span className="text-success-400">✉</span> {siteConfig.email}
+              </p>
+              <p className="flex items-center gap-2">
+                <span className="text-success-400">📞</span> {siteConfig.phone1}
+              </p>
+              <p className="flex items-center gap-2 text-slate-400 text-xs">
+                <span className="text-success-400">📍</span> {siteConfig.address}
+              </p>
+            </div>
+
+            {/* Social Media Links */}
+            <div className="pt-2 flex items-center gap-3">
+              {/* Instagram */}
+              <a
+                href="https://www.instagram.com/anntnandasfoundation/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-success-600 hover:text-white text-slate-300 transition-all"
+              >
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+              </a>
+
+              {/* YouTube */}
+              <a
+                href="https://www.youtube.com/@ANNTNANDASFOUNDATION"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+                className="p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-success-600 hover:text-white text-slate-300 transition-all"
+              >
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z" />
+                </svg>
+              </a>
+
+              {/* Facebook */}
+              <a
+                href="https://www.facebook.com/anita.bisht.549436/videos/anant-nanda-foundation-ki-team/1159831703008107/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+                className="p-2.5 rounded-full bg-white/5 border border-white/10 hover:bg-success-600 hover:text-white text-slate-300 transition-all"
+              >
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.5 5H18V0h-3.808C10.592 0 9 1.583 9 4.615V8z" />
+                </svg>
+              </a>
             </div>
           </div>
 
+          {/* COLUMN 2: NAVIGATE */}
           <div>
-            <h4 className="text-sm font-bold text-white mb-5 font-poppins">Quick Links</h4>
-            <ul className="space-y-3 text-sm text-slate-400 font-inter">
-              {navigationItems.slice(1, 7).map((link) => (
-                <li key={link.href}>
-                  <Link href={link.href} className="transition hover:text-white">
-                    {link.label}
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-white">
+              Navigate
+            </h4>
+            <ul className="space-y-2.5 text-sm text-slate-400">
+              {navigationItems.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className="transition hover:text-success-400 hover:underline"
+                  >
+                    {item.label}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
+          {/* COLUMN 3: PROGRAMS */}
           <div>
-            <h4 className="text-sm font-bold text-white mb-5 font-poppins">Programs</h4>
-            <ul className="space-y-3 text-sm text-slate-400 font-inter">
-              {programs.map((program) => (
-                <li key={program}>
-                  <Link href="/programs" className="transition hover:text-white">
-                    {program}
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-white">
+              Programs
+            </h4>
+            <ul className="space-y-2.5 text-sm text-slate-400">
+              {impactAreas.map((program) => (
+                <li key={program.title}>
+                  <Link
+                    href="/programs"
+                    className="transition hover:text-success-400 hover:underline"
+                  >
+                    {program.title}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
+          {/* COLUMN 4: GET INVOLVED */}
           <div>
-            <h4 className="text-sm font-bold text-white mb-5 font-poppins">Support</h4>
-            <ul className="space-y-3 text-sm text-slate-400 font-inter">
+            <h4 className="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-white">
+              Get Involved
+            </h4>
+            <ul className="space-y-2.5 text-sm text-slate-400">
               {supportLinks.map((link) => (
-                <li key={link.label}>
-                  <Link href={link.href} className="transition hover:text-white">
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="transition hover:text-success-400 hover:underline"
+                  >
                     {link.label}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
-        </div>
-      </div>
 
-      <div className="border-t border-white/10">
-        <div className="container-premium flex flex-col gap-4 py-6 text-sm text-slate-500 md:flex-row md:items-center md:justify-between">
+        </div>
+
+        {/* --- BOTTOM BAR --- */}
+        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-sm text-slate-500 md:flex-row md:items-center md:justify-between">
           <p>© {new Date().getFullYear()} {siteConfig.name}. All Rights Reserved.</p>
-          <div className="flex flex-wrap gap-4">
-            <Link href="#" className="transition hover:text-white">Privacy Policy</Link>
-            <Link href="#" className="transition hover:text-white">Terms & Conditions</Link>
+          <div className="flex flex-wrap gap-6 text-xs text-slate-400">
+            <Link href="/contact" className="transition hover:text-white">
+              Privacy Policy
+            </Link>
+            <Link href="/contact" className="transition hover:text-white">
+              Terms & Conditions
+            </Link>
           </div>
         </div>
       </div>

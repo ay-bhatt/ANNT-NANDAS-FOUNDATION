@@ -4,9 +4,9 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import communityImg from "@/assets/gallery/gallery-014.jpg.jpeg";
-import educationImg from "@/assets/gallery/gallery-015.jpg.jpeg";
-import sportsImg from "@/assets/gallery/gallery-016.jpg.jpeg";
-import plantationImg from "@/assets/gallery/gallery-017.jpg.jpeg";
+import educationImg from "@/assets/edu/gallery-032.jpg.jpeg";
+import sportsImg from "@/assets/gallery/gallery-015.jpg.jpeg";
+import plantationImg from "@/assets/environment/gallery-049.jpg.jpeg";
 
 const features = [
   {
@@ -99,7 +99,7 @@ export default function AboutSection() {
               through education, sports, environment, health and self development.
             </p>
             <p className="text-gray-600 leading-relaxed mb-8 font-inter">
-              Founded on Kalam Singh Bisht's vision, we started with 2 bicycles and 12 children
+              Founded on Kalam Singh Bisht&apos;s vision, we started with 2 bicycles and 12 children
               in Mundoli, Chamoli. Today, we reach over 1,300 children across 48+ villages,
               creating pathways towards self-reliance and excellence.
             </p>

@@ -1,113 +1,82 @@
-"use client";
-
-import { motion } from "framer-motion";
+import Image from "next/image";
+import type { Metadata } from "next";
 import Link from "next/link";
-import ImagePlaceholder from "@/components/ui/ImagePlaceholder";
+import { getAllData } from "@/lib/api";
 
-const programs = [
-  {
-    title: "Sports Development",
-    icon: "🏆",
-    image: "Sports Training",
-    points: ["Athletics & Marathon Training", "Cycling & Mountaineering", "Football & Traditional Sports", "Sports Equipment Distribution", "National Level Competition Prep"],
-  },
-  {
-    title: "Education",
-    icon: "📚",
-    image: "Education Program",
-    points: ["Digital Literacy Classes", "Spoken English Training", "Computer Education", "Career Counselling", "Exam Preparation Support"],
-  },
-  {
-    title: "Healthcare",
-    icon: "❤️",
-    image: "Health Camp",
-    points: ["Free Health Check-up Camps", "Nutrition & Hygiene Awareness", "Women's Health Programs", "Mental Health Support", "Medical Camp Organization"],
-  },
-  {
-    title: "Environment",
-    icon: "🌱",
-    image: "Environment",
-    points: ["Tree Plantation Drives", "Plastic-Free Campaigns", "Waste Management Training", "Climate Change Awareness", "Forest Conservation"],
-  },
-  {
-    title: "Women Empowerment",
-    icon: "👩",
-    image: "Women Empowerment",
-    points: ["Self-Defence Training", "Leadership Development", "Skill Building Workshops", "Gender Equality Campaigns", "Entrepreneurship Support"],
-  },
-  {
-    title: "Agriculture & Livelihood",
-    icon: "🌾",
-    image: "Livelihood",
-    points: ["Organic Farming Promotion", "Kitchen Garden Initiative", "Skill Training Programs", "Employment Readiness", "Rural Enterprise Development"],
-  },
-];
+export const metadata: Metadata = {
+  title: "Our Programs | ANNT NANDAS FOUNDATION",
+  description: "Explore grassroots programs in education, healthcare, sports, environment, women’s empowerment, and livelihoods.",
+  alternates: { canonical: "/programs" },
+};
+import { CTASection, PageHero, SectionHeading } from "@/components/site/SectionBlocks";
 
-export default function ProgramsPage() {
+export default async function ProgramsPage() {
+  const data = await getAllData();
+  const { impactAreas, heroContent } = data;
   return (
-    <>
-      <section className="relative bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 text-white py-24 md:py-32">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-primary-200 font-semibold text-sm tracking-wider uppercase mb-4 font-inter">Our Programs</p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-poppins leading-tight mb-4">
-            Comprehensive{" "}
-            <span className="text-nature-400">Development</span>
-          </h1>
-          <p className="text-primary-200 max-w-2xl mx-auto font-inter text-lg">
-            Holistic programs designed to empower individuals and communities.
-          </p>
-        </div>
-      </section>
+    <div className="pb-8">
+      <PageHero
+        eyebrow="Our Programs"
+        title="Comprehensive development, deeply rooted in community"
+        description="Our programmes are designed to discover potential, strengthen opportunity, and support long-term self-reliance across Himalayan communities."
+        image={heroContent.supportingVisuals[0]}
+        actions={[
+          { label: "Support Our Programs", href: "/donate" },
+          { label: "Join as Volunteer", href: "/volunteer-registration", variant: "secondary" },
+        ]}
+      />
 
-      <section className="section-padding bg-white">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-16">
-            {programs.map((program, i) => (
-              <motion.div
-                key={program.title}
-                className={`flex flex-col ${i % 2 === 0 ? "lg:flex-row" : "lg:flex-row-reverse"} gap-8 lg:gap-12 items-center`}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-              >
-                <div className="lg:w-1/2">
-                  <ImagePlaceholder label={program.image} aspectRatio="landscape" />
-                </div>
-                <div className="lg:w-1/2">
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="text-3xl">{program.icon}</span>
-                    <h2 className="text-2xl md:text-3xl font-bold font-poppins text-gray-900">{program.title}</h2>
+      <section className="section-padding px-3 sm:px-5">
+        <div className="container-premium">
+          <SectionHeading
+            eyebrow="Programme Areas"
+            title="Focused initiatives for everyday change"
+            description="Each programme area reflects a practical path to empowerment—through learning, health, participation, environment, and confidence."
+            centered
+          />
+          <div className="space-y-8">
+            {impactAreas.map((program, index) => (
+              <div key={program.title} className="surface-card overflow-hidden">
+                <div className={`grid gap-0 lg:grid-cols-2 ${index % 2 === 1 ? "lg:[&>*:first-child]:order-2" : ""}`}>
+                  <div className="relative min-h-[320px] lg:min-h-full">
+                    <Image src={program.image} alt={program.title} fill sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw" className="object-cover" />
+                    <div className={`absolute inset-0 bg-gradient-to-tr ${program.color} opacity-20`} />
                   </div>
-                  <ul className="space-y-3">
-                    {program.points.map((point) => (
-                      <li key={point} className="flex items-center gap-3 text-gray-600 font-inter">
-                        <svg className="w-5 h-5 text-nature-500 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        {point}
-                      </li>
-                    ))}
-                  </ul>
+                  <div className="p-6 sm:p-8 lg:p-10">
+                    <div className="mb-4 flex items-center gap-3">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-400/15 to-blue-500/15 text-3xl">
+                        {program.icon}
+                      </div>
+                      <h2 className="text-2xl font-bold text-slate-950 sm:text-3xl">{program.title}</h2>
+                    </div>
+                    <p className="text-base leading-8 text-slate-600">{program.description}</p>
+                    <ul className="mt-6 grid gap-3">
+                      {program.points.map((point) => (
+                        <li key={point} className="flex gap-3 rounded-2xl border border-slate-200/80 bg-slate-50/70 p-4 text-sm leading-7 text-slate-700">
+                          <span className="mt-1 text-emerald-600">✓</span>
+                          <span>{point}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="mt-6 flex flex-wrap gap-3">
+                      <Link href="/contact" className="btn-outline-dark">Partner with us</Link>
+                      <Link href="/donate" className="btn-primary">Support this work</Link>
+                    </div>
+                  </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="section-padding bg-gradient-to-br from-primary-800 to-primary-900 text-white">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold font-poppins mb-4">Support Our Programs</h2>
-          <p className="text-primary-200 mb-8 max-w-xl mx-auto font-inter">Your contribution helps us run these programs effectively.</p>
-          <Link href="/donate" className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-nature-500 text-white font-semibold text-sm hover:bg-nature-600 transition-all duration-300 shadow-sm">
-            Donate Now
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </Link>
-        </div>
-      </section>
-    </>
+      <CTASection
+        title="Your support keeps these programmes moving"
+        description="Every contribution helps expand access to learning, health, opportunity, and local leadership across the communities we serve."
+        primary={{ label: "Donate Now", href: "/donate" }}
+        secondary={{ label: "Contact the Team", href: "/contact" }}
+        image={heroContent.supportingVisuals[1]}
+      />
+    </div>
   );
 }

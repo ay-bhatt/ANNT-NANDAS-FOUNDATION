@@ -1,124 +1,99 @@
-"use client";
+import Image from "next/image";
+import type { Metadata } from "next";
+import { getAllData } from "@/lib/api";
+import { CTASection, PageHero, SectionHeading } from "@/components/site/SectionBlocks";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+export const metadata: Metadata = {
+  title: "Donate | ANNT NANDAS FOUNDATION",
+  description: "Support verified grassroots programs through the foundation’s UPI donation channel.",
+  alternates: { canonical: "/donate" },
+};
 
-const amounts = [500, 1000, 2000, 5000];
-
-export default function DonatePage() {
-  const [selectedAmount, setSelectedAmount] = useState<number | null>(null);
-  const [customAmount, setCustomAmount] = useState("");
-
+export default async function DonatePage() {
+  const data = await getAllData();
+  const { donationImpacts, donationInfo, donationAmounts, heroContent } = data;
   return (
-    <>
-      <section className="relative bg-gradient-to-br from-primary-800 via-primary-700 to-primary-900 text-white py-24 md:py-32">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-primary-200 font-semibold text-sm tracking-wider uppercase mb-4 font-inter">Support Us</p>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold font-poppins leading-tight mb-4">
-            Make a{" "}
-            <span className="text-nature-400">Donation</span>
-          </h1>
-          <p className="text-primary-200 max-w-2xl mx-auto font-inter text-lg">
-            Your contribution helps us transform lives across Himalayan communities.
-          </p>
-        </div>
-      </section>
+    <div className="pb-8">
+      <PageHero
+        eyebrow="Support Us"
+        title="Make a donation that reaches real communities"
+        description="Your contribution supports grassroots programmes across education, healthcare, environment, sports, youth development, and women empowerment."
+        image={heroContent.image}
+        actions={[
+          { label: "Contact for Partnership", href: "/contact" },
+          { label: "Become a Volunteer", href: "/volunteer-registration", variant: "secondary" },
+        ]}
+      />
 
-      <section className="section-padding bg-white">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
-              {/* QR Code Section */}
-              <motion.div
-                className="text-center"
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-              >
-                <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 inline-block">
-                  <div className="w-48 h-48 mx-auto bg-gray-100 rounded-xl flex items-center justify-center mb-4">
-                    <svg className="w-32 h-32 text-gray-300" viewBox="0 0 100 100" fill="currentColor">
-                      <rect x="5" y="5" width="20" height="20" rx="2" />
-                      <rect x="75" y="5" width="20" height="20" rx="2" />
-                      <rect x="5" y="75" width="20" height="20" rx="2" />
-                      <rect x="75" y="75" width="20" height="20" rx="2" />
-                      <rect x="30" y="5" width="10" height="10" />
-                      <rect x="50" y="5" width="10" height="10" />
-                      <rect x="5" y="30" width="10" height="10" />
-                      <rect x="5" y="50" width="10" height="10" />
-                      <rect x="75" y="30" width="10" height="10" />
-                      <rect x="75" y="50" width="10" height="10" />
-                      <rect x="30" y="75" width="10" height="10" />
-                      <rect x="50" y="75" width="10" height="10" />
-                      <rect x="30" y="30" width="15" height="15" rx="1" />
-                      <rect x="55" y="55" width="15" height="15" rx="1" />
-                      <rect x="55" y="30" width="15" height="15" rx="1" />
-                      <rect x="30" y="55" width="15" height="15" rx="1" />
-                    </svg>
-                  </div>
-                  <p className="text-sm font-bold font-poppins text-gray-800">Scan to Donate</p>
-                  <p className="text-xs text-gray-400 mt-1">UPI: annt-1@upi</p>
-                </div>
-                <div className="mt-4 p-4 bg-gray-50 rounded-xl inline-block">
-                  <p className="text-xs text-gray-500 font-inter">UPI ID: <span className="font-semibold text-gray-800">annt-1@upi</span></p>
-                </div>
-                <div className="mt-4 text-left">
-                  <h4 className="text-sm font-bold font-poppins text-gray-800 mb-2">Instructions:</h4>
-                  <ol className="text-xs text-gray-500 font-inter space-y-1 list-decimal list-inside">
-                    <li>Open any UPI app (Google Pay, PhonePe, Paytm)</li>
-                    <li>Scan the QR code or enter UPI ID</li>
-                    <li>Enter your donation amount</li>
-                    <li>Complete the payment</li>
-                    <li>Share transaction ID with us for receipt</li>
-                  </ol>
-                </div>
-              </motion.div>
+      <section className="section-padding px-3 sm:px-5">
+        <div className="container-premium grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <div className="surface-card p-6 text-center sm:p-8">
+            <SectionHeading
+              eyebrow="UPI Donation"
+              title={donationInfo.title}
+              description={donationInfo.description}
+            />
+            <div className="mx-auto max-w-xs rounded-[30px] border border-slate-200 bg-white p-4 shadow-[0_24px_60px_rgba(15,23,42,0.10)]">
+              <div className="relative mx-auto aspect-square overflow-hidden rounded-[24px] bg-slate-50">
+                <Image
+                  src={donationInfo.qrImage}
+                  alt={`UPI donation QR code for ${donationInfo.upiId}`}
+                  fill
+                  sizes="320px"
+                  className="object-contain p-4"
+                />
+              </div>
+              <p className="mt-4 text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700">UPI ID</p>
+              <p className="mt-2 text-lg font-bold text-slate-950">{donationInfo.upiId}</p>
+            </div>
+            <ol className="mt-6 space-y-3 text-left text-sm leading-7 text-slate-600">
+              {donationInfo.instructions.map((instruction, index) => (
+                <li key={instruction} className="surface-card flex gap-3 p-4 shadow-none">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-700">{index + 1}</span>
+                  <span>{instruction}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
 
-              {/* Amount Section */}
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-              >
-                <h3 className="text-lg font-bold font-poppins text-gray-900 mb-6">Select Donation Amount</h3>
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  {amounts.map((amount) => (
-                    <button
-                      key={amount}
-                      onClick={() => { setSelectedAmount(amount); setCustomAmount(""); }}
-                      className={`py-4 px-4 rounded-xl text-center font-semibold font-poppins transition-all duration-200 border-2 ${
-                        selectedAmount === amount
-                          ? "border-primary-500 bg-primary-50 text-primary-600"
-                          : "border-gray-200 bg-white text-gray-700 hover:border-primary-300"
-                      }`}
-                    >
-                      <span className="text-lg">₹{amount.toLocaleString()}</span>
-                    </button>
-                  ))}
+          <div>
+            <SectionHeading
+              eyebrow="Give With Purpose"
+              title="Every amount can support meaningful change"
+              description="Use the QR code to donate directly through your UPI app. Below are sample giving levels and their likely impact."
+            />
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {donationImpacts.map((item) => (
+                <div key={item.amount} className="surface-card p-5">
+                  <p className="text-3xl font-bold tracking-[-0.03em] text-slate-950">₹{item.amount.toLocaleString()}</p>
+                  <p className="mt-3 text-sm leading-7 text-slate-600">{item.impact}</p>
                 </div>
-                <div className="mb-6">
-                  <label className="block text-sm font-medium text-gray-700 mb-2 font-inter">Custom Amount</label>
-                  <div className="relative">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-semibold">₹</span>
-                    <input
-                      type="number"
-                      placeholder="Enter amount"
-                      value={customAmount}
-                      onChange={(e) => { setCustomAmount(e.target.value); setSelectedAmount(null); }}
-                      className="w-full pl-8 pr-4 py-3 rounded-xl border border-gray-200 text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500/50 font-inter"
-                    />
-                  </div>
-                </div>
-                <button className="w-full py-3.5 rounded-xl bg-nature-500 text-white font-semibold text-sm hover:bg-nature-600 transition-all duration-200 shadow-sm">
-                  Donate ₹{selectedAmount ? selectedAmount.toLocaleString() : customAmount || "0"} via UPI
-                </button>
-                <p className="text-xs text-gray-400 mt-3 text-center font-inter">You will be redirected to your UPI app.</p>
-              </motion.div>
+              ))}
+            </div>
+            <div className="surface-card mt-6 p-6 sm:p-8">
+              <h3 className="text-xl font-semibold text-slate-950">Suggested donation levels</h3>
+              <div className="mt-5 flex flex-wrap gap-3">
+                {donationAmounts.map((amount) => (
+                  <span key={amount} className="rounded-full border border-slate-200 bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700">
+                    ₹{amount.toLocaleString()}
+                  </span>
+                ))}
+              </div>
+              <p className="mt-5 text-sm leading-7 text-slate-600">
+                If you need receipts, partnership information, or support for institutional giving, please reach out through the contact page after completing your contribution.
+              </p>
             </div>
           </div>
         </div>
       </section>
-    </>
+
+      <CTASection
+        title="Support the mission beyond a one-time donation"
+        description="You can also volunteer, partner with the team, or help expand the foundation’s reach in your network and community."
+        primary={{ label: "Contact the Team", href: "/contact" }}
+        secondary={{ label: "Volunteer Registration", href: "/volunteer-registration" }}
+        image={heroContent.supportingVisuals[0]}
+      />
+    </div>
   );
 }
