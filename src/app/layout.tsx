@@ -68,7 +68,7 @@ export default async function RootLayout({
       <head>
         <meta name="theme-color" content="#0f172a" />
       </head>
-      <body className="min-h-screen bg-slate-50 text-slate-950 antialiased">
+      <body suppressHydrationWarning className="min-h-screen bg-slate-50 text-slate-950 antialiased">
         <AppShell>
           <Navbar navigationItems={data.navigationItems} />
           <main id="main-content" className="relative">{children}</main>
