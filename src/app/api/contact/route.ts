@@ -54,6 +54,25 @@ export async function POST(request: Request) {
       // keep raw text
     }
 
+    // If upstream is not OK, store the submission locally as a fallback
+    if (!res.ok) {
+      try {
+        const fs = await import("fs");
+        const path = await import("path");
+        const outDir = path.resolve(process.cwd(), "./.contact_fallback");
+        if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+        const filename = path.join(outDir, `${Date.now()}.json`);
+        fs.writeFileSync(filename, JSON.stringify({ received: body, upstreamStatus: res.status, upstreamBody: parsed }, null, 2));
+        console.warn(`/api/contact: upstream returned ${res.status}; stored submission to ${filename}`);
+        return NextResponse.json(
+          { success: true, status: 202, note: "stored_locally", file: filename },
+          { status: 202 }
+        );
+      } catch (e) {
+        console.error("Failed to write fallback file:", e);
+      }
+    }
+
     return NextResponse.json(
       {
         success: res.ok,
