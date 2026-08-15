@@ -6,12 +6,16 @@ export default function ContactForm() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setStatus("loading");
-    setErrorMessage("");
+const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
+  const form = e.currentTarget;
+
+  setStatus("loading");
+  setErrorMessage("");
+
+  const formData = new FormData(form);
+
     const data = {
       name: String(formData.get("name") ?? ""),
       email: String(formData.get("email") ?? ""),
@@ -19,27 +23,33 @@ export default function ContactForm() {
       message: String(formData.get("message") ?? ""),
     };
 
-    try {
-      const response = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+try {
+  const response = await fetch("/api/contact", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 
-      const result = (await response.json()) as { success?: boolean; message?: string };
+  const text = await response.text();
 
-      if (result.success) {
-        setStatus("success");
-        e.currentTarget.reset();
-        return;
-      }
+  console.log("API STATUS:", response.status);
+  console.log("API RESPONSE:", text);
 
-      setStatus("error");
-      setErrorMessage(result.message || "Something went wrong. Please try again.");
-    } catch {
-      setStatus("error");
-      setErrorMessage("Network error. Please try again later.");
-    }
+  if (response.ok) {
+    setStatus("success");
+    form.reset();
+    return;
+  }
+
+  setStatus("error");
+  setErrorMessage(text || "Something went wrong. Please try again.");
+} catch (error) {
+  console.error("CONTACT ERROR:", error);
+  setStatus("error");
+  setErrorMessage("Network error. Please try again later.");
+}
   };
 
   if (status === "success") {

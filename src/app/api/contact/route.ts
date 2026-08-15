@@ -1,154 +1,122 @@
 import { NextResponse } from "next/server";
-
-type JsonValue =
-  | string
-  | number
-  | boolean
-  | null
-  | JsonValue[]
-  | { [key: string]: JsonValue };
+import nodemailer from "nodemailer";
 
 export async function POST(request: Request) {
   try {
-    const text = await request.text();
+    const data = await request.json();
 
-    let body: JsonValue | string | undefined;
+    const { name, email, subject, message } = data;
 
-    // Try JSON first.
-    try {
-      body = JSON.parse(text) as JsonValue;
-    } catch {
-      const trimmed = text.trim();
-
-      // Try JSON wrapped in single quotes.
-      if (trimmed.startsWith("'") && trimmed.endsWith("'")) {
-        try {
-          body = JSON.parse(
-            trimmed.slice(1, -1).replaceAll("'", '"')
-          ) as JsonValue;
-        } catch {
-          // Continue to URL-encoded parsing.
-        }
-      }
-
-      // Try URL-encoded form data.
-      if (body === undefined) {
-        try {
-          const params = new URLSearchParams(text);
-
-          if ([...params].length > 0) {
-            body = Object.fromEntries(params);
-          }
-        } catch {
-          // Continue to raw text.
-        }
-      }
-
-      // If nothing else worked, keep the raw text.
-      if (body === undefined) {
-        body = text;
-      }
-    }
-
-    // Forward the request to the external contact endpoint.
-    const res = await fetch(
-      "https://anntnandasfoundation.com/contact.php",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    if (!name || !email || !subject || !message) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Please fill in all required fields.",
         },
-        body: JSON.stringify(body),
-      }
-    );
-
-    const upstreamText = await res.text();
-
-    // Try to parse upstream JSON.
-    let parsed: JsonValue | string = upstreamText;
-
-    try {
-      parsed = JSON.parse(upstreamText) as JsonValue;
-    } catch {
-      // Keep raw text.
+        { status: 400 }
+      );
     }
 
-    // If upstream is not OK, store the submission locally as a fallback.
-    if (!res.ok) {
-      try {
-        const fs = await import("fs");
-        const path = await import("path");
-
-        const outDir = path.resolve(
-          process.cwd(),
-          "./.contact_fallback"
-        );
-
-        if (!fs.existsSync(outDir)) {
-          fs.mkdirSync(outDir, { recursive: true });
-        }
-
-        const filename = path.join(
-          outDir,
-          `${Date.now()}.json`
-        );
-
-        fs.writeFileSync(
-          filename,
-          JSON.stringify(
-            {
-              received: body,
-              upstreamStatus: res.status,
-              upstreamBody: parsed,
-            },
-            null,
-            2
-          )
-        );
-
-        console.warn(
-          `/api/contact: upstream returned ${res.status}; stored submission to ${filename}`
-        );
-
-        return NextResponse.json(
-          {
-            success: true,
-            status: 202,
-            note: "stored_locally",
-            file: filename,
-          },
-          { status: 202 }
-        );
-      } catch (error) {
-        console.error(
-          "Failed to write fallback file:",
-          error
-        );
-      }
-    }
-
-    return NextResponse.json(
-      {
-        success: res.ok,
-        status: res.status,
-        data: parsed,
+    const transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT || 465),
+      secure: process.env.SMTP_SECURE === "true",
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
-      { status: res.ok ? 200 : 502 }
-    );
-  } catch (error: unknown) {
-    const message =
-      error instanceof Error
-        ? error.message
-        : "Proxy error";
+    });
 
-    console.error("/api/contact proxy error:", error);
+    await transporter.sendMail({
+      from: `"ANNT NANDAS FOUNDATION Website" <${process.env.SMTP_USER}>`,
+      to: process.env.ADMIN_EMAIL,
+      replyTo: email,
+      subject: `Contact Form: ${subject}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 700px; margin: auto; color: #1e293b;">
 
-    return NextResponse.json(
-      {
-        success: false,
-        message,
-      },
-      { status: 500 }
-    );
-  }
+          <div style="
+            background: linear-gradient(135deg, #2563eb, #16a34a);
+            padding: 25px;
+            border-radius: 12px 12px 0 0;
+          ">
+            <h1 style="color: white; margin: 0;">
+              New Contact Message
+            </h1>
+
+            <p style="color: white; margin-bottom: 0;">
+              ANNT NANDAS FOUNDATION
+            </p>
+          </div>
+
+          <div style="
+            padding: 25px;
+            border: 1px solid #e2e8f0;
+            border-top: none;
+          ">
+
+            <h2 style="color: #2563eb;">
+              Contact Information
+            </h2>
+
+            <p>
+              <strong>Name:</strong> ${name}
+            </p>
+
+            <p>
+              <strong>Email:</strong> ${email}
+            </p>
+
+            <p>
+              <strong>Subject:</strong> ${subject}
+            </p>
+
+            <h2 style="color: #16a34a;">
+              Message
+            </h2>
+
+            <div style="
+              background: #f8fafc;
+              padding: 18px;
+              border-radius: 8px;
+              line-height: 1.6;
+            ">
+              ${message}
+            </div>
+
+            <hr style="
+              margin: 30px 0;
+              border: none;
+              border-top: 1px solid #e2e8f0;
+            " />
+
+            <p style="font-size: 12px; color: #64748b;">
+              This message was submitted through the ANNT NANDAS FOUNDATION website.
+            </p>
+
+          </div>
+        </div>
+      `,
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: "Message sent successfully.",
+    });
+  } catch (error) {
+  console.error("========== CONTACT EMAIL ERROR ==========");
+  console.error(error);
+  console.error("=========================================");
+
+  return NextResponse.json(
+    {
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Email sending failed",
+    },
+    { status: 500 }
+  );
 }
+  }

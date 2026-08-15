@@ -40,11 +40,35 @@ export default function RegistrationForm({ type, title, description, heroImage, 
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!formData.agreeTerms) return;
+const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  if (!formData.agreeTerms) return;
+
+  try {
+    const response = await fetch("/api/registration", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        type,
+        ...formData,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || "Registration failed");
+    }
+
     setSubmitted(true);
-  };
+  } catch (error) {
+    console.error("Registration error:", error);
+    alert("Unable to submit registration. Please try again.");
+  }
+};
 
   if (submitted) {
     return (
