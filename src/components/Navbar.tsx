@@ -62,13 +62,18 @@ export default function Navbar({ navigationItems }: NavbarProps) {
           : "border-slate-200 bg-white"
       }`}
     >
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:p-4 focus:bg-white focus:z-50">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:bg-white focus:p-4"
+      >
         Skip to main content
       </a>
 
       <div className="container-premium mx-auto px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Primary navigation" className="flex h-[72px] items-center justify-between gap-4">
-          
+        <nav
+          aria-label="Primary navigation"
+          className="flex h-[72px] items-center justify-between gap-4"
+        >
           {/* Logo & Brand Name */}
           <Link
             href="/"
@@ -117,25 +122,37 @@ export default function Navbar({ navigationItems }: NavbarProps) {
 
           {/* Action Buttons & Mobile Hamburger */}
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* Desktop Volunteer Button */}
+            <Link
+              href="/volunteer-registration"
+              className="hidden rounded-full border border-slate-300 bg-white px-4 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-50 active:scale-95 sm:inline-flex sm:px-4 sm:text-sm lg:inline-flex"
+            >
+              Volunteer
+            </Link>
+
+            {/* Donate Button */}
             <Link
               href="/donate"
-              className="rounded-full bg-blue-950 px-4 py-2 text-xs font-semibold text-white shadow-sm hover:bg-blue-900 transition active:scale-95 sm:px-5 sm:text-sm"
+              className="rounded-full bg-blue-950 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-blue-900 active:scale-95 sm:px-5 sm:text-sm"
             >
               Donate Now
             </Link>
 
+            {/* Mobile Hamburger Button */}
             <button
               ref={menuButtonRef}
               type="button"
-              aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
+              aria-label={
+                mobileOpen ? "Close navigation menu" : "Open navigation menu"
+              }
               aria-expanded={mobileOpen}
               aria-controls="mobile-navigation"
               onClick={() => setMobileOpen((value) => !value)}
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 transition active:scale-95 lg:hidden hover:bg-slate-50"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 transition hover:bg-slate-50 active:scale-95 lg:hidden"
             >
               <div className="relative flex h-4 w-5 flex-col justify-between">
                 <span
-                  className={`h-0.5 w-full rounded-full bg-slate-900 transition-all duration-300 origin-center ${
+                  className={`h-0.5 w-full origin-center rounded-full bg-slate-900 transition-all duration-300 ${
                     mobileOpen ? "translate-y-[7px] rotate-45" : ""
                   }`}
                 />
@@ -145,7 +162,7 @@ export default function Navbar({ navigationItems }: NavbarProps) {
                   }`}
                 />
                 <span
-                  className={`h-0.5 w-full rounded-full bg-slate-900 transition-all duration-300 origin-center ${
+                  className={`h-0.5 w-full origin-center rounded-full bg-slate-900 transition-all duration-300 ${
                     mobileOpen ? "-translate-y-[7px] -rotate-45" : ""
                   }`}
                 />
@@ -176,32 +193,37 @@ export default function Navbar({ navigationItems }: NavbarProps) {
                   }`}
                 >
                   <span>{item.label}</span>
-                  <span aria-hidden="true" className="text-lg">→</span>
+                  <span aria-hidden="true" className="text-lg">
+                    →
+                  </span>
                 </Link>
               );
             })}
           </div>
 
-          <div className="mt-6 border-t border-slate-200 pt-6 space-y-4">
+          <div className="mt-6 space-y-4 border-t border-slate-200 pt-6">
             <div className="grid gap-3 sm:grid-cols-2">
               <Link
                 href="/volunteer-registration"
-                className="flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-800 hover:bg-slate-50 transition"
+                className="flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
               >
                 Become a Volunteer
               </Link>
               <Link
                 href="/contact"
-                className="flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-800 hover:bg-slate-50 transition"
+                className="flex items-center justify-center rounded-xl border border-slate-300 bg-white px-4 py-3 text-center text-sm font-semibold text-slate-800 transition hover:bg-slate-50"
               >
                 Contact Us
               </Link>
             </div>
 
             <div className="rounded-2xl bg-slate-100 p-4 text-xs text-slate-600">
-              <p className="font-bold text-slate-900">From the heart of the Himalayas</p>
+              <p className="font-bold text-slate-900">
+                From the heart of the Himalayas
+              </p>
               <p className="mt-1 leading-5">
-                Creating opportunity through education, health, sports, environment, and community action.
+                Creating opportunity through education, health, sports,
+                environment, and community action.
               </p>
             </div>
           </div>
