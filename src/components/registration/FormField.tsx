@@ -103,6 +103,7 @@ export function TextField({
         aria-invalid={Boolean(error)}
         aria-describedby={error ? `${id}-error` : undefined}
         onChange={(event) => onChange(event.target.value)}
+        onInput={(event) => onChange((event.target as HTMLInputElement).value)}
         className={cn(controlClass, error ? "border-rose-300 ring-2 ring-rose-100" : "border-slate-200")}
       />
     </FieldShell>

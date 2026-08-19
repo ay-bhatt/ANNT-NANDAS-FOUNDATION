@@ -133,14 +133,26 @@ export default function Navbar({ navigationItems }: NavbarProps) {
             </Link>
           </div>
 
-          <button
+          <div className="flex items-center gap-2 lg:hidden">
+            <Link
+              href="/register"
+              aria-current={isActivePath(pathname, "/register") ? "page" : undefined}
+              className={`inline-flex min-h-10 items-center justify-center rounded-full px-3 py-2 text-xs font-semibold transition sm:px-4 ${
+                isActivePath(pathname, "/register")
+                  ? "bg-emerald-600 text-white"
+                  : "bg-emerald-600 text-white hover:bg-emerald-700"
+              }`}
+            >
+              Get Involved
+            </Link>
+            <button
             ref={menuButtonRef}
             type="button"
             aria-label={mobileOpen ? "Close navigation menu" : "Open navigation menu"}
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
             onClick={() => setMobileOpen((value) => !value)}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 transition hover:bg-slate-50 active:scale-95 lg:hidden"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 transition hover:bg-slate-50 active:scale-95"
           >
             <div className="relative flex h-4 w-5 flex-col justify-between">
               <span
@@ -160,6 +172,7 @@ export default function Navbar({ navigationItems }: NavbarProps) {
               />
             </div>
           </button>
+          </div>
         </nav>
       </div>
 

@@ -28,8 +28,9 @@ const nextConfig: NextConfig = {
   experimental: {
     ppr: false,
     serverActions: {
-      bodySizeLimit: "8mb",
+      bodySizeLimit: "10mb",
     },
+    middlewareClientMaxBodySize: "10mb",
   },
   async redirects() {
     return [

@@ -40,9 +40,9 @@ export default function ImageUpload({
     setLocalError("");
     try {
       const compressed = await compressImageFile(file, {
-        maxWidth: variant === "photo" ? 900 : 1200,
-        maxHeight: variant === "photo" ? 1100 : 480,
-        quality: 0.82,
+        maxWidth: variant === "photo" ? 480 : 720,
+        maxHeight: variant === "photo" ? 600 : 280,
+        quality: 0.7,
       });
       onChange(compressed);
     } catch (caught) {

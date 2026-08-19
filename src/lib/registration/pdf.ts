@@ -1,7 +1,6 @@
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import fs from "fs/promises";
 import path from "path";
-import sharp from "sharp";
 import { REGISTRATION_TYPE_META, SPORT_OPTIONS } from "./constants";
 import { DECLARATION_CLAUSES } from "./declaration";
 import type { RegistrationFormState, RegistrationType } from "./types";
@@ -16,6 +15,7 @@ const SLATE = rgb(51 / 255, 65 / 255, 85 / 255);
 const LINE = rgb(226 / 255, 232 / 255, 240 / 255);
 
 async function toPng(buffer: Buffer): Promise<Buffer> {
+  const sharp = (await import("sharp")).default;
   return sharp(buffer, { failOn: "none" }).rotate().png().toBuffer();
 }
 

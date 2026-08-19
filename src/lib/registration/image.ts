@@ -60,10 +60,12 @@ export async function compressImageFile(file: File, options: CompressOptions): P
     canvas.height = height;
     const context = canvas.getContext("2d");
     if (!context) throw new Error("Unable to process this image.");
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, width, height);
     context.drawImage(image, 0, 0, width, height);
 
-    const outputType = file.type === "image/png" ? "image/png" : "image/jpeg";
-    const blob = await canvasToBlob(canvas, outputType, options.quality ?? 0.82);
+    const outputType = "image/jpeg";
+    const blob = await canvasToBlob(canvas, outputType, options.quality ?? 0.72);
     const dataUrl = await blobToDataUrl(blob);
 
     return {

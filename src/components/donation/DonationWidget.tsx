@@ -23,8 +23,13 @@ export default function DonationWidget({
   const [status, setStatus] = useState("");
 
   const uri = useMemo(() => upiPaymentUri(amount, payeeName, upiId), [amount, payeeName, upiId]);
-  const isMobile = typeof navigator !== "undefined" && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  const isAndroid = typeof navigator !== "undefined" && /Android/i.test(navigator.userAgent);
+  const canOpenUpiApp = useMemo(() => {
+    if (typeof navigator === "undefined") return false;
+    const platform = navigator.platform || "";
+    if (/Win|MacIntel|Linux x86|Linux amd64|Linux x86_64/i.test(platform)) return false;
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || "");
+  }, []);
+  const isAndroid = canOpenUpiApp && /Android/i.test(navigator.userAgent || "");
   const dark = variant === "dark";
 
   useEffect(() => {
@@ -53,15 +58,16 @@ export default function DonationWidget({
 
   const donate = () => {
     setStatus("If a payment app does not open, scan the QR or copy the UPI ID below.");
-    if (!isMobile) return;
-    if (isAndroid) {
-      window.location.href = googlePayUri(amount, payeeName, upiId);
-      window.setTimeout(() => {
-        window.location.href = uri;
-      }, 900);
-      return;
+    if (!canOpenUpiApp) return;
+    try {
+      if (isAndroid) {
+        window.location.assign(googlePayUri(amount, payeeName, upiId));
+        return;
+      }
+      window.location.assign(uri);
+    } catch {
+      setStatus("Scan the QR or copy the UPI ID to complete payment.");
     }
-    window.location.href = uri;
   };
 
   return (
@@ -101,13 +107,13 @@ export default function DonationWidget({
         <button type="button" onClick={donate} className="btn-primary min-h-12 flex-1 sm:flex-none">
           Donate Now {formatRupees(amount)} <span aria-hidden="true">→</span>
         </button>
-        {isMobile ? (
+        {canOpenUpiApp ? (
           <p className={`text-xs leading-5 ${dark ? "text-blue-100" : "text-slate-500"}`}>
             Opens Google Pay or another UPI app when available.
           </p>
         ) : (
           <p className={`text-xs leading-5 ${dark ? "text-blue-100" : "text-slate-500"}`}>
-            On a phone, Donate Now opens UPI. On desktop, scan the QR.
+            Scan the QR with Google Pay or any UPI app, or copy the UPI ID.
           </p>
         )}
       </div>

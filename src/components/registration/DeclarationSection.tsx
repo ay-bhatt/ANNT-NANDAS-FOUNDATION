@@ -89,6 +89,7 @@ export default function DeclarationSection({
           id="declarationPlace"
           label="Place"
           required
+          autoComplete="address-level2"
           value={value.place}
           error={errors.place}
           onChange={(next) => onChange({ ...value, place: next })}

@@ -35,6 +35,16 @@ function prevStep(step: WizardStep): WizardStep {
   return FLOW[Math.max(FLOW.indexOf(step) - 1, 0)];
 }
 
+function dataUrlToFile(image: { dataUrl: string; name?: string; mime?: string }, fallbackName: string): File {
+  const match = /^data:([^;]+);base64,(.+)$/.exec(image.dataUrl);
+  const mime = match?.[1] || image.mime || "image/jpeg";
+  const base64 = match?.[2] || "";
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+  return new File([bytes], image.name || fallbackName, { type: mime });
+}
+
 export default function RegistrationWizard({
   initialType = "",
   initialSport = "",
@@ -102,28 +112,64 @@ export default function RegistrationWizard({
   };
 
   const handleSubmit = async () => {
-    const declarationErrors = validateStep("declaration", state);
+    const placeInput = document.getElementById("declarationPlace") as HTMLInputElement | null;
+    const dateInput = document.getElementById("declarationDate") as HTMLInputElement | null;
+    const declaration = {
+      ...state.declaration,
+      place: (placeInput?.value || state.declaration.place).trim(),
+      date: dateInput?.value || state.declaration.date,
+    };
+    const nextState = { ...state, declaration };
+    if (declaration.place !== state.declaration.place || declaration.date !== state.declaration.date) {
+      update({ declaration });
+    }
+
+    const declarationErrors = validateStep("declaration", nextState);
     if (Object.keys(declarationErrors).length > 0) {
       setErrors(declarationErrors);
       return;
     }
-    const payload = toPayload(state);
+    const payload = toPayload(nextState);
     if (!payload) return;
 
     setSubmitting(true);
     setSubmitError("");
+    setErrors({});
     try {
+      const body = new FormData();
+      body.append(
+        "payload",
+        JSON.stringify({
+          ...payload,
+          photograph: undefined,
+          signature: undefined,
+        }),
+      );
+      if (payload.photograph?.dataUrl) {
+        body.append("photograph", dataUrlToFile(payload.photograph, "photograph.jpg"));
+      }
+      if (payload.signature?.dataUrl) {
+        body.append("signature", dataUrlToFile(payload.signature, "signature.jpg"));
+      }
+
       const response = await fetch("/api/registration", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body,
       });
-      const data = (await response.json()) as {
+      const text = await response.text();
+      let data: {
         success?: boolean;
         message?: string;
         registrationId?: string;
         submittedAt?: string;
       };
+      try {
+        data = JSON.parse(text) as typeof data;
+      } catch {
+        throw new Error(
+          "The server could not process the photo and signature upload. Please use a smaller image and try again.",
+        );
+      }
       if (!response.ok || !data.success || !data.registrationId) {
         throw new Error(data.message || "Unable to submit registration. Please try again.");
       }
@@ -226,7 +272,16 @@ export default function RegistrationWizard({
               value={state.declaration}
               errors={errors}
               signature={state.signature}
-              onChange={(declaration) => update({ declaration })}
+              onChange={(declaration) => {
+                update({ declaration });
+                setErrors((current) => {
+                  const next = { ...current };
+                  delete next.place;
+                  delete next.date;
+                  delete next.accepted;
+                  return next;
+                });
+              }}
             />
           ) : null}
         </motion.div>
