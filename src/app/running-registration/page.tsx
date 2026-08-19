@@ -1,16 +1,19 @@
-import { getAllData } from "@/lib/api";
-import RegistrationForm from "@/components/RegistrationForm";
+import type { Metadata } from "next";
+import RegistrationExperience from "@/components/registration/RegistrationExperience";
 
-export default async function RunningRegistration() {
-  const data = await getAllData();
+export const metadata: Metadata = {
+  title: "Running Registration | ANNT NANDAS FOUNDATION",
+  description: "Register for AVIRALL Nannda Run and community running events organised by the foundation.",
+  alternates: { canonical: "/running-registration" },
+};
+
+export default function RunningRegistration() {
   return (
-    <RegistrationForm
-      type="running"
-      title="Running Registration"
+    <RegistrationExperience
+      initialType="sports"
+      initialSport="running"
+      heading="Running Registration"
       description="Register for AVIRALL Nannda Run and be part of our flagship event promoting fitness and community spirit."
-      heroImage={data.heroContent.supportingVisuals[1]}
-      genderOptions={data.formOptions.genderOptions}
-      occupationOptions={data.formOptions.occupationOptions}
     />
   );
 }

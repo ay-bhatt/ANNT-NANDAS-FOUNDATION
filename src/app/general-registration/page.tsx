@@ -1,16 +1,18 @@
-import { getAllData } from "@/lib/api";
-import RegistrationForm from "@/components/RegistrationForm";
+import type { Metadata } from "next";
+import RegistrationExperience from "@/components/registration/RegistrationExperience";
 
-export default async function GeneralRegistration() {
-  const data = await getAllData();
+export const metadata: Metadata = {
+  title: "Event Registration | ANNT NANDAS FOUNDATION",
+  description: "Register for upcoming events and activities organised by ANNT NANDAS FOUNDATION.",
+  alternates: { canonical: "/general-registration" },
+};
+
+export default function GeneralRegistration() {
   return (
-    <RegistrationForm
-      type="general"
-      title="Event Registration"
+    <RegistrationExperience
+      initialType="event"
+      heading="Event Registration"
       description="Register for our upcoming events and activities. Participate in transforming communities."
-      heroImage={data.heroContent.supportingVisuals[1]}
-      genderOptions={data.formOptions.genderOptions}
-      occupationOptions={data.formOptions.occupationOptions}
     />
   );
 }

@@ -34,7 +34,9 @@ export default function ScrollToTop() {
     <AnimatePresence>
       {visible && (
         <motion.button
+          type="button"
           onClick={scrollToTop}
+          aria-label="Back to top"
           className="fixed bottom-24 right-6 z-40 w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-nature-500 text-white flex items-center justify-center shadow-xl shadow-primary-500/30 hover:shadow-primary-500/50"
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}

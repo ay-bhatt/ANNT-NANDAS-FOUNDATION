@@ -1,14 +1,16 @@
 ﻿import Link from "next/link";
 import Image from "next/image";
-import logoImg from "@/assets/logo.jpeg";
+import logoImg from "@/assets/logo.webp";
 import type { SiteConfig, NavItem } from "@/lib/types";
 import type { ImpactArea } from "@/lib/types";
 
 const supportLinks = [
-  { label: "Donate", href: "/donate" },
+  { label: "Register Now", href: "/register" },
   { label: "Volunteer", href: "/volunteer-registration" },
+  { label: "Membership", href: "/membership-registration" },
+  { label: "Sports", href: "/sports-registration" },
+  { label: "Donate", href: "/donate" },
   { label: "Partner With Us", href: "/contact" },
-  { label: "General Registration", href: "/general-registration" },
 ];
 
 interface FooterProps {
@@ -112,7 +114,14 @@ export default function Footer({ siteConfig, navigationItems, impactAreas }: Foo
               Navigate
             </h4>
             <ul className="space-y-2.5 text-sm text-slate-400">
-              {navigationItems.map((item) => (
+              {[
+                ...navigationItems,
+                { label: "Events", href: "/events" },
+                { label: "News", href: "/news" },
+                { label: "Contact Us", href: "/contact" },
+              ]
+                .filter((item, index, list) => list.findIndex((entry) => entry.href === item.href) === index)
+                .map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}

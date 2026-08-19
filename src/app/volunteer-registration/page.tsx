@@ -1,16 +1,18 @@
-import { getAllData } from "@/lib/api";
-import RegistrationForm from "@/components/RegistrationForm";
+import type { Metadata } from "next";
+import RegistrationExperience from "@/components/registration/RegistrationExperience";
 
-export default async function VolunteerRegistration() {
-  const data = await getAllData();
+export const metadata: Metadata = {
+  title: "Volunteer Registration | ANNT NANDAS FOUNDATION",
+  description: "Join our mission to transform lives in the Himalayas. Share the skills you can contribute.",
+  alternates: { canonical: "/volunteer-registration" },
+};
+
+export default function VolunteerRegistration() {
   return (
-    <RegistrationForm
-      type="volunteer"
-      title="Volunteer Registration"
-      description="Join our mission to transform lives in the Himalayas. Your time and skills can create lasting change."
-      heroImage={data.heroContent.supportingVisuals[1]}
-      genderOptions={data.formOptions.genderOptions}
-      occupationOptions={data.formOptions.occupationOptions}
+    <RegistrationExperience
+      initialType="volunteer"
+      heading="Volunteer Registration"
+      description="Join our mission to transform lives in the Himalayas. Tell us what you can contribute — your time, skills, and energy can create lasting change."
     />
   );
 }

@@ -1,25 +1,18 @@
 import type { Metadata } from "next";
-import { Inter, Noto_Sans_Devanagari, Poppins } from "next/font/google";
+import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
-import AppShell from "@/components/AppShell";
 import { getAllData } from "@/lib/api";
-import logoImage from "@/assets/logo.jpeg";
+import logoImage from "@/assets/logo.webp";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://anntnandasfoundation.com";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["500", "600", "700"],
   variable: "--font-poppins",
-  display: "swap",
-});
-const devanagari = Noto_Sans_Devanagari({
-  subsets: ["devanagari"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-devanagari",
   display: "swap",
 });
 
@@ -37,7 +30,7 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_IN",
     siteName: "ANNT NANDAS FOUNDATION",
-    images: [{ url: logoImage.src, width: 1254, height: 1254, alt: "ANNT NANDAS FOUNDATION logo" }],
+    images: [{ url: logoImage.src, width: 512, height: 512, alt: "ANNT NANDAS FOUNDATION logo" }],
   },
   twitter: {
     card: "summary_large_image",
@@ -64,21 +57,19 @@ export default async function RootLayout({
   const data = await getAllData();
 
   return (
-    <html lang="en" className={`scroll-smooth ${inter.variable} ${poppins.variable} ${devanagari.variable}`}>
+    <html lang="en" className={`scroll-smooth ${inter.variable} ${poppins.variable}`}>
       <head>
         <meta name="theme-color" content="#0f172a" />
       </head>
       <body suppressHydrationWarning className="min-h-screen bg-slate-50 text-slate-950 antialiased">
-        <AppShell>
-          <Navbar navigationItems={data.navigationItems} />
-          <main id="main-content" className="relative">{children}</main>
-          <Footer
-            siteConfig={data.siteConfig}
-            navigationItems={data.navigationItems}
-            impactAreas={data.impactAreas}
-          />
-          <ScrollToTop />
-        </AppShell>
+        <Navbar navigationItems={data.navigationItems} />
+        <main id="main-content" className="relative">{children}</main>
+        <Footer
+          siteConfig={data.siteConfig}
+          navigationItems={data.navigationItems}
+          impactAreas={data.impactAreas}
+        />
+        <ScrollToTop />
       </body>
     </html>
   );

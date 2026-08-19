@@ -1,51 +1,51 @@
-import heroImage from "@/assets/hero/HERO.jpeg";
-import heroAltImage from "@/assets/hero/HERO (1).jpeg";
-import heroVisualOne from "@/assets/hero/HERO (2).jpeg";
-import heroVisualTwo from "@/assets/hero/HERO (3).jpeg";
-import heroVisualThree from "@/assets/hero/HERO (4).jpeg";
-import founderImage from "@/assets/Kalam singh bisht/event-011.jpg.jpeg";
-import founderCollageOne from "@/assets/Kalam singh bisht/collage (4).jpeg";
-import founderCollageTwo from "@/assets/Kalam singh bisht/collage (5).jpeg";
-import educationImage from "@/assets/education/gallery-032.jpg.jpeg";
-import educationImageTwo from "@/assets/education/gallery-066.jpg.jpeg";
-import educationImageThree from "@/assets/education/gallery-067.jpg.jpeg";
-import womenImage from "@/assets/women empowerment/gallery-029.jpg.jpeg";
-import womenImageTwo from "@/assets/women empowerment/gallery-031.jpg.jpeg";
-import womenImageThree from "@/assets/women empowerment/image.jpeg";
-import healthcareImage from "@/assets/healthcare/event (4).jpeg";
-import environmentImage from "@/assets/environment/gallery-049.jpg.jpeg";
-import eventOne from "@/assets/events/event (1).jpeg";
-import eventTwo from "@/assets/events/event (4).jpeg";
-import eventThree from "@/assets/events/event (10).jpeg";
-import eventFour from "@/assets/events/event (14).jpeg";
-import eventFive from "@/assets/events/event (16).jpeg";
-import eventSix from "@/assets/events/event-010.jpg.jpeg";
-import newsHero from "@/assets/news/news.jpeg";
-import newsOne from "@/assets/news/news (1).jpeg";
-import newsTwo from "@/assets/news/news (2).jpeg";
-import newsThree from "@/assets/news/news (3).jpeg";
-import newsFour from "@/assets/news/news (4).jpeg";
-import newsFive from "@/assets/news/news (5).jpeg";
-import newsSix from "@/assets/news/news (6).jpeg";
-import galleryOne from "@/assets/gallery/gallery (1).jpeg";
-import galleryTwo from "@/assets/gallery/gallery (2).jpeg";
-import galleryThree from "@/assets/gallery/gallery (3).jpeg";
-import galleryFour from "@/assets/gallery/gallery (4).jpeg";
-import galleryFive from "@/assets/gallery/gallery-015.jpg.jpeg";
-import gallerySix from "@/assets/gallery/gallery-020.jpg.jpeg";
-import gallerySeven from "@/assets/gallery/gallery-021.jpg.jpeg";
-import galleryEight from "@/assets/gallery/gallery-024.jpg.jpeg";
-import galleryNine from "@/assets/gallery/gallery-031.jpg.jpeg";
-import galleryTen from "@/assets/gallery/gallery-034.jpg.jpeg";
-import galleryEleven from "@/assets/gallery/gallery-041.jpg.jpeg";
-import galleryTwelve from "@/assets/gallery/gallery-054.jpg.jpeg";
-import galleryThirteen from "@/assets/gallery/gallery-060.jpg.jpeg";
-import galleryFourteen from "@/assets/gallery/gallery-065.jpg.jpeg";
-import collageOne from "@/assets/collage/collage (1).jpeg";
-import collageTwo from "@/assets/collage/collage (6).jpeg";
-import collageThree from "@/assets/collage/collage (10).jpeg";
-import collageFour from "@/assets/collage/gallery (1).jpeg";
-import collageFive from "@/assets/collage/gallery (2).jpeg";
+import heroImage from "@/assets/hero/HERO.webp";
+import heroAltImage from "@/assets/hero/HERO (1).webp";
+import heroVisualOne from "@/assets/hero/HERO (2).webp";
+import heroVisualTwo from "@/assets/hero/HERO (3).webp";
+import heroVisualThree from "@/assets/hero/HERO (4).webp";
+import founderImage from "@/assets/Kalam singh bisht/event-011.jpg.webp";
+import founderCollageOne from "@/assets/Kalam singh bisht/collage (4).webp";
+import founderCollageTwo from "@/assets/Kalam singh bisht/collage (5).webp";
+import educationImage from "@/assets/education/gallery-032.jpg.webp";
+import educationImageTwo from "@/assets/education/gallery-066.jpg.webp";
+import educationImageThree from "@/assets/education/gallery-067.jpg.webp";
+import womenImage from "@/assets/women empowerment/gallery-029.jpg.webp";
+import womenImageTwo from "@/assets/women empowerment/gallery-031.jpg.webp";
+import womenImageThree from "@/assets/women empowerment/image.webp";
+import healthcareImage from "@/assets/healthcare/event (4).webp";
+import environmentImage from "@/assets/environment/gallery-049.jpg.webp";
+import eventOne from "@/assets/events/event (1).webp";
+import eventTwo from "@/assets/events/event (4).webp";
+import eventThree from "@/assets/events/event (10).webp";
+import eventFour from "@/assets/events/event (14).webp";
+import eventFive from "@/assets/events/event (16).webp";
+import eventSix from "@/assets/events/event-010.jpg.webp";
+import newsHero from "@/assets/news/news.webp";
+import newsOne from "@/assets/news/news (1).webp";
+import newsTwo from "@/assets/news/news (2).webp";
+import newsThree from "@/assets/news/news (3).webp";
+import newsFour from "@/assets/news/news (4).webp";
+import newsFive from "@/assets/news/news (5).webp";
+import newsSix from "@/assets/news/news (6).webp";
+import galleryOne from "@/assets/gallery/gallery (1).webp";
+import galleryTwo from "@/assets/gallery/gallery (2).webp";
+import galleryThree from "@/assets/gallery/gallery (3).webp";
+import galleryFour from "@/assets/gallery/gallery (4).webp";
+import galleryFive from "@/assets/gallery/gallery-015.jpg.webp";
+import gallerySix from "@/assets/gallery/gallery-020.jpg.webp";
+import gallerySeven from "@/assets/gallery/gallery-021.jpg.webp";
+import galleryEight from "@/assets/gallery/gallery-024.jpg.webp";
+import galleryNine from "@/assets/gallery/gallery-031.jpg.webp";
+import galleryTen from "@/assets/gallery/gallery-034.jpg.webp";
+import galleryEleven from "@/assets/gallery/gallery-041.jpg.webp";
+import galleryTwelve from "@/assets/gallery/gallery-054.jpg.webp";
+import galleryThirteen from "@/assets/gallery/gallery-060.jpg.webp";
+import galleryFourteen from "@/assets/gallery/gallery-065.jpg.webp";
+import collageOne from "@/assets/collage/collage (1).webp";
+import collageTwo from "@/assets/collage/collage (6).webp";
+import collageThree from "@/assets/collage/collage (10).webp";
+import collageFour from "@/assets/collage/gallery (1).webp";
+import collageFive from "@/assets/collage/gallery (2).webp";
 import donationQr from "@/assets/qr.png";
 
 export const siteConfig = {
@@ -349,7 +349,7 @@ export const upcomingEvents = [
       "A community-led event celebrating endurance, discipline, and the spirit of youth participation in the hills.",
     type: "Sports",
     image: eventThree,
-    href: "/running-registration",
+    href: "/sports-registration",
   },
   {
     title: "Education Outreach Workshop",

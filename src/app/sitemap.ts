@@ -10,7 +10,13 @@ const routes = [
   "/news",
   "/contact",
   "/donate",
+  "/register",
   "/volunteer-registration",
+  "/membership-registration",
+  "/sports-registration",
+  "/running-registration",
+  "/general-registration",
+  "/employee-registration",
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {

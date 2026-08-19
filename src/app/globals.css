@@ -239,3 +239,13 @@ button {
   background: linear-gradient(180deg, #2563eb, #16a34a);
   border-radius: 9999px;
 }
+
+@media print {
+  header,
+  footer,
+  .skip-link,
+  .app-shell > button,
+  #main-content > div > .pointer-events-none {
+    display: none !important;
+  }
+}

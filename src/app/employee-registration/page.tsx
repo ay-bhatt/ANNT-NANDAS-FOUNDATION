@@ -1,16 +1,18 @@
-import { getAllData } from "@/lib/api";
-import RegistrationForm from "@/components/RegistrationForm";
+import type { Metadata } from "next";
+import RegistrationExperience from "@/components/registration/RegistrationExperience";
 
-export default async function EmployeeRegistration() {
-  const data = await getAllData();
+export const metadata: Metadata = {
+  title: "Team Registration | ANNT NANDAS FOUNDATION",
+  description: "Apply to join the ANNT NANDAS FOUNDATION team and contribute professionally to the mission.",
+  alternates: { canonical: "/employee-registration" },
+};
+
+export default function EmployeeRegistration() {
   return (
-    <RegistrationForm
-      type="employee"
-      title="Employee Registration"
+    <RegistrationExperience
+      initialType="employee"
+      heading="Team / Employee Registration"
       description="Join the ANNT NANDAS FOUNDATION team and be part of a movement creating lasting social impact."
-      heroImage={data.heroContent.supportingVisuals[1]}
-      genderOptions={data.formOptions.genderOptions}
-      occupationOptions={data.formOptions.occupationOptions}
     />
   );
 }

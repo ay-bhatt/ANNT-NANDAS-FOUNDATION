@@ -15,26 +15,21 @@ const nextConfig: NextConfig = {
   // - Incremental Static Regeneration (ISR)
   // - Server Actions / Route Handlers (Phase 3: forms)
   images: {
-    // For Phase 1 we keep images unoptimized so the existing local asset URLs
-    // (/_next/static/media/*) render without extra configuration.
-    // In Phase 4 we will remove `unoptimized` and add remotePatterns for
-    // your headless CMS / CDN image domains.
-    unoptimized: process.env.NODE_ENV !== "production",
+    unoptimized: false,
     formats: ["image/avif", "image/webp"],
-    remotePatterns: [
-      // ---- Add your CMS / CDN domains here in production ----
-      // Example for Sanity:
-      // { protocol: "https", hostname: "cdn.sanity.io" },
-      // Example for Strapi:
-      // { protocol: "https", hostname: "images.strapi.io" },
-      // Example for Cloudinary:
-      // { protocol: "https", hostname: "res.cloudinary.com" },
-    ],
+    qualities: [75],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1600, 1920],
+    imageSizes: [48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
+    remotePatterns: [],
   },
   // Server Actions are enabled by default in Next.js 15, but we set it
   // explicitly for clarity.
   experimental: {
     ppr: false,
+    serverActions: {
+      bodySizeLimit: "8mb",
+    },
   },
   async headers() {
     const contentSecurityPolicy = [
