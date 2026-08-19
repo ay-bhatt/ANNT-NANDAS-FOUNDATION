@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import fs from "fs/promises";
-import path from "path";
 import { REGISTRATION_TYPE_META } from "@/lib/registration/constants";
 import { createEmptyForm } from "@/lib/registration/form-state";
+import { buildRegistrationPdf } from "@/lib/registration/pdf";
 import { buildPrintableHtml } from "@/lib/registration/printable";
+import { saveRegistrationRecord } from "@/lib/registration/store";
 import type {
   PersonalInformation,
   RegistrationFormState,
@@ -265,40 +265,14 @@ export async function POST(request: Request) {
     const submittedAt = new Date().toISOString();
     const record = recordWithoutImages(state, registrationId, submittedAt);
 
-    const dataDir = path.join(process.cwd(), "data");
-    const uploadsDir = path.join(dataDir, "uploads");
-    const registrationsFile = path.join(dataDir, "registrations.json");
-
     try {
-      await fs.mkdir(uploadsDir, { recursive: true });
-
-      if (state.photograph) {
-        const parsed = parseDataUrl(state.photograph.dataUrl);
-        if (parsed) {
-          const filename = `${registrationId}-photograph.${parsed.ext}`;
-          await fs.writeFile(path.join(uploadsDir, filename), parsed.buffer);
-          record.photographName = filename;
-        }
-      }
-      if (state.signature) {
-        const parsed = parseDataUrl(state.signature.dataUrl);
-        if (parsed) {
-          const filename = `${registrationId}-signature.${parsed.ext}`;
-          await fs.writeFile(path.join(uploadsDir, filename), parsed.buffer);
-          record.signatureName = filename;
-        }
-      }
-
-      let existing: unknown[] = [];
-      try {
-        const text = await fs.readFile(registrationsFile, "utf-8");
-        const parsed = JSON.parse(text);
-        existing = Array.isArray(parsed) ? parsed : [];
-      } catch {
-        existing = [];
-      }
-      existing.push(record);
-      await fs.writeFile(registrationsFile, JSON.stringify(existing, null, 2), "utf-8");
+      const stored = await saveRegistrationRecord({
+        id: registrationId,
+        submittedAt,
+        state,
+      });
+      record.photographName = stored.photographPath;
+      record.signatureName = stored.signaturePath;
     } catch (storeError) {
       console.error("REGISTRATION STORE WARNING:", storeError);
     }
@@ -329,6 +303,13 @@ export async function POST(request: Request) {
         },
       });
 
+      let pdfBuffer: Buffer | null = null;
+      try {
+        pdfBuffer = await buildRegistrationPdf({ state, registrationId, submittedAt });
+      } catch (pdfError) {
+        console.error("REGISTRATION PDF WARNING:", pdfError);
+      }
+
       const attachments = [
         photoParsed
           ? {
@@ -346,18 +327,24 @@ export async function POST(request: Request) {
               cid: signatureCid,
             }
           : null,
-        {
-          filename: `${registrationId}.html`,
-          content: buildPrintableHtml({
-            state,
-            registrationId,
-            submittedAt,
-            photoSrc: state.photograph?.dataUrl,
-            signatureSrc: state.signature?.dataUrl,
-            mode: "document",
-          }),
-          contentType: "text/html",
-        },
+        pdfBuffer
+          ? {
+              filename: `${registrationId}.pdf`,
+              content: pdfBuffer,
+              contentType: "application/pdf",
+            }
+          : {
+              filename: `${registrationId}.html`,
+              content: buildPrintableHtml({
+                state,
+                registrationId,
+                submittedAt,
+                photoSrc: state.photograph?.dataUrl,
+                signatureSrc: state.signature?.dataUrl,
+                mode: "document",
+              }),
+              contentType: "text/html",
+            },
       ].filter(Boolean);
 
       await transporter.sendMail({

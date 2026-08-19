@@ -139,6 +139,7 @@ export async function GET() {
       donationImpacts: D.donationImpacts,
       donationInfo: serializeDonationInfo(),
       donationAmounts: D.donationAmounts,
+      volunteerOpportunities: D.volunteerOpportunities,
       galleryCategories: D.galleryCategories,
       galleryItems: serializeGalleryItems(),
       collageImages: D.collageImages.map(img),

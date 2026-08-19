@@ -31,6 +31,12 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "8mb",
     },
   },
+  async redirects() {
+    return [
+      { source: "/data/:path*", destination: "/", permanent: false },
+      { source: "/anntnandasfoundation/:path*", destination: "/", permanent: false },
+    ];
+  },
   async headers() {
     const contentSecurityPolicy = [
       "default-src 'self'",

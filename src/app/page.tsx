@@ -9,6 +9,7 @@ import ImpactStatsSection from "@/components/sections/ImpactStatsSection";
 import EventsTestimonialsSection from "@/components/sections/EventsTestimonialsSection";
 import NewsGalleryPreviewSection from "@/components/sections/NewsGalleryPreviewSection";
 import HomeDonationSection from "@/components/sections/HomeDonationSection";
+import VolunteerOpportunitiesSection from "@/components/sections/VolunteerOpportunitiesSection";
 
 export const metadata: Metadata = {
   title: "ANNT NANDAS FOUNDATION | Building Futures Without Limits",
@@ -32,6 +33,8 @@ export default async function Home() {
     collageImages,
     homeVisualGrid,
     donationInfo,
+    donationAmounts,
+    volunteerOpportunities,
   } = data;
 
   return (
@@ -53,8 +56,9 @@ export default async function Home() {
         upcomingEvents={upcomingEvents}
         testimonials={testimonials}
       />
+      <VolunteerOpportunitiesSection opportunities={volunteerOpportunities} />
       <NewsGalleryPreviewSection newsItems={newsItems} homeVisualGrid={homeVisualGrid} />
-      <HomeDonationSection donation={donationInfo} />
+      <HomeDonationSection donation={donationInfo} amounts={donationAmounts} />
       <CTASection
         title="Help us build brighter futures in the Himalayas"
         description="Whether you volunteer, donate, or collaborate, your support helps create meaningful long-term change."

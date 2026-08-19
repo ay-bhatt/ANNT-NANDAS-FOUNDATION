@@ -11,6 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import type { StaticImageData } from "next/image";
+import CountUp from "./CountUp";
 
 type ImgSrc = string | StaticImageData;
 
@@ -70,7 +71,9 @@ export function StatGrid({ stats, dark = false }: { stats: { label: string; valu
           <div className={`mb-3 flex h-12 w-12 items-center justify-center rounded-2xl text-2xl ${dark ? "bg-white/10" : "bg-emerald-50"}`}>
             {iconSymbol(stat.icon)}
           </div>
-          <p className={`text-3xl font-bold tracking-[-0.03em] ${dark ? "text-white" : "text-slate-950"}`}>{stat.value}</p>
+          <p className={`text-3xl font-bold tracking-[-0.03em] ${dark ? "text-white" : "text-slate-950"}`}>
+            <CountUp value={stat.value} />
+          </p>
           <p className={`mt-2 text-sm ${dark ? "text-slate-300" : "text-slate-600"}`}>{stat.label}</p>
         </motion.div>
       ))}

@@ -213,9 +213,16 @@ export interface DonationImpact {
 export interface DonationInfo {
   qrImage: ImageSrc;
   upiId: string;
+  payeeName: string;
   title: string;
   description: string;
   instructions: string[];
+}
+
+export interface VolunteerOpportunity {
+  title: string;
+  description: string;
+  href: string;
 }
 
 // ─────────────────────────
@@ -265,6 +272,7 @@ export interface AllData {
   donationImpacts: DonationImpact[];
   donationInfo: DonationInfo;
   donationAmounts: number[];
+  volunteerOpportunities: VolunteerOpportunity[];
   galleryCategories: string[];
   galleryItems: GalleryItem[];
   collageImages: ImageSrc[];

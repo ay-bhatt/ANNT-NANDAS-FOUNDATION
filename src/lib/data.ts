@@ -469,27 +469,45 @@ export const partners = [
 export const donationImpacts = [
   { amount: 500, impact: "Support educational materials for a child" },
   { amount: 1000, impact: "Help conduct a grassroots sports or learning activity" },
-  { amount: 2000, impact: "Contribute to health and awareness outreach" },
   { amount: 5000, impact: "Strengthen a village-level programme or event" },
   { amount: 10000, impact: "Back broader community development initiatives" },
 ];
 
 export const donationInfo = {
   qrImage: donationQr,
-  upiId: "annt-1@upi",
-  title: "Donate Through QR",
+  upiId: "sbibhim.instant40718938615865236@sbipay",
+  payeeName: "ANNT NANDAS FOUNDATION",
+  title: "Donate Through UPI",
   description:
-    "Scan the QR code with your preferred UPI app to support Himalayan programmes across education, health, environment, sports, and youth development.",
+    "Choose an amount and donate through Google Pay or any UPI app. If a payment app does not open, scan the QR code or copy the UPI ID.",
   instructions: [
-    "Open your preferred UPI app.",
-    "Scan the QR code displayed on this page.",
-    "Enter the amount you wish to contribute.",
-    "Complete the payment securely.",
+    "Select a donation amount.",
+    "Tap Donate Now to open Google Pay or your UPI app on a supported phone.",
+    "If a payment app does not open, scan the amount-specific QR or copy the UPI ID.",
+    "Confirm the payee name: ANNT NANDAS FOUNDATION.",
     "Save the transaction reference for acknowledgement.",
   ],
 };
 
-export const donationAmounts = [500, 1000, 2000, 5000, 10000];
+export const donationAmounts = [500, 1000, 5000, 10000];
+
+export const volunteerOpportunities = [
+  {
+    title: "Teaching & Mentorship",
+    description: "Support village learning sessions and help children build confidence in school subjects.",
+    href: "/volunteer-registration",
+  },
+  {
+    title: "Sports Coaching",
+    description: "Help run running, cycling, and youth fitness activities in Himalayan communities.",
+    href: "/sports-registration",
+  },
+  {
+    title: "Community Outreach",
+    description: "Join health camps, environment drives, and village events as they are announced.",
+    href: "/volunteer-registration",
+  },
+];
 
 export const galleryCategories = ["All", "Photos", "Videos"];
 
