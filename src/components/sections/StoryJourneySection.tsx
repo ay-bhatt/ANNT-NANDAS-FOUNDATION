@@ -37,7 +37,7 @@ export default function StoryJourneySection({
             <ImageCard
               key={index}
               image={image}
-              title={`Impact story ${index + 1}`}
+              alt="ANNT NANDAS FOUNDATION community work"
               className={index === 0 ? "sm:col-span-2" : ""}
             />
           ))}

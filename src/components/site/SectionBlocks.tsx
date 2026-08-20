@@ -81,16 +81,28 @@ export function StatGrid({ stats, dark = false }: { stats: { label: string; valu
   );
 }
 
-export function ImageCard({ image, title, subtitle, className = "" }: { image: ImgSrc; title: string; subtitle?: string; className?: string; }) {
+export function ImageCard({ image, title, subtitle, alt, className = "" }: { image: ImgSrc; title?: string; subtitle?: string; alt?: string; className?: string; }) {
+  const hasCaption = Boolean(title || subtitle);
+
   return (
-    <div className={`relative overflow-hidden rounded-[28px] ${className}`}>
+    <div className={`group relative overflow-hidden rounded-[28px] shadow-[0_14px_40px_rgba(15,23,42,0.10)] ${className}`}>
       <div className="relative aspect-[4/3] overflow-hidden rounded-[28px]">
-        <Image src={image} alt={title} fill sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 40vw" className="object-cover transition duration-700 hover:scale-105" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-          <p className="text-lg font-semibold">{title}</p>
-          {subtitle ? <p className="mt-1 text-sm text-slate-200">{subtitle}</p> : null}
-        </div>
+        <Image
+          src={image}
+          alt={alt || title || "ANNT NANDAS FOUNDATION"}
+          fill
+          sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 40vw"
+          className="object-cover transition duration-700 group-hover:scale-105"
+        />
+        {hasCaption ? (
+          <>
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+              {title ? <p className="text-lg font-semibold">{title}</p> : null}
+              {subtitle ? <p className="mt-1 text-sm text-slate-200">{subtitle}</p> : null}
+            </div>
+          </>
+        ) : null}
       </div>
     </div>
   );
