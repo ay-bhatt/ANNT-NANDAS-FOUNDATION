@@ -32,7 +32,7 @@ export default function VolunteerOpportunitiesSection({
               <h3 className="text-xl font-semibold text-slate-950">{item.title}</h3>
               <p className="mt-3 text-sm leading-7 text-slate-600">{item.description}</p>
               <Link href={item.href} className="mt-5 inline-flex text-sm font-semibold text-blue-700 hover:text-emerald-700">
-                Get involved →
+                Join Us →
               </Link>
             </motion.article>
           ))}

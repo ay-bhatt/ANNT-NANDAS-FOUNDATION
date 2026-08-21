@@ -1,15 +1,8 @@
 ﻿import Link from "next/link";
 import Image from "next/image";
 import logoImg from "@/assets/logo.webp";
-import caumasLogo from "@/assets/Caumas Logo white bg.png";
+import caumasLogo from "@/assets/caumas-logo.webp";
 import type { SiteConfig, NavItem, ImpactArea } from "@/lib/types";
-
-const supportLinks = [
-  { label: "Register Now", href: "/register" },
-  { label: "Membership", href: "/membership-registration" },
-  { label: "Sports", href: "/sports-registration" },
-  { label: "Partner With Us", href: "/contact" },
-];
 
 interface FooterProps {
   siteConfig: SiteConfig;
@@ -29,26 +22,7 @@ function whatsappHref(phone: string) {
   return `https://wa.me/${phone.replace(/[^\d]/g, "")}`;
 }
 
-function FooterNavLink({ href, label }: { href: string; label: string }) {
-  return (
-    <Link
-      href={href}
-      className="group inline-flex items-center gap-2 text-sm text-slate-400 transition-colors duration-200 hover:text-white"
-    >
-      <span className="h-px w-0 bg-emerald-400 transition-all duration-200 group-hover:w-3" />
-      <span className="transition-transform duration-200 group-hover:translate-x-0.5">{label}</span>
-    </Link>
-  );
-}
-
-export default function Footer({ siteConfig, navigationItems, impactAreas }: FooterProps) {
-  const navItems = [
-    ...navigationItems,
-    { label: "Events", href: "/events" },
-    { label: "News", href: "/news" },
-    { label: "Contact Us", href: "/contact" },
-  ].filter((item, index, list) => list.findIndex((entry) => entry.href === item.href) === index);
-
+export default function Footer({ siteConfig }: FooterProps) {
   const socials = [
     {
       label: "Instagram",
@@ -81,13 +55,13 @@ export default function Footer({ siteConfig, navigationItems, impactAreas }: Foo
   ];
 
   return (
-    <footer className="relative mt-16 overflow-hidden bg-slate-950 text-slate-200">
+    <footer className="relative mt-8 w-full max-w-full overflow-hidden bg-slate-950 text-slate-200">
       <div className="h-1 w-full bg-gradient-to-r from-emerald-500 via-sky-400 to-blue-600" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(16,185,129,0.10),transparent_42%),radial-gradient(ellipse_at_bottom_right,rgba(37,99,235,0.10),transparent_46%)]" />
 
-      <div className="container-premium relative py-14 lg:py-16">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1.2fr_1.2fr] lg:gap-12">
-          <div className="space-y-6">
+      <div className="container-premium relative w-full max-w-full py-10 pb-[max(1.25rem,env(safe-area-inset-bottom))] lg:py-14">
+        <div className="grid w-full min-w-0 gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
+          <div className="min-w-0 space-y-5">
             <Link href="/" className="group inline-flex items-center gap-3">
               <div className="relative h-14 w-14 overflow-hidden rounded-2xl border border-white/15 bg-white shrink-0 transition duration-200 group-hover:scale-105 group-hover:shadow-[0_10px_24px_rgba(16,185,129,0.25)]">
                 <Image
@@ -112,53 +86,6 @@ export default function Footer({ siteConfig, navigationItems, impactAreas }: Foo
               {siteConfig.tagline}. We support children and communities through education, health, environment, sports, and opportunity.
             </p>
 
-            <div className="space-y-3 pt-1">
-              <a
-                href={`mailto:${siteConfig.email}`}
-                className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 transition duration-200 hover:-translate-y-0.5 hover:border-emerald-400/40 hover:bg-white/[0.07]"
-              >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 transition group-hover:bg-emerald-500 group-hover:text-white">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                </span>
-                <span className="truncate text-sm text-slate-200">{siteConfig.email}</span>
-              </a>
-
-              <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 transition duration-200 hover:border-emerald-400/40 hover:bg-white/[0.07]">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                </span>
-                <span className="flex flex-col gap-0.5 text-sm text-slate-200">
-                  <a href={toTelHref(siteConfig.phone1)} className="transition hover:text-white">
-                    {siteConfig.phone1}
-                  </a>
-                  {siteConfig.phone2 ? (
-                    <a href={toTelHref(siteConfig.phone2)} className="text-slate-400 transition hover:text-white">
-                      {siteConfig.phone2}
-                    </a>
-                  ) : null}
-                </span>
-              </div>
-
-              <a
-                href={mapsHref(siteConfig.address)}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 transition duration-200 hover:-translate-y-0.5 hover:border-emerald-400/40 hover:bg-white/[0.07]"
-              >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 transition group-hover:bg-emerald-500 group-hover:text-white">
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
-                </span>
-                <span className="text-sm leading-5 text-slate-300">{siteConfig.address}</span>
-              </a>
-            </div>
-
             <div className="flex items-center gap-3 pt-2">
               {socials.map((social) => (
                 <a
@@ -167,7 +94,7 @@ export default function Footer({ siteConfig, navigationItems, impactAreas }: Foo
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition duration-200 hover:-translate-y-0.5 hover:scale-110 hover:border-emerald-400/40 hover:bg-emerald-500 hover:text-white hover:shadow-[0_10px_20px_rgba(16,185,129,0.28)]"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 transition duration-200 hover:border-emerald-400/40 hover:bg-emerald-500 hover:text-white"
                 >
                   <svg className="h-5 w-5 fill-current" viewBox="0 0 24 24">
                     {social.icon}
@@ -177,91 +104,100 @@ export default function Footer({ siteConfig, navigationItems, impactAreas }: Foo
             </div>
           </div>
 
-          <div className="lg:pl-6">
+          <div className="min-w-0 space-y-4">
             <h4 className="mb-6 text-xs font-bold uppercase tracking-[0.22em] text-white">
-              Navigate
+              Contact Us
             </h4>
-            <ul className="space-y-3.5">
-              {navItems.map((item) => (
-                <li key={item.href}>
-                  <FooterNavLink href={item.href} label={item.label} />
-                </li>
-              ))}
-            </ul>
-          </div>
+            <a
+              href={`mailto:${siteConfig.email}`}
+              className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 transition duration-200 hover:-translate-y-0.5 hover:border-emerald-400/40 hover:bg-white/[0.07]"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 transition group-hover:bg-emerald-500 group-hover:text-white">
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </span>
+              <span className="truncate text-sm text-slate-200">{siteConfig.email}</span>
+            </a>
 
-          <div>
-            <h4 className="mb-6 text-xs font-bold uppercase tracking-[0.22em] text-white">
-              Programs
-            </h4>
-            <ul className="space-y-3.5">
-              {impactAreas.map((program) => (
-                <li key={program.title}>
-                  <FooterNavLink href="/programs" label={program.title} />
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div>
-            <h4 className="mb-6 text-xs font-bold uppercase tracking-[0.22em] text-white">
-              Get Involved
-            </h4>
-            <div className="space-y-4">
-              <Link
-                href="/donate"
-                className="btn-primary flex w-full items-center justify-center min-h-12 px-5 text-sm font-semibold"
-              >
-                Donate Now
-              </Link>
-              <Link
-                href="/volunteer-registration"
-                className="inline-flex min-h-12 w-full items-center justify-center rounded-full border border-white/20 bg-white/5 px-5 text-sm font-semibold text-white transition duration-200 hover:-translate-y-0.5 hover:border-emerald-400/50 hover:bg-white/10"
-              >
-                Become a Volunteer
-              </Link>
-              <ul className="space-y-3.5 pt-4">
-                {supportLinks.map((link) => (
-                  <li key={link.href}>
-                    <FooterNavLink href={link.href} label={link.label} />
-                  </li>
-                ))}
-              </ul>
+            <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 transition duration-200 hover:border-emerald-400/40 hover:bg-white/[0.07]">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400">
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </span>
+              <span className="flex flex-col gap-0.5 text-sm text-slate-200">
+                <a href={toTelHref(siteConfig.phone1)} className="transition hover:text-white">
+                  {siteConfig.phone1}
+                </a>
+                {siteConfig.phone2 ? (
+                  <a href={toTelHref(siteConfig.phone2)} className="text-slate-400 transition hover:text-white">
+                    {siteConfig.phone2}
+                  </a>
+                ) : null}
+              </span>
             </div>
           </div>
-        </div>
 
-        <div className="mt-16 flex flex-col gap-6 border-t border-white/10 pt-8 md:flex-row md:flex-wrap md:items-center md:justify-between">
-          <p className="text-sm text-slate-500 order-2 md:order-1">
-            © {new Date().getFullYear()} {siteConfig.name}. All Rights Reserved.
-          </p>
-
-          <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-xs text-slate-400 order-3 md:order-2">
-            <Link href="/contact" className="transition hover:text-white">
-              Privacy Policy
-            </Link>
-            <Link href="/contact" className="transition hover:text-white">
-              Terms & Conditions
-            </Link>
+          <div className="min-w-0 space-y-4 sm:col-span-2 lg:col-span-1">
+             <h4 className="mb-6 text-xs font-bold uppercase tracking-[0.22em] text-white">
+              Visit Us
+            </h4>
+            <a
+              href={mapsHref(siteConfig.address)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 transition duration-200 hover:-translate-y-0.5 hover:border-emerald-400/40 hover:bg-white/[0.07]"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 transition group-hover:bg-emerald-500 group-hover:text-white">
+                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </span>
+              <span className="text-sm leading-5 text-slate-300">{siteConfig.address}</span>
+            </a>
           </div>
 
-          <div className="flex items-center gap-3 order-1 md:order-3">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500">
+        </div>
+
+        <div className="mt-8 w-full min-w-0 max-w-full space-y-5 border-t border-white/10 pt-6">
+          <div className="flex min-w-0 flex-wrap items-center gap-3">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
               Developed by
             </p>
-            <div
-              className="group relative h-11 w-36 overflow-hidden rounded-lg bg-white ring-1 ring-white/10 transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(37,99,235,0.22)]"
+            <a
+              href="https://caumas.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-10 max-w-[10rem] items-center justify-center rounded-lg bg-white px-2 py-1 ring-1 ring-white/10"
               aria-label="Developed by Caumas"
             >
               <Image
                 src={caumasLogo}
                 alt="Caumas"
-                fill
-                sizes="144px"
-                className="object-contain scale-110 transition duration-200 group-hover:scale-125"
+                width={140}
+                height={36}
+                className="h-7 w-auto max-w-full object-contain"
               />
-            </div>
+            </a>
           </div>
+
+          <nav
+            aria-label="Legal"
+            className="grid min-w-0 grid-cols-2 gap-x-3 gap-y-2 text-xs text-slate-400 sm:flex sm:flex-wrap sm:gap-x-5"
+          >
+            <Link href="/privacy-policy" className="py-1 transition hover:text-white">Privacy Policy</Link>
+            <Link href="/terms" className="py-1 transition hover:text-white">Terms &amp; Conditions</Link>
+            <Link href="/cookie-policy" className="py-1 transition hover:text-white">Cookie Policy</Link>
+            <Link href="/accessibility" className="py-1 transition hover:text-white">Accessibility</Link>
+            <Link href="/refund-policy" className="py-1 transition hover:text-white">Refund Policy</Link>
+            <Link href="/contact" className="py-1 transition hover:text-white">Contact</Link>
+          </nav>
+
+          <p className="text-sm text-slate-500">
+            © {new Date().getFullYear()} {siteConfig.name}. All Rights Reserved.
+          </p>
         </div>
       </div>
     </footer>

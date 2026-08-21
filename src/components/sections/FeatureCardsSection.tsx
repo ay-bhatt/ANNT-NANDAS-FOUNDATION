@@ -12,7 +12,7 @@ interface FeatureCardsSectionProps {
 
 export default function FeatureCardsSection({ featureCards }: FeatureCardsSectionProps) {
   return (
-    <section className="section-padding overflow-hidden bg-white px-3 sm:px-5">
+    <section className="section-padding bg-white px-3 sm:px-5">
       <div className="container-premium">
         <SectionHeading
           eyebrow="What We Do"
@@ -20,7 +20,7 @@ export default function FeatureCardsSection({ featureCards }: FeatureCardsSectio
           description="ANNT NANDAS FOUNDATION works across education, health, environment, sports, women empowerment, and community development with a strong local focus."
           centered
         />
-        <div className="-mx-3 flex snap-x snap-mandatory gap-4 overflow-x-auto px-3 pb-5 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0 xl:grid-cols-3">
+        <div className="grid min-w-0 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {featureCards.map((card, index) => (
             <motion.article
               key={card.title}
@@ -28,15 +28,15 @@ export default function FeatureCardsSection({ featureCards }: FeatureCardsSectio
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: "-80px" }}
               transition={{ duration: 0.4, delay: index * 0.05 }}
-              className="surface-card group min-w-[84%] snap-center overflow-hidden min-[430px]:min-w-[72%] md:min-w-0"
+              className="surface-card group min-w-0 overflow-hidden"
             >
-              <div className="relative aspect-[16/10] overflow-hidden">
+              <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
                 <Image
                   src={card.image}
                   alt={`${card.title} programme`}
                   fill
-                  sizes="(max-width: 767px) 84vw, (max-width: 1279px) 50vw, 33vw"
-                  className="object-cover transition duration-700 group-hover:scale-105"
+                  sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw"
+                  className="object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/35 to-transparent" />
               </div>

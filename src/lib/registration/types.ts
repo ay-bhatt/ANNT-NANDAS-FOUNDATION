@@ -27,6 +27,12 @@ export interface PersonalInformation {
   gender: string;
   nationality: string;
   address: string;
+  postOffice: string;
+  tehsil: string;
+  district: string;
+  state: string;
+  country: string;
+  pinCode: string;
   phone: string;
   email: string;
   whatsapp: string;
@@ -34,6 +40,9 @@ export interface PersonalInformation {
   education: string;
   specialEducation: string;
   occupation: string;
+  emergencyName: string;
+  emergencyRelation: string;
+  emergencyPhone: string;
 }
 
 export interface VolunteerDetails {
@@ -62,8 +71,6 @@ export interface MembershipDetails {
   areasOfInterest: string[];
   contribution: string;
   howHeard: string;
-  emergencyName: string;
-  emergencyPhone: string;
   additionalComments: string;
 }
 
@@ -73,8 +80,6 @@ export interface SportsDetails {
   category: string;
   experienceLevel: string;
   previousParticipation: string;
-  emergencyName: string;
-  emergencyPhone: string;
   medicalInfo: string;
   medicallyFit: boolean;
   tshirtSize: string;
@@ -93,8 +98,6 @@ export interface EmployeeDetails {
 export interface EventDetails {
   eventInterest: string;
   participationMode: string;
-  emergencyName: string;
-  emergencyPhone: string;
   additionalComments: string;
 }
 

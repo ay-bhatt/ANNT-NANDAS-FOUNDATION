@@ -43,22 +43,6 @@ export default function EventForm({
           options={PARTICIPATION_MODES}
           onChange={(next) => set("participationMode", next)}
         />
-        <TextField
-          id="eventEmergencyName"
-          label="Emergency contact name"
-          value={value.emergencyName}
-          error={errors.emergencyName}
-          onChange={(next) => set("emergencyName", next)}
-        />
-        <TextField
-          id="eventEmergencyPhone"
-          label="Emergency contact number"
-          type="tel"
-          inputMode="tel"
-          value={value.emergencyPhone}
-          error={errors.emergencyPhone}
-          onChange={(next) => set("emergencyPhone", next)}
-        />
         <TextAreaField
           id="eventComments"
           label="Additional comments"

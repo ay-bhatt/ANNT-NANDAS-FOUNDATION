@@ -3,6 +3,7 @@ import path from "path";
 import type { RegistrationFormState, RegistrationType, SportKind } from "./types";
 
 const DATA_ROOT = path.join(process.cwd(), "anntnandasfoundation", "data");
+const PROJECT_DATA = path.join(process.cwd(), "data");
 
 export type StorageFolder = "volunteer" | "membership" | "sports" | "running" | "cycling" | "employee" | "event";
 
@@ -36,19 +37,25 @@ export async function saveRegistrationRecord(options: {
   const folder = storageFolder(type, state.sports.sport);
   const recordDir = path.join(DATA_ROOT, "registrations", folder);
   const uploadDir = path.join(DATA_ROOT, "uploads", folder);
+  const rootUploadDir = path.join(PROJECT_DATA, "uploads");
 
   await fs.mkdir(recordDir, { recursive: true });
   await fs.mkdir(uploadDir, { recursive: true });
+  await fs.mkdir(rootUploadDir, { recursive: true });
 
   let photographPath = "";
   let signaturePath = "";
+  let rootPhotographPath = "";
+  let rootSignaturePath = "";
 
   if (state.photograph?.dataUrl) {
     const parsed = parseDataUrl(state.photograph.dataUrl);
     if (parsed) {
       const filename = `${id}-photograph.${parsed.ext}`;
       await fs.writeFile(path.join(uploadDir, filename), parsed.buffer);
+      await fs.writeFile(path.join(rootUploadDir, filename), parsed.buffer);
       photographPath = path.posix.join("uploads", folder, filename);
+      rootPhotographPath = path.posix.join("uploads", filename);
     }
   }
 
@@ -57,7 +64,9 @@ export async function saveRegistrationRecord(options: {
     if (parsed) {
       const filename = `${id}-signature.${parsed.ext}`;
       await fs.writeFile(path.join(uploadDir, filename), parsed.buffer);
+      await fs.writeFile(path.join(rootUploadDir, filename), parsed.buffer);
       signaturePath = path.posix.join("uploads", folder, filename);
+      rootSignaturePath = path.posix.join("uploads", filename);
     }
   }
 
@@ -82,5 +91,89 @@ export async function saveRegistrationRecord(options: {
   const jsonPath = path.join(recordDir, `${id}.json`);
   await fs.writeFile(jsonPath, JSON.stringify(record, null, 2), "utf-8");
 
+  await appendToMembersDatabase(record);
+  await appendToRootRegistrations({
+    ...record,
+    files: {
+      photograph: rootPhotographPath || null,
+      signature: rootSignaturePath || null,
+    },
+  });
+
   return { folder, jsonPath, photographPath, signaturePath };
+}
+
+async function appendJsonArray(filePath: string, record: Record<string, unknown>) {
+  await fs.mkdir(path.dirname(filePath), { recursive: true });
+
+  let items: Record<string, unknown>[] = [];
+  try {
+    const raw = await fs.readFile(filePath, "utf-8");
+    const parsed = JSON.parse(raw) as unknown;
+    if (Array.isArray(parsed)) {
+      items = parsed.filter((item): item is Record<string, unknown> => Boolean(item) && typeof item === "object");
+    }
+  } catch {
+    items = [];
+  }
+
+  const nextIndex = items.findIndex((item) => item.id === record.id);
+  if (nextIndex >= 0) {
+    items[nextIndex] = record;
+  } else {
+    items.push(record);
+  }
+
+  await fs.writeFile(filePath, JSON.stringify(items, null, 2), "utf-8");
+}
+
+async function appendToMembersDatabase(record: Record<string, unknown>) {
+  const personal = record.personal as { fullName?: string } | undefined;
+  await appendJsonArray(path.join(DATA_ROOT, "members.json"), {
+    ...record,
+    name: personal?.fullName || "",
+    joinedAs: record.type,
+  });
+}
+
+async function appendToRootRegistrations(record: Record<string, unknown>) {
+  const personal = (record.personal || {}) as Record<string, unknown>;
+  const summary: Record<string, unknown> = {
+    id: record.id,
+    type: record.type,
+    sport: record.sport,
+    submittedAt: record.submittedAt,
+    name: personal.fullName || "",
+    fatherName: personal.fatherName || "",
+    motherName: personal.motherName || "",
+    dob: personal.dob || "",
+    age: personal.age || "",
+    gender: personal.gender || "",
+    nationality: personal.nationality || "",
+    address: personal.address || "",
+    postOffice: personal.postOffice || "",
+    tehsil: personal.tehsil || "",
+    district: personal.district || "",
+    state: personal.state || "",
+    country: personal.country || "",
+    pinCode: personal.pinCode || "",
+    phone: personal.phone || "",
+    email: personal.email || "",
+    whatsapp: personal.whatsapp || "",
+    bloodGroup: personal.bloodGroup || "",
+    education: personal.education || "",
+    occupation: personal.occupation || "",
+    emergencyName: personal.emergencyName || "",
+    emergencyRelation: personal.emergencyRelation || "",
+    emergencyPhone: personal.emergencyPhone || "",
+    volunteer: record.volunteer,
+    membership: record.membership,
+    sports: record.sports,
+    employee: record.employee,
+    event: record.event,
+    declaration: record.declaration,
+    files: record.files,
+  };
+
+  await appendJsonArray(path.join(PROJECT_DATA, "registrations.json"), summary);
 }

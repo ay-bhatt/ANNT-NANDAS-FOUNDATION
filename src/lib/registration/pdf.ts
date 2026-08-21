@@ -4,7 +4,7 @@ import path from "path";
 import { REGISTRATION_TYPE_META, SPORT_OPTIONS } from "./constants";
 import { DECLARATION_CLAUSES } from "./declaration";
 import type { RegistrationFormState, RegistrationType } from "./types";
-import { typeLabel } from "./validation";
+import { formatDob, typeLabel } from "./validation";
 
 const PAGE = { width: 595.28, height: 841.89 };
 const MARGIN = 42;
@@ -244,12 +244,67 @@ export async function buildRegistrationPdf(options: {
   });
   writer.y -= 16;
 
+  let photoImage = null;
+  let signImage = null;
+  try {
+    if (state.photograph?.dataUrl) {
+      const raw = parseDataUrl(state.photograph.dataUrl);
+      if (raw) photoImage = await doc.embedPng(await toPng(raw));
+    }
+  } catch {
+    photoImage = null;
+  }
+  try {
+    if (state.signature?.dataUrl) {
+      const raw = parseDataUrl(state.signature.dataUrl);
+      if (raw) signImage = await doc.embedPng(await toPng(raw));
+    }
+  } catch {
+    signImage = null;
+  }
+
   const p = state.personal;
+  await writer.ensure(170);
+  writer.page.drawText("Photograph", {
+    x: MARGIN,
+    y: writer.y,
+    size: 9,
+    font: bold,
+    color: SLATE,
+  });
+  writer.y -= 8;
+  if (photoImage) {
+    writer.page.drawImage(photoImage, { x: MARGIN, y: writer.y - 118, width: 96, height: 118 });
+  } else {
+    writer.page.drawRectangle({
+      x: MARGIN,
+      y: writer.y - 118,
+      width: 96,
+      height: 118,
+      borderColor: LINE,
+      borderWidth: 1,
+    });
+  }
+  const nameLines = wrapText(bold, p.fullName || "Not provided", 16, PAGE.width - MARGIN * 2 - 120);
+  let nameY = writer.y - 28;
+  for (const line of nameLines) {
+    writer.page.drawText(line, { x: MARGIN + 112, y: nameY, size: 16, font: bold, color: NAVY });
+    nameY -= 18;
+  }
+  writer.page.drawText(pdfSafe(`${typeLabel(type)}  |  ${registrationId}`), {
+    x: MARGIN + 112,
+    y: nameY - 4,
+    size: 10,
+    font: font,
+    color: SLATE,
+  });
+  writer.y -= 130;
+
   writer.heading("Personal Information");
   writer.row("Name", p.fullName);
   writer.row("Father’s Name", p.fatherName);
   writer.row("Mother’s Name", p.motherName);
-  writer.row("Date of Birth", p.dob);
+  writer.row("Date of Birth", formatDob(p.dob));
   writer.row("Age", p.age);
   writer.row("Gender", p.gender);
   writer.row("Blood Group", p.bloodGroup);
@@ -258,9 +313,20 @@ export async function buildRegistrationPdf(options: {
   writer.row("Occupation", p.occupation);
   writer.row("Nationality", p.nationality);
   writer.row("Address", p.address);
+  writer.row("Post Office", p.postOffice);
+  writer.row("Tehsil", p.tehsil);
+  writer.row("District", p.district);
+  writer.row("State", p.state);
+  writer.row("Country", p.country);
+  writer.row("PIN Code", p.pinCode);
   writer.row("Phone", p.phone);
   writer.row("Email", p.email);
   writer.row("WhatsApp", p.whatsapp);
+
+  writer.heading("Emergency Contact");
+  writer.row("Emergency Contact Person’s Name", p.emergencyName);
+  writer.row("Relation with the Person", p.emergencyRelation);
+  writer.row("Emergency Contact Number", p.emergencyPhone);
 
   if (type === "volunteer") {
     const v = state.volunteer;
@@ -285,8 +351,6 @@ export async function buildRegistrationPdf(options: {
     writer.row("Areas of Interest", m.areasOfInterest.join(", "));
     writer.row("Contribution", m.contribution);
     writer.row("How They Heard About Us", m.howHeard);
-    writer.row("Emergency Contact", m.emergencyName);
-    writer.row("Emergency Phone", m.emergencyPhone);
     writer.row("Additional Comments", m.additionalComments);
   } else if (type === "sports") {
     const s = state.sports;
@@ -295,8 +359,6 @@ export async function buildRegistrationPdf(options: {
     writer.row("Category", s.category);
     writer.row("Experience Level", s.experienceLevel);
     writer.row("Previous Participation", s.previousParticipation);
-    writer.row("Emergency Contact", s.emergencyName);
-    writer.row("Emergency Phone", s.emergencyPhone);
     writer.row("Medical Information", s.medicalInfo);
     writer.row("Medically Fit", s.medicallyFit ? "Yes" : "No");
     writer.row("T-shirt Size", s.tshirtSize);
@@ -315,50 +377,12 @@ export async function buildRegistrationPdf(options: {
     writer.heading("Event Information");
     writer.row("Event / Activity", ev.eventInterest);
     writer.row("Participation Mode", ev.participationMode);
-    writer.row("Emergency Contact", ev.emergencyName);
-    writer.row("Emergency Phone", ev.emergencyPhone);
     writer.row("Additional Comments", ev.additionalComments);
   }
 
-  await writer.ensure(180);
-  writer.heading("Photograph, Signature & Declaration");
-  writer.row("Declaration accepted", state.declaration.accepted ? "Yes" : "No");
-  writer.row("Date", state.declaration.date);
-  writer.row("Place", state.declaration.place);
-
-  let photoImage = null;
-  let signImage = null;
-  try {
-    if (state.photograph?.dataUrl) {
-      const raw = parseDataUrl(state.photograph.dataUrl);
-      if (raw) photoImage = await doc.embedPng(await toPng(raw));
-    }
-  } catch {
-    photoImage = null;
-  }
-  try {
-    if (state.signature?.dataUrl) {
-      const raw = parseDataUrl(state.signature.dataUrl);
-      if (raw) signImage = await doc.embedPng(await toPng(raw));
-    }
-  } catch {
-    signImage = null;
-  }
-
-  await writer.ensure(150);
-  writer.y -= 10;
-  if (photoImage) {
-    writer.page.drawText("Photograph", { x: MARGIN, y: writer.y, size: 9, font: bold, color: SLATE });
-    writer.page.drawImage(photoImage, { x: MARGIN, y: writer.y - 122, width: 92, height: 112 });
-  }
-  if (signImage) {
-    writer.page.drawText("Signature", { x: MARGIN + 140, y: writer.y, size: 9, font: bold, color: SLATE });
-    writer.page.drawImage(signImage, { x: MARGIN + 140, y: writer.y - 78, width: 160, height: 64 });
-  }
-  writer.y -= 140;
-
   await writer.ensure(40);
   writer.heading("Declaration");
+  writer.row("Declaration accepted", state.declaration.accepted ? "Yes" : "No");
   for (const [index, clause] of DECLARATION_CLAUSES.entries()) {
     const text = `${index + 1}. ${clause.title}. ${clause.body}`;
     const lines = wrapText(writer.font, text, 8.5, PAGE.width - MARGIN * 2);
@@ -368,6 +392,30 @@ export async function buildRegistrationPdf(options: {
       writer.page.drawText(line, { x: MARGIN, y: writer.y, size: 8.5, font: writer.font, color: SLATE });
     }
     writer.y -= 4;
+  }
+
+  await writer.ensure(150);
+  writer.heading("Applicant Signature");
+  writer.row("Name", p.fullName);
+  writer.row("Date", formatDob(state.declaration.date));
+  writer.row("Place", state.declaration.place);
+  writer.y -= 10;
+  writer.page.drawText("Signature", { x: MARGIN, y: writer.y, size: 9, font: bold, color: SLATE });
+  writer.y -= 8;
+  if (signImage) {
+    await writer.ensure(80);
+    writer.page.drawImage(signImage, { x: MARGIN, y: writer.y - 72, width: 180, height: 72 });
+    writer.y -= 84;
+  } else {
+    writer.page.drawRectangle({
+      x: MARGIN,
+      y: writer.y - 72,
+      width: 180,
+      height: 72,
+      borderColor: LINE,
+      borderWidth: 1,
+    });
+    writer.y -= 84;
   }
 
   writer.page.drawText(`ANNT NANDAS FOUNDATION · ${meta.label} · ${registrationId}`, {

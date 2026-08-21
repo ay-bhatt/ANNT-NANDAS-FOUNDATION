@@ -290,27 +290,49 @@ export default function RegistrationWizard({
       {submitError ? <p className="mt-4 text-sm font-medium text-rose-600">{submitError}</p> : null}
 
       {step !== "type" ? (
-      <div className="fixed inset-x-0 bottom-0 z-40 border-t border-slate-200 bg-white/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur lg:static lg:mt-8 lg:border-0 lg:bg-transparent lg:p-0 lg:pb-0 lg:backdrop-blur-none">
-        <div className="mx-auto flex max-w-[1240px] gap-3">
-          <button type="button" onClick={goBack} className="btn-outline-dark flex-1 lg:flex-none">
-            Back
-          </button>
-          {step !== "declaration" ? (
-            <button type="button" onClick={goNext} className="btn-primary flex-[2] lg:flex-none">
-              Continue
+        <>
+          <div className="mt-8 flex gap-3">
+            <button type="button" onClick={goBack} className="btn-outline-dark flex-1 sm:flex-none">
+              Back
             </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => void handleSubmit()}
-              disabled={submitting || !state.declaration.accepted}
-              className="btn-primary flex-[2] disabled:cursor-not-allowed disabled:opacity-60 lg:flex-none"
-            >
-              {submitting ? "Submitting…" : "Submit Registration"}
-            </button>
-          )}
-        </div>
-      </div>
+            {step !== "declaration" ? (
+              <button type="button" onClick={goNext} className="btn-primary flex-[2] sm:flex-none">
+                Continue
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => void handleSubmit()}
+                disabled={submitting || !state.declaration.accepted}
+                className="btn-primary flex-[2] disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none"
+              >
+                {submitting ? "Submitting…" : "Submit Registration"}
+              </button>
+            )}
+          </div>
+
+          <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-slate-200 bg-white px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(15,23,42,0.12)] lg:hidden">
+            <div className="mx-auto flex max-w-[1240px] gap-3">
+              <button type="button" onClick={goBack} className="btn-outline-dark flex-1">
+                Back
+              </button>
+              {step !== "declaration" ? (
+                <button type="button" onClick={goNext} className="btn-primary flex-[2]">
+                  Continue
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => void handleSubmit()}
+                  disabled={submitting || !state.declaration.accepted}
+                  className="btn-primary flex-[2] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {submitting ? "Submitting…" : "Submit Registration"}
+                </button>
+              )}
+            </div>
+          </div>
+        </>
       ) : null}
     </div>
   );

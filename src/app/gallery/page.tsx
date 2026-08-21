@@ -26,7 +26,7 @@ export default async function GalleryPage() {
         ]}
       />
 
-      <SectionHeading eyebrow="Photo Gallery" title="Real field moments, beautifully presented" centered />
+      <SectionHeading eyebrow="Photos & Videos" title="Real field moments, beautifully presented" centered />
 
       <GalleryGrid items={galleryItems} categories={galleryCategories} />
 

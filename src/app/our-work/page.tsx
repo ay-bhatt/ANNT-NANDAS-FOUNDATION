@@ -36,31 +36,30 @@ export default async function OurWorkPage() {
         </div>
       </section>
 
-      <section className="section-padding bg-white/70 px-3 sm:px-5">
-        <div className="container-premium grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-          <div>
-            <SectionHeading
-              eyebrow="Our Approach"
-              title="How we move from outreach to transformation"
-              description="The foundation’s work is not one-time distribution or symbolic activity. It is a structured process of engaging, mentoring, and sustaining momentum."
-            />
-            <div className="space-y-3">
-              {[
-                { step: "01", title: "Identify", desc: "We identify needs, aspirations, and hidden talent through direct village engagement." },
-                { step: "02", title: "Empower", desc: "We provide mentorship, learning, participation, and practical programme support." },
-                { step: "03", title: "Transform", desc: "We help communities build confidence, continuity, and a stronger future." },
-              ].map((item) => (
-                <div key={item.step} className="surface-card flex gap-4 p-5">
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-950 font-bold text-white">{item.step}</div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-slate-950">{item.title}</h3>
-                    <p className="mt-2 text-sm leading-7 text-slate-600">{item.desc}</p>
-                  </div>
+      <section className="section-padding bg-white px-3 sm:px-5">
+        <div className="container-premium">
+          <SectionHeading
+            eyebrow="Our Approach"
+            title="How we move from outreach to transformation"
+            description="The foundation’s work is not one-time distribution or symbolic activity. It is a structured process of engaging, mentoring, and sustaining momentum."
+            centered
+          />
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              { step: "01", title: "Identify", desc: "We identify needs, aspirations, and hidden talent through direct village engagement." },
+              { step: "02", title: "Empower", desc: "We provide mentorship, learning, participation, and practical programme support." },
+              { step: "03", title: "Transform", desc: "We help communities build confidence, continuity, and a stronger future." },
+            ].map((item) => (
+              <div key={item.step} className="surface-card flex gap-4 p-5">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-950 font-bold text-white">{item.step}</div>
+                <div className="min-w-0">
+                  <h3 className="text-lg font-semibold text-slate-950">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-slate-600">{item.desc}</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {impactAreas.map((item) => (
               <div key={item.title} className="surface-card p-5">
                 <div className="mb-3 text-3xl">{item.icon}</div>
@@ -73,31 +72,42 @@ export default async function OurWorkPage() {
       </section>
 
       <section className="section-padding px-3 sm:px-5">
-        <div className="container-premium grid gap-10 lg:grid-cols-2">
-          <div>
-            <SectionHeading eyebrow="In Practice" title="What this looks like on the ground" />
-            <div className="space-y-4">
-              {storyChapters.map((chapter) => (
-                <div key={chapter.title} className="surface-card p-5">
-                  <h3 className="text-lg font-semibold text-slate-950">{chapter.title}</h3>
-                  <p className="mt-2 text-sm leading-7 text-slate-600">{chapter.description}</p>
+        <div className="container-premium">
+          <SectionHeading
+            eyebrow="Talent Discovery"
+            title="Finding talent. Building character. Creating leaders."
+            description="We do not wait for children to find opportunities. We take opportunities to them through a community-based process."
+            centered
+          />
+          <div className="grid gap-4 md:grid-cols-2">
+            {talentDiscoverySteps.map((step, index) => (
+              <div key={step.title} className="surface-card flex gap-4 p-5">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-700">{index + 1}</div>
+                <div className="min-w-0">
+                  <h3 className="text-base font-semibold text-slate-950">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-slate-600">{step.description}</p>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-          <div>
-            <SectionHeading eyebrow="Talent Discovery" title="A process rooted in trust and consistency" />
-            <div className="space-y-4">
-              {talentDiscoverySteps.map((step, index) => (
-                <div key={step.title} className="surface-card flex gap-4 p-5">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-700">{index + 1}</div>
-                  <div>
-                    <h3 className="text-base font-semibold text-slate-950">{step.title}</h3>
-                    <p className="mt-2 text-sm leading-7 text-slate-600">{step.description}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+        </div>
+      </section>
+
+      <section className="section-padding bg-white px-3 sm:px-5">
+        <div className="container-premium">
+          <SectionHeading
+            eyebrow="In Practice"
+            title="What this looks like on the ground"
+            description="Every great movement begins with a single step. These chapters describe how the work grew from Mundoli into a wider Himalayan mission."
+            centered
+          />
+          <div className="grid gap-4 sm:grid-cols-2">
+            {storyChapters.map((chapter) => (
+              <div key={chapter.title} className="surface-card p-5">
+                <h3 className="text-lg font-semibold text-slate-950">{chapter.title}</h3>
+                <p className="mt-2 text-sm leading-7 text-slate-600">{chapter.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>

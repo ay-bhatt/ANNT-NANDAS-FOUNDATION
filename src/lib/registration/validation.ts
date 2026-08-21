@@ -13,6 +13,7 @@ import type {
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const PHONE_PATTERN = /^(?:\+91[\s-]?|0)?[6-9]\d{9}$/;
 const INTL_PHONE_PATTERN = /^\+?[0-9][0-9\s-]{8,16}$/;
+const INDIAN_PIN_PATTERN = /^[1-9][0-9]{5}$/;
 
 export function isValidEmail(value: string): boolean {
   return EMAIL_PATTERN.test(value.trim());
@@ -23,10 +24,42 @@ export function isValidPhone(value: string): boolean {
   return PHONE_PATTERN.test(trimmed) || INTL_PHONE_PATTERN.test(trimmed);
 }
 
+export function parseDob(value: string): Date | null {
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+
+  const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(trimmed);
+  if (iso) {
+    return calendarDate(Number(iso[1]), Number(iso[2]), Number(iso[3]));
+  }
+
+  const dmy = /^(\d{1,2})[/\-.](\d{1,2})[/\-.](\d{4})$/.exec(trimmed);
+  if (dmy) {
+    return calendarDate(Number(dmy[3]), Number(dmy[2]), Number(dmy[1]));
+  }
+
+  return null;
+}
+
+function calendarDate(year: number, month: number, day: number): Date | null {
+  const date = new Date(year, month - 1, day);
+  if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
+    return null;
+  }
+  return date;
+}
+
+export function formatDob(value: string): string {
+  const date = parseDob(value);
+  if (!date) return value.trim() || "Not provided";
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return `${day}/${month}/${date.getFullYear()}`;
+}
+
 export function ageFromDob(dob: string): number | null {
-  if (!dob) return null;
-  const birth = new Date(`${dob}T00:00:00`);
-  if (Number.isNaN(birth.getTime())) return null;
+  const birth = parseDob(dob);
+  if (!birth) return null;
   const today = new Date();
   let age = today.getFullYear() - birth.getFullYear();
   const monthDelta = today.getMonth() - birth.getMonth();
@@ -60,10 +93,19 @@ export function validatePersonal(personal: PersonalInformation): FieldErrors {
   const genderError = required(personal.gender, "Gender");
   const nationalityError = required(personal.nationality, "Nationality");
   const addressError = required(personal.address, "Address");
+  const postOfficeError = required(personal.postOffice, "Post office");
+  const tehsilError = required(personal.tehsil, "Tehsil");
+  const districtError = required(personal.district, "District");
+  const stateError = required(personal.state, "State");
+  const countryError = required(personal.country, "Country");
+  const pinError = required(personal.pinCode, "PIN code");
   const phoneError = required(personal.phone, "Phone number");
   const emailError = required(personal.email, "Email");
   const bloodError = required(personal.bloodGroup, "Blood group");
   const educationError = required(personal.education, "Education");
+  const emergencyNameError = required(personal.emergencyName, "Emergency contact person’s name");
+  const emergencyRelationError = required(personal.emergencyRelation, "Relation with the person");
+  const emergencyPhoneError = required(personal.emergencyPhone, "Emergency contact number");
 
   if (nameError) errors.fullName = nameError;
   if (fatherError) errors.fatherName = fatherError;
@@ -72,10 +114,19 @@ export function validatePersonal(personal: PersonalInformation): FieldErrors {
   if (genderError) errors.gender = genderError;
   if (nationalityError) errors.nationality = nationalityError;
   if (addressError) errors.address = addressError;
+  if (postOfficeError) errors.postOffice = postOfficeError;
+  if (tehsilError) errors.tehsil = tehsilError;
+  if (districtError) errors.district = districtError;
+  if (stateError) errors.state = stateError;
+  if (countryError) errors.country = countryError;
+  if (pinError) errors.pinCode = pinError;
   if (phoneError) errors.phone = phoneError;
   if (emailError) errors.email = emailError;
   if (bloodError) errors.bloodGroup = bloodError;
   if (educationError) errors.education = educationError;
+  if (emergencyNameError) errors.emergencyName = emergencyNameError;
+  if (emergencyRelationError) errors.emergencyRelation = emergencyRelationError;
+  if (emergencyPhoneError) errors.emergencyPhone = emergencyPhoneError;
 
   if (personal.email && !isValidEmail(personal.email)) {
     errors.email = "Enter a valid email address.";
@@ -86,11 +137,25 @@ export function validatePersonal(personal: PersonalInformation): FieldErrors {
   if (personal.whatsapp && !isValidPhone(personal.whatsapp)) {
     errors.whatsapp = "Enter a valid WhatsApp number.";
   }
+  if (personal.emergencyPhone && !isValidPhone(personal.emergencyPhone)) {
+    errors.emergencyPhone = "Enter a valid emergency contact number.";
+  }
+  if (personal.pinCode) {
+    const pin = personal.pinCode.trim();
+    const country = personal.country.trim().toLowerCase();
+    if (country === "india" || country === "in") {
+      if (!INDIAN_PIN_PATTERN.test(pin)) {
+        errors.pinCode = "Enter a valid 6-digit PIN code.";
+      }
+    } else if (!/^[0-9A-Za-z][0-9A-Za-z\s-]{2,11}$/.test(pin)) {
+      errors.pinCode = "Enter a valid PIN / postal code.";
+    }
+  }
 
   if (personal.dob) {
     const computed = ageFromDob(personal.dob);
     if (computed === null) {
-      errors.dob = "Enter a valid date of birth.";
+      errors.dob = "Enter a valid date of birth in DD/MM/YYYY format.";
     } else if (computed < 8 || computed > 90) {
       errors.dob = "Please enter a realistic date of birth.";
     } else if (personal.age && Number(personal.age) !== computed) {
@@ -128,9 +193,6 @@ export function validateMembership(details: RegistrationFormState["membership"])
     errors.areasOfInterest = "Select at least one area of interest.";
   }
   if (!details.contribution) errors.contribution = "Please tell us how you would like to contribute.";
-  if (details.emergencyPhone && !isValidPhone(details.emergencyPhone)) {
-    errors.emergencyPhone = "Enter a valid emergency contact number.";
-  }
   return errors;
 }
 
@@ -142,9 +204,6 @@ export function validateSports(details: SportsDetails): FieldErrors {
   }
   if (!details.category) errors.category = "Select a sports category.";
   if (!details.experienceLevel) errors.experienceLevel = "Select your experience level.";
-  if (!details.emergencyName.trim()) errors.emergencyName = "Emergency contact name is required.";
-  if (!details.emergencyPhone.trim()) errors.emergencyPhone = "Emergency contact number is required.";
-  else if (!isValidPhone(details.emergencyPhone)) errors.emergencyPhone = "Enter a valid emergency number.";
   if (!details.medicallyFit) {
     errors.medicallyFit = "Please confirm that you are medically fit to participate.";
   }
@@ -163,9 +222,6 @@ export function validateEvent(details: RegistrationFormState["event"]): FieldErr
   const errors: FieldErrors = {};
   if (!details.eventInterest.trim()) errors.eventInterest = "Please share the event or activity.";
   if (!details.participationMode) errors.participationMode = "Select how you would like to participate.";
-  if (details.emergencyPhone && !isValidPhone(details.emergencyPhone)) {
-    errors.emergencyPhone = "Enter a valid emergency contact number.";
-  }
   return errors;
 }
 

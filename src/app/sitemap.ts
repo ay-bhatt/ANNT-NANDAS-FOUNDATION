@@ -17,6 +17,11 @@ const routes = [
   "/running-registration",
   "/general-registration",
   "/employee-registration",
+  "/privacy-policy",
+  "/terms",
+  "/cookie-policy",
+  "/accessibility",
+  "/refund-policy",
 ] as const;
 
 export default function sitemap(): MetadataRoute.Sitemap {

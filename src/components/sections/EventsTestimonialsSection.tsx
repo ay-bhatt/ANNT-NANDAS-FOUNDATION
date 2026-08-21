@@ -30,10 +30,10 @@ export default function EventsTestimonialsSection({
 
   return (
     <section className="section-padding px-3 sm:px-5">
-      <div className="container-premium grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
-        <div>
+      <div className="container-premium grid min-w-0 gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
+        <div className="min-w-0">
           <SectionHeading eyebrow="Upcoming Events" title="Be part of our next initiatives" />
-          <div className="-mx-3 flex snap-x snap-mandatory gap-4 overflow-x-auto px-3 pb-4 [scrollbar-width:none] md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 md:pb-0">
+          <div className="grid gap-4 sm:grid-cols-2">
             {upcomingEvents.map((event, index) => (
               <motion.article
                 key={event.title}
@@ -41,15 +41,15 @@ export default function EventsTestimonialsSection({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.06 }}
-                className="surface-card min-w-[86%] snap-center overflow-hidden min-[430px]:min-w-[72%] md:min-w-0"
+                className="surface-card min-w-0 overflow-hidden"
               >
-                <div className="relative aspect-[16/10] overflow-hidden">
+                <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
                   <Image
                     src={event.image}
                     alt={event.title}
                     fill
-                    sizes="(max-width: 767px) 86vw, (max-width: 1023px) 50vw, 28vw"
-                    className="object-cover transition duration-700 hover:scale-105"
+                    sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 28vw"
+                    className="object-cover object-center"
                   />
                 </div>
                 <div className="p-5">
@@ -70,7 +70,7 @@ export default function EventsTestimonialsSection({
           </div>
         </div>
 
-        <div>
+        <div className="min-w-0">
           <SectionHeading eyebrow="Voices of Change" title="Stories of hope and transformation" />
           {active ? (
             <div className="surface-card min-h-[260px] p-6">

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -16,13 +16,26 @@ const poppins = Poppins({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: "#0f172a",
+};
+
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "ANNT NANDAS FOUNDATION | Building Futures Without Limits",
   description:
     "ANNT NANDAS FOUNDATION is a non-profit organization empowering communities in the Himalayas through sports, education, healthcare, and sustainable development.",
   keywords:
-    "ANNT NANDAS FOUNDATION, NGO, Uttarakhand, Himalayas, sports development, education, healthcare, community development",
+    "ANNT NANDAS FOUNDATION, Kalam Singh Bisht, NGO, Uttarakhand, Himalayas, sports development, education, healthcare, community development, Hajar Ultra, COAS Commendation",
+  icons: {
+    icon: [{ url: logoImage.src, type: "image/webp" }],
+    shortcut: logoImage.src,
+    apple: [{ url: logoImage.src, type: "image/webp" }],
+  },
   openGraph: {
     title: "ANNT NANDAS FOUNDATION | Building Futures Without Limits",
     description:
@@ -57,13 +70,14 @@ export default async function RootLayout({
   const data = await getAllData();
 
   return (
-    <html lang="en" className={`scroll-smooth ${inter.variable} ${poppins.variable}`}>
+    <html lang="en-IN" className={`scroll-smooth ${inter.variable} ${poppins.variable}`}>
       <head>
-        <meta name="theme-color" content="#0f172a" />
+        <link rel="icon" href={logoImage.src} type="image/webp" sizes="any" />
+        <link rel="apple-touch-icon" href={logoImage.src} />
       </head>
-      <body suppressHydrationWarning className="min-h-screen bg-slate-50 text-slate-950 antialiased">
+      <body suppressHydrationWarning className="min-h-screen min-w-0 overflow-x-clip bg-slate-50 text-slate-950 antialiased">
         <Navbar navigationItems={data.navigationItems} />
-        <main id="main-content" className="relative">{children}</main>
+        <main id="main-content" className="relative min-w-0">{children}</main>
         <Footer
           siteConfig={data.siteConfig}
           navigationItems={data.navigationItems}

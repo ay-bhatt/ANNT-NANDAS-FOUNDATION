@@ -17,10 +17,10 @@ type ImgSrc = string | StaticImageData;
 
 export function PageHero({ eyebrow, title, description, image, actions }: { eyebrow: string; title: string; description: string; image: ImgSrc; actions?: { label: string; href: string; variant?: "primary" | "secondary" }[]; }) {
   return (
-    <section className="relative overflow-hidden bg-slate-950 px-3 pb-14 pt-20 text-white sm:px-5 lg:pt-24">
+    <section className="relative overflow-hidden bg-slate-950 px-3 pb-10 pt-12 text-white sm:px-5 sm:pb-12 sm:pt-16 lg:pt-20">
       <div className="container-premium">
-        <div className="grid items-center gap-10 lg:grid-cols-[1fr_0.9fr]">
-          <div className="py-8 lg:py-14">
+        <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.9fr]">
+          <div className="py-4 lg:py-8">
             <span className="section-label-dark">{eyebrow}</span>
             <h1 className="display-title-dark">{title}</h1>
             <p className="mt-5 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">{description}</p>
@@ -48,7 +48,7 @@ export function PageHero({ eyebrow, title, description, image, actions }: { eyeb
 
 export function SectionHeading({ eyebrow, title, description, centered = false, dark = false }: { eyebrow: string; title: string; description?: string; centered?: boolean; dark?: boolean; }) {
   return (
-    <div className={centered ? "mx-auto mb-12 max-w-3xl text-center" : "mb-10 max-w-3xl"}>
+    <div className={centered ? "mx-auto mb-8 max-w-3xl text-center" : "mb-6 max-w-3xl"}>
       <span className={dark ? "section-label-dark" : "section-label"}>{eyebrow}</span>
       <h2 className={`text-balance text-3xl font-bold leading-tight tracking-[-0.03em] sm:text-4xl lg:text-5xl ${dark ? "text-white" : "text-slate-950"}`}>{title}</h2>
       {description ? <p className={`mt-4 text-base leading-8 ${dark ? "text-slate-300" : "text-slate-600"}`}>{description}</p> : null}
@@ -92,7 +92,7 @@ export function ImageCard({ image, title, subtitle, alt, className = "" }: { ima
           alt={alt || title || "ANNT NANDAS FOUNDATION"}
           fill
           sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 40vw"
-          className="object-cover transition duration-700 group-hover:scale-105"
+          className="object-cover object-center"
         />
         {hasCaption ? (
           <>
@@ -114,7 +114,7 @@ export function CTASection({ title, description, primary, secondary, image }: { 
       <div className="container-premium">
         <div className="grid overflow-hidden rounded-[32px] bg-slate-950 text-white lg:grid-cols-[1.1fr_0.9fr]">
           <div className="p-8 sm:p-10 lg:p-12">
-            <span className="section-label-dark">Get Involved</span>
+            <span className="section-label-dark">Join Us</span>
             <h2 className="text-balance text-3xl font-bold leading-tight tracking-[-0.03em] text-white sm:text-4xl">{title}</h2>
             <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">{description}</p>
             <div className="mt-8 flex flex-wrap gap-3">
@@ -122,8 +122,8 @@ export function CTASection({ title, description, primary, secondary, image }: { 
               {secondary ? <Link href={secondary.href} className="btn-secondary">{secondary.label}</Link> : null}
             </div>
           </div>
-          <div className="relative min-h-[280px] lg:min-h-full">
-            <Image src={image} alt={title} fill sizes="(max-width: 1023px) 100vw, 45vw" className="object-cover" />
+          <div className="relative aspect-[16/10] min-h-[220px] lg:aspect-auto lg:min-h-full">
+            <Image src={image} alt={title} fill sizes="(max-width: 1023px) 100vw, 45vw" className="object-cover object-center" />
             <div className="absolute inset-0 bg-gradient-to-l from-transparent to-slate-950/40" />
           </div>
         </div>

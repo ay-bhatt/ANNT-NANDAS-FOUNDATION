@@ -12,7 +12,7 @@ export default function StoryJourneySection({
 }: StoryJourneySectionProps) {
   return (
     <section className="section-padding px-3 sm:px-5">
-      <div className="container-premium grid gap-10 lg:grid-cols-[1fr_1fr] lg:items-start">
+      <div className="container-premium grid min-w-0 gap-8 lg:grid-cols-[1fr_1fr] lg:items-start">
         <div>
           <SectionHeading
             eyebrow="Our Journey"

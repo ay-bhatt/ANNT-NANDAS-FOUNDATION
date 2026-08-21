@@ -60,22 +60,6 @@ export default function MembershipForm({
           error={errors.howHeard}
           onChange={(next) => set("howHeard", next)}
         />
-        <TextField
-          id="membershipEmergencyName"
-          label="Emergency contact name"
-          value={value.emergencyName}
-          error={errors.emergencyName}
-          onChange={(next) => set("emergencyName", next)}
-        />
-        <TextField
-          id="membershipEmergencyPhone"
-          label="Emergency contact number"
-          type="tel"
-          inputMode="tel"
-          value={value.emergencyPhone}
-          error={errors.emergencyPhone}
-          onChange={(next) => set("emergencyPhone", next)}
-        />
         <TextAreaField
           id="membershipComments"
           label="Additional comments"

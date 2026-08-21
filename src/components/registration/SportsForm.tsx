@@ -92,24 +92,6 @@ export default function SportsForm({
           hint="Share races, rides, or community sports you have taken part in."
           onChange={(next) => set("previousParticipation", next)}
         />
-        <TextField
-          id="sportsEmergencyName"
-          label="Emergency contact name"
-          required
-          value={value.emergencyName}
-          error={errors.emergencyName}
-          onChange={(next) => set("emergencyName", next)}
-        />
-        <TextField
-          id="sportsEmergencyPhone"
-          label="Emergency contact number"
-          type="tel"
-          required
-          inputMode="tel"
-          value={value.emergencyPhone}
-          error={errors.emergencyPhone}
-          onChange={(next) => set("emergencyPhone", next)}
-        />
         <TextAreaField
           id="medicalInfo"
           label="Medical / basic information"

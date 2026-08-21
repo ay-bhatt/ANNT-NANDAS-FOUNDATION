@@ -1,0 +1,56 @@
+[
+  {
+    "id": "ANF-SPT-260821-6DM8",
+    "type": "sports",
+    "sport": "community",
+    "submittedAt": "2026-08-21T14:45:41.046Z",
+    "personal": {
+      "fullName": "ayush bhatt",
+      "fatherName": "vij",
+      "motherName": "sus",
+      "dob": "2005-05-08",
+      "age": "21",
+      "gender": "Male",
+      "nationality": "Indian",
+      "address": "177 SHASTRI NAGAR SEEMADWAR DEHRADUN UTTRAKHAND",
+      "postOffice": "GARHICANTT POST OFFI",
+      "tehsil": "ded",
+      "district": "Dehradun",
+      "state": "Uttarakhand",
+      "country": "India",
+      "pinCode": "248001",
+      "phone": "+917310756069",
+      "email": "aybhatt0022@gmail.com",
+      "whatsapp": "32456789654",
+      "bloodGroup": "O+",
+      "education": "Intermediate / 12th",
+      "specialEducation": "",
+      "occupation": "Teacher",
+      "emergencyName": "ayush bhatt",
+      "emergencyRelation": "Brother",
+      "emergencyPhone": "+917310756069"
+    },
+    "sports": {
+      "sport": "community",
+      "otherSport": "",
+      "category": "Youth Training Camp",
+      "experienceLevel": "Advanced",
+      "previousParticipation": "",
+      "medicalInfo": "",
+      "medicallyFit": true,
+      "tshirtSize": "L",
+      "additionalComments": "dd"
+    },
+    "declaration": {
+      "accepted": true,
+      "place": "dehradun",
+      "date": "2026-08-21"
+    },
+    "files": {
+      "photograph": "uploads/sports/ANF-SPT-260821-6DM8-photograph.jpg",
+      "signature": "uploads/sports/ANF-SPT-260821-6DM8-signature.jpg"
+    },
+    "name": "ayush bhatt",
+    "joinedAs": "sports"
+  }
+]

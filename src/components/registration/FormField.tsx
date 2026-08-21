@@ -1,6 +1,6 @@
 "use client";
 
-import type { HTMLAttributes, ReactNode } from "react";
+import { useRef, useState, type HTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 interface FieldBaseProps {
@@ -20,6 +20,8 @@ interface InputFieldProps extends FieldBaseProps {
   inputMode?: HTMLAttributes<HTMLInputElement>["inputMode"];
   max?: string;
   min?: string;
+  maxLength?: number;
+  placeholder?: string;
   readOnly?: boolean;
 }
 
@@ -85,6 +87,8 @@ export function TextField({
   inputMode,
   max,
   min,
+  maxLength,
+  placeholder,
   readOnly,
 }: InputFieldProps) {
   return (
@@ -98,6 +102,8 @@ export function TextField({
         inputMode={inputMode}
         max={max}
         min={min}
+        maxLength={maxLength}
+        placeholder={placeholder}
         readOnly={readOnly}
         required={required}
         aria-invalid={Boolean(error)}
@@ -274,6 +280,135 @@ export function SegmentedField({
       </div>
       {error ? <p className="mt-1.5 text-xs font-medium text-rose-600">{error}</p> : null}
     </div>
+  );
+}
+
+function dobParts(value: string): { day: string; month: string; year: string } {
+  const iso = /^(\d{4})-(\d{2})-(\d{2})$/.exec(value.trim());
+  if (iso) return { year: iso[1], month: iso[2], day: iso[3] };
+  const dmy = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value.trim());
+  if (dmy) return { day: dmy[1], month: dmy[2], year: dmy[3] };
+  return { day: "", month: "", year: "" };
+}
+
+const DOB_DAYS = Array.from({ length: 31 }, (_, index) => String(index + 1).padStart(2, "0"));
+const DOB_MONTHS = Array.from({ length: 12 }, (_, index) => String(index + 1).padStart(2, "0"));
+const DOB_MONTH_LABELS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+function dobYears(): string[] {
+  const now = new Date().getFullYear();
+  const years: string[] = [];
+  for (let year = now - 8; year >= now - 90; year -= 1) years.push(String(year));
+  return years;
+}
+
+export function DateOfBirthField({
+  id,
+  label = "Date of Birth",
+  required,
+  error,
+  hint = "Date / Month / Year (DD/MM/YYYY)",
+  className,
+  value,
+  onChange,
+}: FieldBaseProps & { value: string; onChange: (value: string) => void }) {
+  const initial = dobParts(value);
+  const [day, setDay] = useState(initial.day);
+  const [month, setMonth] = useState(initial.month);
+  const [year, setYear] = useState(initial.year);
+  const partsRef = useRef({ day: initial.day, month: initial.month, year: initial.year });
+  const years = dobYears();
+
+  const emit = (patch: { day?: string; month?: string; year?: string }) => {
+    const next = { ...partsRef.current, ...patch };
+    partsRef.current = next;
+    setDay(next.day);
+    setMonth(next.month);
+    setYear(next.year);
+    onChange(next.day && next.month && next.year ? `${next.year}-${next.month}-${next.day}` : "");
+  };
+
+  const selectClass = cn(controlClass, "min-w-0 px-3", error ? "border-rose-300 ring-2 ring-rose-100" : "border-slate-200");
+
+  return (
+    <FieldShell id={id} label={label} required={required} error={error} hint={hint} className={className}>
+      <div className="grid grid-cols-3 gap-2">
+        <label className="min-w-0">
+          <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Date (DD)</span>
+          <select
+            id={`${id}-day`}
+            name={`${id}-day`}
+            aria-label="Date"
+            value={day}
+            required={required}
+            aria-invalid={Boolean(error)}
+            onChange={(event) => emit({ day: event.target.value })}
+            className={selectClass}
+          >
+            <option value="">DD</option>
+            {DOB_DAYS.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="min-w-0">
+          <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Month (MM)</span>
+          <select
+            id={`${id}-month`}
+            name={`${id}-month`}
+            aria-label="Month"
+            value={month}
+            required={required}
+            aria-invalid={Boolean(error)}
+            onChange={(event) => emit({ month: event.target.value })}
+            className={selectClass}
+          >
+            <option value="">MM</option>
+            {DOB_MONTHS.map((option, index) => (
+              <option key={option} value={option}>
+                {option} · {DOB_MONTH_LABELS[index]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="min-w-0">
+          <span className="mb-1.5 block text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-500">Year (YYYY)</span>
+          <select
+            id={id}
+            name={id}
+            aria-label="Year"
+            value={year}
+            required={required}
+            aria-invalid={Boolean(error)}
+            aria-describedby={error ? `${id}-error` : undefined}
+            onChange={(event) => emit({ year: event.target.value })}
+            className={selectClass}
+          >
+            <option value="">YYYY</option>
+            {years.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+    </FieldShell>
   );
 }
 

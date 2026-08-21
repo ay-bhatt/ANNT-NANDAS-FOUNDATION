@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   output: "standalone",
+  devIndicators: false,
   // Tell Next.js the correct project root — a parent directory (C:\Users\aybha)
   // contains an unrelated package-lock.json that would otherwise be detected as
   // the workspace root, breaking production builds (PageNotFoundError).
@@ -17,7 +18,7 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: false,
     formats: ["image/avif", "image/webp"],
-    qualities: [75],
+    qualities: [75, 90],
     deviceSizes: [640, 750, 828, 1080, 1200, 1600, 1920],
     imageSizes: [48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 60 * 60 * 24 * 30,
@@ -45,6 +46,7 @@ const nextConfig: NextConfig = {
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "font-src 'self' data: https://fonts.gstatic.com",
       "img-src 'self' data: blob:",
+      "media-src 'self'",
       "connect-src 'self' https:",
       "frame-src https://www.google.com",
       "object-src 'none'",

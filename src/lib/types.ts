@@ -119,13 +119,23 @@ export interface CoreValue {
 //  Founder
 // ─────────────────────────
 
+export interface FounderHonour {
+  title: string;
+  description: string;
+  image: ImageSrc;
+  category: string;
+}
+
 export interface FounderInfo {
   name: string;
   title: string;
   description: string;
   fullBio: string;
   image: ImageSrc;
+  portraitImage: ImageSrc;
+  medalsImage: ImageSrc;
   achievements: string[];
+  honours: FounderHonour[];
   quote: string;
 }
 
@@ -141,6 +151,7 @@ export interface ImpactArea {
   image: ImageSrc;
   gallery: ImageSrc[];
   points: string[];
+  story?: string[];
 }
 
 export interface FeatureCard {
@@ -234,7 +245,8 @@ export type GalleryItemType = "photo" | "video";
 export interface GalleryItem {
   label: string;
   type: GalleryItemType;
-  imageSrc: ImageSrc;
+  imageSrc?: ImageSrc;
+  videoSrc?: string;
   theme: string;
 }
 

@@ -6,6 +6,10 @@ import heroVisualThree from "@/assets/hero/HERO (4).webp";
 import founderImage from "@/assets/Kalam singh bisht/event-011.jpg.webp";
 import founderCollageOne from "@/assets/Kalam singh bisht/collage (4).webp";
 import founderCollageTwo from "@/assets/Kalam singh bisht/collage (5).webp";
+import founderCoasAward from "@/assets/Kalam singh bisht/coas-veteran-achiever.webp";
+import founderGovernorAward from "@/assets/Kalam singh bisht/governor-award.webp";
+import founderHajarUltra from "@/assets/Kalam singh bisht/hajar-ultra.webp";
+import founderAwardsOverview from "@/assets/Kalam singh bisht/awards-overview.webp";
 import educationImage from "@/assets/education/gallery-032.jpg.webp";
 import educationImageTwo from "@/assets/education/gallery-066.jpg.webp";
 import educationImageThree from "@/assets/education/gallery-067.jpg.webp";
@@ -18,8 +22,6 @@ import eventOne from "@/assets/events/event (1).webp";
 import eventTwo from "@/assets/events/event (4).webp";
 import eventThree from "@/assets/events/event (10).webp";
 import eventFour from "@/assets/events/event (14).webp";
-import eventFive from "@/assets/events/event (16).webp";
-import eventSix from "@/assets/events/event-010.jpg.webp";
 import newsHero from "@/assets/news/news.webp";
 import newsOne from "@/assets/news/news (1).webp";
 import newsTwo from "@/assets/news/news (2).webp";
@@ -31,6 +33,13 @@ import galleryOne from "@/assets/gallery/gallery (1).webp";
 import galleryTwo from "@/assets/gallery/gallery (2).webp";
 import galleryThree from "@/assets/gallery/gallery (3).webp";
 import galleryFour from "@/assets/gallery/gallery (4).webp";
+import galleryPhotoCycling from "@/assets/gallery/gallery-new-cycling.webp";
+import galleryPhotoMeal from "@/assets/gallery/gallery-new-meal.webp";
+import galleryPhotoMedal from "@/assets/gallery/gallery-new-flag.webp";
+import galleryPhotoSportsMeet from "@/assets/gallery/gallery-new-gathering.webp";
+import galleryPhotoAward from "@/assets/gallery/gallery-new-sports-meet.webp";
+import galleryPhotoCommunity from "@/assets/gallery/gallery-new-medal.webp";
+import galleryPhotoFlag from "@/assets/gallery/gallery-new-award.webp";
 import galleryFive from "@/assets/gallery/gallery-015.jpg.webp";
 import gallerySix from "@/assets/gallery/gallery-020.jpg.webp";
 import gallerySeven from "@/assets/gallery/gallery-021.jpg.webp";
@@ -139,28 +148,34 @@ export const storyChapters = [
 
 export const talentDiscoverySteps = [
   {
-    title: "Reach the Village",
-    description: "We start by listening to local realities and understanding the aspirations of children, youth, and families.",
+    title: "Reach the Heart of the Village",
+    description:
+      "Every journey begins by entering the community with respect. We visit villages, listen to local leaders, schools, parents, and families, and understand their challenges, aspirations, and strengths. Meaningful change begins with listening.",
   },
   {
-    title: "Build Trust",
-    description: "Through regular presence, mentorship, and activities, we create a safe and encouraging environment.",
+    title: "Connect with Children",
+    description:
+      "We gather children in an open, friendly environment where they can participate without fear. Through conversations, games, sports, and creative activities, we begin to understand each child’s personality, interests, strengths, and dreams. Trust is the first step towards transformation.",
   },
   {
-    title: "Identify Potential",
-    description: "We look for hidden talent in sports, leadership, education, creativity, and life skills across rural communities.",
+    title: "Counsel and Mentor",
+    description:
+      "Every child carries a unique story. Some need encouragement, some need confidence, and some simply need someone who believes in them. Mentors counsel children and families on education, discipline, health, sports, and personal development.",
   },
   {
-    title: "Train With Intention",
-    description: "Children and youth receive structured support, coaching, guidance, and exposure suited to their strengths.",
+    title: "Discover Hidden Potential",
+    description:
+      "Once trust is established, we identify individual talents — athletic ability, leadership, creativity, intelligence, technical aptitude, communication, or entrepreneurial thinking. Our role is not to compare children. It is to recognise what makes each child unique.",
   },
   {
-    title: "Support Families",
-    description: "We work with parents and communities so opportunity is reinforced at home and sustained over time.",
+    title: "Train with Purpose",
+    description:
+      "Structured training follows each child’s interests and potential: sports coaching, cycling, running, self-defence, computer education, communication, leadership, yoga, competitive-exam preparation, vocational skills, environmental awareness, and life skills. Learning becomes a continuous journey.",
   },
   {
-    title: "Create Independence",
-    description: "The real goal is not short-term help, but confidence, livelihoods, and resilient futures.",
+    title: "Build Independent Individuals",
+    description:
+      "Work does not end with a medal or a completed course. True success is independence — young people who can make informed decisions, pursue meaningful careers, support their families, and contribute to society. When one child succeeds, an entire family benefits.",
   },
 ];
 
@@ -192,14 +207,14 @@ export const journeyMilestones = [
 ];
 
 export const coreValues = [
-  { icon: "🙏", title: "Service Before Self", desc: "Community well-being comes first in every programme and partnership." },
-  { icon: "⚖️", title: "Integrity", desc: "We believe trust is built through transparency, honesty, and consistency." },
-  { icon: "🎯", title: "Discipline", desc: "Daily practice and commitment help transform talent into achievement." },
-  { icon: "💚", title: "Compassion", desc: "We lead with dignity, care, and empathy across all age groups and communities." },
-  { icon: "⭐", title: "Excellence", desc: "Every child and participant deserves thoughtful support and the highest standards." },
-  { icon: "♻️", title: "Sustainability", desc: "We design interventions that create long-term value, not short-lived relief." },
-  { icon: "🤝", title: "Inclusion", desc: "Opportunity must reach every gender, caste, religion, and background." },
-  { icon: "🌄", title: "Local Pride", desc: "Our work is rooted in the culture, resilience, and spirit of the Himalayas." },
+  { icon: "🙏", title: "Service Before Self", desc: "True leadership begins with serving others. We dedicate ourselves to those who need support, guidance, and opportunity." },
+  { icon: "⚖️", title: "Integrity", desc: "Honesty, transparency, accountability, and ethical conduct form the foundation of every action. Trust is earned through consistency." },
+  { icon: "🎯", title: "Discipline", desc: "Discipline transforms talent into excellence. Through sports, education, and daily practice we encourage responsibility, punctuality, and perseverance." },
+  { icon: "💚", title: "Compassion", desc: "Every individual deserves respect, dignity, and equal opportunity. We work with empathy and genuine care for every member of our community." },
+  { icon: "⭐", title: "Excellence", desc: "Every child can achieve greatness when given the right environment, guidance, and opportunities. We hold high standards in every programme." },
+  { icon: "♻️", title: "Sustainability", desc: "Our initiatives are designed to create long-term positive change while protecting natural resources for future generations." },
+  { icon: "🤝", title: "Inclusion", desc: "We welcome every individual regardless of gender, religion, caste, ethnicity, financial background, or physical ability. Talent has no boundaries." },
+  { icon: "🌄", title: "Local Pride", desc: "We preserve Himalayan traditions, languages, values, and culture while creating opportunities rooted in the land that raised us." },
 ];
 
 export const foundersGallery = [founderImage, founderCollageOne, founderCollageTwo];
@@ -212,12 +227,53 @@ export const founderInfo = {
   fullBio:
     "He started with two bicycles and twelve children, believing that discipline, opportunity, and care can transform a generation. His leadership continues to guide the Foundation’s work across education, sports, health, environment, and community empowerment.",
   image: founderImage,
+  portraitImage: founderCollageTwo,
+  medalsImage: founderCollageOne,
   achievements: [
-    "Ex-Serviceman, 4th Battalion, The Garhwal Rifles",
+    "Ex-Serviceman, Naik, 4th Battalion, The Garhwal Rifles (1996–2012)",
+    "COAS Commendation Card — Chief of the Army Staff Veteran Achiever Award",
+    "GOC-in-C Commendation Card — Central Command Veteran Achiever Award",
+    "Governor Award, Government of Uttarakhand",
     "International Ultra Trail Runner",
+    "1st Place, 120 KM Hajar Ultra Trail Run, Oman (2025)",
     "Founder of ANNT NANDAS FOUNDATION",
-    "Grassroots mentor and community mobiliser",
-    "Committed to long-term Himalayan transformation",
+  ],
+  honours: [
+    {
+      title: "COAS Commendation Card",
+      category: "Indian Army",
+      description:
+        "Chief of the Army Staff Veteran Achiever Award, presented for exceptional service, integrity, and continued contribution to the nation after retirement from 4th Battalion, The Garhwal Rifles.",
+      image: founderCoasAward,
+    },
+    {
+      title: "GOC-in-C Commendation Card",
+      category: "Central Command",
+      description:
+        "Honoured by the General Officer Commanding-in-Chief, Central Command, for exemplary military service and a lifetime of discipline, duty, and public service.",
+      image: founderAwardsOverview,
+    },
+    {
+      title: "Governor Award",
+      category: "Uttarakhand",
+      description:
+        "Recognised by the Hon’ble Governor of Uttarakhand for outstanding dedication to community welfare, youth empowerment, and nation-building.",
+      image: founderGovernorAward,
+    },
+    {
+      title: "International Ultra Trail Runner",
+      category: "Endurance Sport",
+      description:
+        "Represents India on demanding ultra trail courses worldwide, carrying Himalayan grit from village roads to international start lines.",
+      image: founderCollageOne,
+    },
+    {
+      title: "1st Place, 120 KM Hajar Ultra Trail Run, Oman (2025)",
+      category: "International",
+      description:
+        "Won the 120 km Hajar Ultra Trail Run in Oman in 2025 — a landmark international victory built on endurance, discipline, and purpose.",
+      image: founderHajarUltra,
+    },
   ],
   quote:
     "Every child possesses a gift. Our responsibility is to discover it, nurture it, and help it become a source of confidence and independence.",
@@ -232,11 +288,18 @@ export const impactAreas = [
     color: "from-blue-500 to-cyan-500",
     image: educationImage,
     gallery: [educationImage, educationImageTwo, educationImageThree],
+    story: [
+      "Education without opportunity is incomplete. In many Himalayan villages, children have ability, curiosity, and discipline — yet they lack books, digital access, career guidance, and a mentor who believes in them. We work to close that gap.",
+      "Our learning sessions support school subjects, spoken English, computer education, communication skills, and preparation for competitive examinations. We treat learning as a continuous journey, not a one-time workshop.",
+      "The aim is not only better marks. It is confidence: a child who can speak, think independently, use technology, and imagine a future as a teacher, officer, entrepreneur, or skilled professional.",
+    ],
     points: [
-      "Digital literacy and computer learning",
-      "Academic support for rural children",
-      "Spoken English and confidence-building",
-      "Career guidance and exam readiness",
+      "Village learning sessions and academic support",
+      "Digital literacy, computer education, and ICT skills",
+      "Spoken English, communication, and confidence-building",
+      "Career counselling and competitive-examination guidance",
+      "Vocational and life-skill training for self-reliance",
+      "Mentorship that continues beyond a single class or camp",
     ],
   },
   {
@@ -247,11 +310,18 @@ export const impactAreas = [
     color: "from-rose-500 to-orange-400",
     image: healthcareImage,
     gallery: [healthcareImage, eventTwo, collageFour],
+    story: [
+      "A child cannot grow through education or sport without good health. Remote communities often have limited access to preventive care, nutrition guidance, and regular wellness support.",
+      "ANNT NANDAS FOUNDATION organises health and awareness camps, hygiene education, women’s health outreach, and family-welfare conversations with village families. We also encourage yoga, fitness, and daily discipline as part of a healthy life.",
+      "Our belief is simple: health, education, and opportunity must move together. When a family is healthier, children attend more regularly, train more consistently, and carry more hope.",
+    ],
     points: [
-      "Free health and awareness camps",
-      "Nutrition and hygiene support",
-      "Women’s health outreach",
-      "Community wellness initiatives",
+      "Free health, wellness, and awareness camps",
+      "Nutrition, hygiene, and preventive-care education",
+      "Women’s health and family-welfare outreach",
+      "Fitness, yoga, and community wellness sessions",
+      "Support for children, youth, women, and senior citizens",
+      "Health guidance linked with sports and school participation",
     ],
   },
   {
@@ -262,11 +332,18 @@ export const impactAreas = [
     color: "from-emerald-500 to-lime-400",
     image: environmentImage,
     gallery: [environmentImage, gallerySix, galleryEight],
+    story: [
+      "Development should never come at the cost of the Himalayas. Forests, water, soil, and village landscapes are not a backdrop to our work — they are part of the future we are trying to protect.",
+      "Children in our programmes learn that caring for nature is a daily responsibility. Tree plantation, plastic-free drives, forest care, and climate awareness are woven into training, events, and village gatherings.",
+      "We want a generation that is physically strong, socially responsible, and environmentally conscious — able to prosper without destroying the land that raised them.",
+    ],
     points: [
-      "Tree plantation and forest care",
-      "Plastic-free awareness drives",
-      "Climate and sustainability education",
-      "Community action for greener villages",
+      "Tree plantation and forest conservation",
+      "Plastic-free and cleaner-village campaigns",
+      "Climate, water, and sustainability education",
+      "Community action for greener Himalayan settlements",
+      "Teaching children to protect local ecology and culture",
+      "Long-term stewardship instead of one-day drives",
     ],
   },
   {
@@ -277,11 +354,18 @@ export const impactAreas = [
     color: "from-violet-500 to-fuchsia-500",
     image: womenImage,
     gallery: [womenImage, womenImageTwo, womenImageThree],
+    story: [
+      "No village can rise if its women and girls are left behind. We work for equal access to education, health, skill development, employment pathways, and leadership — regardless of caste, religion, or financial background.",
+      "Through mentorship, community participation, and skill-based support, women and girls are encouraged to take space in public life, support their families, and build independent livelihoods.",
+      "Inclusion is a core value of the Foundation. Talent has no boundaries. Neither should opportunity.",
+    ],
     points: [
-      "Leadership and confidence-building",
-      "Community participation and mentorship",
-      "Skill development opportunities",
-      "Supportive spaces for women and girls",
+      "Leadership, confidence, and public participation",
+      "Skill development and employment pathways",
+      "Mentorship for girls and women in rural communities",
+      "Health, literacy, and livelihood-linked support",
+      "Safe, respectful spaces for learning and leadership",
+      "Equal opportunity across gender, caste, and background",
     ],
   },
   {
@@ -292,11 +376,18 @@ export const impactAreas = [
     color: "from-amber-500 to-orange-500",
     image: eventOne,
     gallery: [eventOne, eventThree, eventFour],
+    story: [
+      "Our journey began with two bicycles and twelve children in Mundoli. Those morning sessions were never only about running faster or cycling farther. Every run was a lesson in determination. Every conversation was a chance to build confidence.",
+      "Today the Foundation trains children and youth in running, cycling, fitness, self-defence, mountaineering spirit, teamwork, and competitive exposure. We look for hidden athletic ability — and for leadership, grit, and character.",
+      "We are not simply creating athletes. We are building confident leaders who can represent their villages at district, state, national, and international levels, and who carry discipline into study, work, and civic life.",
+    ],
     points: [
-      "Running, cycling, and athletic training",
-      "Youth engagement through sports",
-      "Discipline, fitness, and teamwork",
-      "Competitive exposure and confidence",
+      "Running, cycling, trail, and community sports training",
+      "Daily discipline, fitness, and character-building",
+      "Youth leadership, mentorship, and counselling",
+      "Self-defence, yoga, and physical development",
+      "Competitive exposure from village ground to wider arenas",
+      "A pathway from hidden talent to independent adulthood",
     ],
   },
   {
@@ -307,11 +398,18 @@ export const impactAreas = [
     color: "from-sky-500 to-indigo-500",
     image: collageTwo,
     gallery: [collageOne, collageTwo, collageThree],
+    story: [
+      "The problem in remote Himalayan villages is not the absence of ability. It is the absence of opportunity. Young people often migrate without direction. Hidden talent remains undiscovered. Poverty continues across generations.",
+      "We work to remove poverty from its roots — not by temporary relief alone, but by education, vocational skills, entrepreneurship, sustainable farming, community outreach, and continuous mentorship.",
+      "When one child succeeds, a family benefits. When families succeed, villages flourish. That is the cycle of transformation we seek to create: independent individuals who contribute to society with dignity.",
+    ],
     points: [
-      "Community capacity building",
-      "Youth mentorship and guidance",
-      "Livelihood-focused support",
-      "Local participation and resilience",
+      "Vocational training and livelihood-focused skills",
+      "Youth mentorship, counselling, and career direction",
+      "Support for entrepreneurship and self-employment",
+      "Community outreach, awareness, and local leadership",
+      "Art, culture, and Himalayan identity as strengths",
+      "Building independence instead of long-term dependence",
     ],
   },
 ];
@@ -512,34 +610,64 @@ export const volunteerOpportunities = [
 export const galleryCategories = ["All", "Photos", "Videos"];
 
 export const galleryItems = [
-  { label: "Himalayan Journey", type: "photo", imageSrc: heroImage, theme: "Hero" },
-  { label: "Children in Learning Session", type: "photo", imageSrc: educationImage, theme: "Education" },
-  { label: "Community Moments", type: "photo", imageSrc: galleryOne, theme: "Community" },
-  { label: "Sports Training", type: "photo", imageSrc: eventOne, theme: "Sports" },
-  { label: "Environmental Outreach", type: "photo", imageSrc: environmentImage, theme: "Environment" },
-  { label: "Women Empowerment Session", type: "photo", imageSrc: womenImage, theme: "Women Empowerment" },
-  { label: "Health Camp Highlights", type: "photo", imageSrc: healthcareImage, theme: "Healthcare" },
-  { label: "Village Participation", type: "photo", imageSrc: galleryTwo, theme: "Community" },
-  { label: "Mentorship & Guidance", type: "photo", imageSrc: galleryThree, theme: "Youth" },
-  { label: "Running Event", type: "photo", imageSrc: eventThree, theme: "Sports" },
-  { label: "Smiles of Change", type: "photo", imageSrc: galleryFour, theme: "Community" },
-  { label: "Program Fieldwork", type: "photo", imageSrc: collageOne, theme: "Impact" },
-  { label: "Education Collage", type: "photo", imageSrc: galleryFive, theme: "Education" },
-  { label: "Green Initiative", type: "photo", imageSrc: gallerySix, theme: "Environment" },
-  { label: "Women Leadership", type: "photo", imageSrc: gallerySeven, theme: "Women Empowerment" },
-  { label: "Village Landscape", type: "photo", imageSrc: galleryEight, theme: "Landscape" },
-  { label: "Youth Group", type: "photo", imageSrc: galleryNine, theme: "Youth" },
-  { label: "Community Gathering", type: "photo", imageSrc: galleryTen, theme: "Community" },
-  { label: "Field Experience", type: "photo", imageSrc: galleryEleven, theme: "Impact" },
-  { label: "Action Day", type: "photo", imageSrc: galleryTwelve, theme: "Events" },
-  { label: "Village Smiles", type: "photo", imageSrc: galleryThirteen, theme: "Community" },
-  { label: "Hope in Motion", type: "photo", imageSrc: galleryFourteen, theme: "Transformation" },
-  { label: "Programme Documentary", type: "video", imageSrc: heroAltImage, theme: "Story" },
-  { label: "Event Highlights", type: "video", imageSrc: eventFour, theme: "Events" },
-  { label: "Community Impact Reel", type: "video", imageSrc: eventFive, theme: "Community" },
-  { label: "Founder Journey", type: "video", imageSrc: founderImage, theme: "Founder" },
-  { label: "Youth Voices", type: "video", imageSrc: eventSix, theme: "Youth" },
-  { label: "Education in Action", type: "video", imageSrc: educationImageThree, theme: "Education" },
+  { label: "Cycling with the Tricolour", type: "photo", imageSrc: galleryPhotoCycling, theme: "Sports" },
+  { label: "Sharing a Meal with Children", type: "photo", imageSrc: galleryPhotoMeal, theme: "Community" },
+  { label: "Flag Hoisting Ceremony", type: "photo", imageSrc: galleryPhotoMedal, theme: "Events" },
+  { label: "Independence Day Gathering, Haldwani", type: "photo", imageSrc: galleryPhotoSportsMeet, theme: "Events" },
+  { label: "District Sports Meet, Haldwani", type: "photo", imageSrc: galleryPhotoAward, theme: "Sports" },
+  { label: "Marathon Medal and Trophy", type: "photo", imageSrc: galleryPhotoCommunity, theme: "Sports" },
+  { label: "Award Ceremony, Haldwani", type: "photo", imageSrc: galleryPhotoFlag, theme: "Events" },
+  { label: "Carrying the Tricolour, Oman", type: "photo", imageSrc: heroImage, theme: "Sports" },
+  { label: "Radio Ibex Tarana Interview", type: "photo", imageSrc: educationImage, theme: "News" },
+  { label: "Mawla Ghaati Ultra Champion", type: "photo", imageSrc: galleryOne, theme: "Sports" },
+  { label: "Cultural Programme", type: "photo", imageSrc: eventOne, theme: "Events" },
+  { label: "Village Cycling Day", type: "photo", imageSrc: environmentImage, theme: "Sports" },
+  { label: "Community Reading Session", type: "photo", imageSrc: womenImage, theme: "Community" },
+  { label: "Himalayan Trek", type: "photo", imageSrc: galleryTwo, theme: "Landscape" },
+  { label: "Himalayan Peaks", type: "photo", imageSrc: galleryThree, theme: "Landscape" },
+  { label: "National Cycling Championship", type: "photo", imageSrc: eventThree, theme: "Sports" },
+  { label: "Dawn in the Himalayas", type: "photo", imageSrc: galleryFour, theme: "Landscape" },
+  { label: "Village Cycling Programme", type: "photo", imageSrc: collageOne, theme: "Sports" },
+  { label: "Niti Xtreme Ultra Run Awards", type: "photo", imageSrc: galleryFive, theme: "Sports" },
+  { label: "Niti Xtreme Ultra Run Team", type: "photo", imageSrc: gallerySix, theme: "Sports" },
+  { label: "Ultra Run Winner", type: "photo", imageSrc: gallerySeven, theme: "Sports" },
+  { label: "Morning Training Run", type: "photo", imageSrc: galleryEight, theme: "Sports" },
+  { label: "Village Women's Gathering", type: "photo", imageSrc: galleryNine, theme: "Community" },
+  { label: "National Mountain Bike Championship", type: "photo", imageSrc: galleryTen, theme: "Sports" },
+  { label: "Cycling Federation Championships Team", type: "photo", imageSrc: galleryEleven, theme: "Sports" },
+  { label: "Village Children with Bicycles", type: "photo", imageSrc: galleryTwelve, theme: "Community" },
+  { label: "Morning Yoga with Children", type: "photo", imageSrc: galleryThirteen, theme: "Community" },
+  { label: "School Assembly, Mundoli", type: "photo", imageSrc: galleryFourteen, theme: "Education" },
+  {
+    label: "Community Sports Gathering",
+    type: "video",
+    videoSrc: "/gallery/videos/01.mp4",
+    theme: "Sports",
+  },
+  {
+    label: "Village Cycling Ride",
+    type: "video",
+    videoSrc: "/gallery/videos/02.mp4",
+    theme: "Sports",
+  },
+  {
+    label: "Foundation Cycling Event",
+    type: "video",
+    videoSrc: "/gallery/videos/03.mp4",
+    theme: "Sports",
+  },
+  {
+    label: "Park Fitness Session",
+    type: "video",
+    videoSrc: "/gallery/videos/04.mp4",
+    theme: "Sports",
+  },
+  {
+    label: "Independence Day Celebration",
+    type: "video",
+    videoSrc: "/gallery/videos/05.mp4",
+    theme: "Events",
+  },
 ];
 
 export const collageImages = [collageOne, collageTwo, collageThree, collageFour, collageFive];

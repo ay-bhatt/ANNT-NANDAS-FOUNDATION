@@ -127,6 +127,10 @@ function normalizePayload(raw: unknown): RegistrationFormState | null {
   const state = createEmptyForm(type, sport);
   const incomingPersonal = isRecord(raw.personal) ? raw.personal : raw;
 
+  const membershipRaw = isRecord(raw.membership) ? raw.membership : {};
+  const sportsRaw = isRecord(raw.sports) ? raw.sports : raw;
+  const eventRaw = isRecord(raw.event) ? raw.event : raw;
+
   const personal: PersonalInformation = {
     fullName: asString(incomingPersonal.fullName || incomingPersonal.name),
     fatherName: asString(incomingPersonal.fatherName),
@@ -136,6 +140,12 @@ function normalizePayload(raw: unknown): RegistrationFormState | null {
     gender: asString(incomingPersonal.gender),
     nationality: asString(incomingPersonal.nationality) || "Indian",
     address: asString(incomingPersonal.address),
+    postOffice: asString(incomingPersonal.postOffice),
+    tehsil: asString(incomingPersonal.tehsil),
+    district: asString(incomingPersonal.district),
+    state: asString(incomingPersonal.state),
+    country: asString(incomingPersonal.country) || "India",
+    pinCode: asString(incomingPersonal.pinCode),
     phone: asString(incomingPersonal.phone),
     email: asString(incomingPersonal.email),
     whatsapp: asString(incomingPersonal.whatsapp),
@@ -143,13 +153,21 @@ function normalizePayload(raw: unknown): RegistrationFormState | null {
     education: asString(incomingPersonal.education),
     specialEducation: asString(incomingPersonal.specialEducation),
     occupation: asString(incomingPersonal.occupation),
+    emergencyName: asString(
+      incomingPersonal.emergencyName || membershipRaw.emergencyName || sportsRaw.emergencyName || eventRaw.emergencyName,
+    ),
+    emergencyRelation: asString(incomingPersonal.emergencyRelation),
+    emergencyPhone: asString(
+      incomingPersonal.emergencyPhone ||
+        membershipRaw.emergencyPhone ||
+        sportsRaw.emergencyPhone ||
+        eventRaw.emergencyPhone ||
+        raw.emergencyContact,
+    ),
   };
 
   const volunteerRaw = isRecord(raw.volunteer) ? raw.volunteer : raw;
-  const membershipRaw = isRecord(raw.membership) ? raw.membership : {};
-  const sportsRaw = isRecord(raw.sports) ? raw.sports : raw;
   const employeeRaw = isRecord(raw.employee) ? raw.employee : raw;
-  const eventRaw = isRecord(raw.event) ? raw.event : raw;
   const declarationRaw = isRecord(raw.declaration) ? raw.declaration : raw;
 
   return {
@@ -183,8 +201,6 @@ function normalizePayload(raw: unknown): RegistrationFormState | null {
       areasOfInterest: asStringArray(membershipRaw.areasOfInterest),
       contribution: asString(membershipRaw.contribution),
       howHeard: asString(membershipRaw.howHeard),
-      emergencyName: asString(membershipRaw.emergencyName),
-      emergencyPhone: asString(membershipRaw.emergencyPhone),
       additionalComments: asString(membershipRaw.additionalComments),
     },
     sports: {
@@ -194,8 +210,6 @@ function normalizePayload(raw: unknown): RegistrationFormState | null {
       category: asString(sportsRaw.category || raw.category),
       experienceLevel: asString(sportsRaw.experienceLevel || raw.experience),
       previousParticipation: asString(sportsRaw.previousParticipation || raw.experience),
-      emergencyName: asString(sportsRaw.emergencyName),
-      emergencyPhone: asString(sportsRaw.emergencyPhone || raw.emergencyContact),
       medicalInfo: asString(sportsRaw.medicalInfo),
       medicallyFit: asBoolean(sportsRaw.medicallyFit),
       tshirtSize: asString(sportsRaw.tshirtSize),
@@ -214,8 +228,6 @@ function normalizePayload(raw: unknown): RegistrationFormState | null {
       ...state.event,
       eventInterest: asString(eventRaw.eventInterest),
       participationMode: asString(eventRaw.participationMode),
-      emergencyName: asString(eventRaw.emergencyName),
-      emergencyPhone: asString(eventRaw.emergencyPhone || raw.emergencyContact),
       additionalComments: asString(eventRaw.additionalComments),
     },
     photograph: parseImage(raw.photograph),
@@ -264,6 +276,15 @@ function recordWithoutImages(state: RegistrationFormState, id: string, submitted
     gender: state.personal.gender,
     dob: state.personal.dob,
     address: state.personal.address,
+    postOffice: state.personal.postOffice,
+    tehsil: state.personal.tehsil,
+    district: state.personal.district,
+    stateName: state.personal.state,
+    country: state.personal.country,
+    pinCode: state.personal.pinCode,
+    emergencyName: state.personal.emergencyName,
+    emergencyRelation: state.personal.emergencyRelation,
+    emergencyPhone: state.personal.emergencyPhone,
     submittedAt,
     hasPhotograph: Boolean(state.photograph),
     hasSignature: Boolean(state.signature),

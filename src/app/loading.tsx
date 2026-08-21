@@ -78,6 +78,19 @@ export default function Loading() {
         </div>
       </section>
 
+      {/* Founder achievements */}
+      <section className="section-padding bg-white px-3 sm:px-5">
+        <div className="container-premium">
+          <Skeleton className="mb-4 h-10 w-64 rounded" />
+          <Skeleton className="mb-10 h-8 w-3/4 max-w-xl" />
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="aspect-[16/10] w-full rounded-[28px]" />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Story + Journey */}
       <section className="section-padding px-3 sm:px-5">
         <div className="container-premium grid gap-10 lg:grid-cols-[1fr_1fr]">

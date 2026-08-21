@@ -1,7 +1,7 @@
 import { REGISTRATION_TYPE_META, SPORT_OPTIONS } from "./constants";
 import { DECLARATION_CLAUSES, DECLARATION_TITLE } from "./declaration";
-import type { RegistrationFormState, RegistrationType } from "./types";
-import { typeLabel } from "./validation";
+import type { PersonalInformation, RegistrationFormState, RegistrationType } from "./types";
+import { formatDob, typeLabel } from "./validation";
 
 export function escapeHtml(value: unknown): string {
   return String(value ?? "")
@@ -54,6 +54,45 @@ function section(title: string, rows: string): string {
   `;
 }
 
+function personalRows(personal: PersonalInformation): string {
+  const contact = [personal.phone, personal.email, personal.whatsapp ? `WhatsApp: ${personal.whatsapp}` : ""]
+    .filter(Boolean)
+    .join(" · ");
+
+  return [
+    row("Name", display(personal.fullName)),
+    row("Father’s Name", display(personal.fatherName)),
+    row("Mother’s Name", display(personal.motherName)),
+    row("Date of Birth", escapeHtml(formatDob(personal.dob))),
+    row("Age", display(personal.age)),
+    row("Gender", display(personal.gender)),
+    row("Blood Group", display(personal.bloodGroup)),
+    row("Education", display(personal.education)),
+    row("Special Education / Qualification", display(personal.specialEducation)),
+    row("Occupation", display(personal.occupation)),
+    row("Nationality", display(personal.nationality)),
+    row("Address", display(personal.address)),
+    row("Post Office", display(personal.postOffice)),
+    row("Tehsil", display(personal.tehsil)),
+    row("District", display(personal.district)),
+    row("State", display(personal.state)),
+    row("Country", display(personal.country)),
+    row("PIN Code", display(personal.pinCode)),
+    row("Contact Information", display(contact)),
+  ].join("");
+}
+
+function emergencyRows(personal: PersonalInformation): string {
+  return section(
+    "Emergency Contact",
+    [
+      row("Emergency Contact Person’s Name", display(personal.emergencyName)),
+      row("Relation with the Person", display(personal.emergencyRelation)),
+      row("Emergency Contact Number", display(personal.emergencyPhone)),
+    ].join(""),
+  );
+}
+
 function sportLabel(state: RegistrationFormState): string {
   if (state.sports.sport === "other") return state.sports.otherSport || "Other";
   const found = SPORT_OPTIONS.find((item) => item.id === state.sports.sport);
@@ -98,8 +137,6 @@ function categorySpecificRows(state: RegistrationFormState): string {
         row("Areas of Interest", display(m.areasOfInterest.join(", "))),
         row("Contribution", display(m.contribution)),
         row("How They Heard About Us", display(m.howHeard)),
-        row("Emergency Contact", display(m.emergencyName)),
-        row("Emergency Phone", display(m.emergencyPhone)),
         row("Additional Comments", display(m.additionalComments)),
       ].join(""),
     );
@@ -114,8 +151,6 @@ function categorySpecificRows(state: RegistrationFormState): string {
         row("Category", display(s.category)),
         row("Experience Level", display(s.experienceLevel)),
         row("Previous Participation", display(s.previousParticipation)),
-        row("Emergency Contact", display(s.emergencyName)),
-        row("Emergency Phone", display(s.emergencyPhone)),
         row("Medical Information", display(s.medicalInfo)),
         row("Medically Fit", s.medicallyFit ? "Yes" : "No"),
         row("T-shirt Size", display(s.tshirtSize)),
@@ -145,8 +180,6 @@ function categorySpecificRows(state: RegistrationFormState): string {
     [
       row("Event / Activity", display(ev.eventInterest)),
       row("Participation Mode", display(ev.participationMode)),
-      row("Emergency Contact", display(ev.emergencyName)),
-      row("Emergency Phone", display(ev.emergencyPhone)),
       row("Additional Comments", display(ev.additionalComments)),
     ].join(""),
   );
@@ -168,17 +201,14 @@ export function buildPrintableHtml(options: {
     : new Date().toLocaleString("en-IN", { dateStyle: "long", timeStyle: "short" });
 
   const personal = state.personal;
-  const contact = [personal.phone, personal.email, personal.whatsapp ? `WhatsApp: ${personal.whatsapp}` : ""]
-    .filter(Boolean)
-    .join(" · ");
 
   const photoBlock = photoSrc
-    ? `<img src="${photoSrc}" alt="Applicant photograph" style="width:118px;height:142px;object-fit:cover;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc;" />`
-    : `<div style="width:118px;height:142px;border:1px dashed #94a3b8;border-radius:8px;background:#f8fafc;color:#64748b;font-size:11px;text-align:center;line-height:142px;">No photo</div>`;
+    ? `<img src="${photoSrc}" alt="Applicant photograph" style="width:132px;height:160px;object-fit:cover;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc;" />`
+    : `<div style="width:132px;height:160px;border:1px dashed #94a3b8;border-radius:8px;background:#f8fafc;color:#64748b;font-size:11px;text-align:center;line-height:160px;">No photo</div>`;
 
   const signatureBlock = signatureSrc
-    ? `<img src="${signatureSrc}" alt="Applicant signature" style="width:180px;height:78px;object-fit:contain;border:1px solid #cbd5e1;border-radius:8px;background:#ffffff;padding:6px;" />`
-    : `<div style="width:180px;height:78px;border:1px dashed #94a3b8;border-radius:8px;background:#f8fafc;color:#64748b;font-size:11px;text-align:center;line-height:78px;">No signature</div>`;
+    ? `<img src="${signatureSrc}" alt="Applicant signature" style="width:220px;height:88px;object-fit:contain;border:1px solid #cbd5e1;border-radius:8px;background:#ffffff;padding:6px;" />`
+    : `<div style="width:220px;height:88px;border:1px dashed #94a3b8;border-radius:8px;background:#f8fafc;color:#64748b;font-size:11px;text-align:center;line-height:88px;">No signature</div>`;
 
   const clauses = DECLARATION_CLAUSES.map(
     (clause, index) =>
@@ -234,52 +264,53 @@ export function buildPrintableHtml(options: {
           </tr>
           <tr>
             <td style="padding:22px 24px 8px;">
-              ${section(
-                "Personal Information",
-                [
-                  row("Name", display(personal.fullName)),
-                  row("Father’s Name", display(personal.fatherName)),
-                  row("Mother’s Name", display(personal.motherName)),
-                  row("Date of Birth", formatDate(personal.dob)),
-                  row("Age", display(personal.age)),
-                  row("Gender", display(personal.gender)),
-                  row("Blood Group", display(personal.bloodGroup)),
-                  row("Education", display(personal.education)),
-                  row("Special Education / Qualification", display(personal.specialEducation)),
-                  row("Occupation", display(personal.occupation)),
-                  row("Nationality", display(personal.nationality)),
-                  row("Address", display(personal.address)),
-                  row("Contact Information", display(contact)),
-                ].join(""),
-              )}
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;">
+                <tr>
+                  <td align="center">
+                    <p style="margin:0 0 8px;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#64748b;">Photograph</p>
+                    ${photoBlock}
+                    <h2 style="margin:14px 0 4px;font-size:24px;line-height:1.2;color:#0f172a;">${display(personal.fullName)}</h2>
+                    <p style="margin:0;font-size:13px;color:#475569;">${escapeHtml(typeLabel(type))} · ${escapeHtml(registrationId)}</p>
+                  </td>
+                </tr>
+              </table>
+              ${section("Personal Information", personalRows(personal))}
+              ${emergencyRows(personal)}
               ${categorySpecificRows(state)}
               <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#ffffff;">
                 <tr>
                   <td style="padding:12px 14px;background:#0f172a;color:#ffffff;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;">
-                    Photograph, Signature &amp; Declaration
+                    ${escapeHtml(DECLARATION_TITLE)}
                   </td>
                 </tr>
                 <tr>
                   <td style="padding:16px 14px;">
+                    ${clauses}
+                    <p style="margin:12px 0 0;font-size:13px;color:#0f172a;"><strong>Declaration accepted:</strong> ${state.declaration.accepted ? "Yes" : "No"}</p>
+                  </td>
+                </tr>
+              </table>
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#ffffff;">
+                <tr>
+                  <td style="padding:12px 14px;background:#0f172a;color:#ffffff;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;">
+                    Applicant Signature
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:18px 14px 16px;">
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
-                        <td width="38%" style="vertical-align:top;padding-right:12px;">
-                          <p style="margin:0 0 8px;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#64748b;">Photograph</p>
-                          ${photoBlock}
-                        </td>
-                        <td style="vertical-align:top;">
+                        <td style="vertical-align:bottom;">
                           <p style="margin:0 0 8px;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#64748b;">Signature</p>
                           ${signatureBlock}
-                          <p style="margin:14px 0 0;font-size:13px;color:#0f172a;"><strong>Date:</strong> ${formatDate(state.declaration.date)}</p>
-                          <p style="margin:6px 0 0;font-size:13px;color:#0f172a;"><strong>Place:</strong> ${display(state.declaration.place)}</p>
-                          <p style="margin:6px 0 0;font-size:13px;color:#0f172a;"><strong>Declaration accepted:</strong> ${state.declaration.accepted ? "Yes" : "No"}</p>
+                          <p style="margin:12px 0 0;font-size:13px;color:#0f172a;"><strong>Name:</strong> ${display(personal.fullName)}</p>
+                        </td>
+                        <td style="vertical-align:bottom;text-align:right;">
+                          <p style="margin:0 0 8px;font-size:13px;color:#0f172a;"><strong>Date:</strong> ${formatDate(state.declaration.date)}</p>
+                          <p style="margin:0;font-size:13px;color:#0f172a;"><strong>Place:</strong> ${display(state.declaration.place)}</p>
                         </td>
                       </tr>
                     </table>
-                    <div style="margin-top:16px;padding-top:12px;border-top:1px solid #e2e8f0;">
-                      <p style="margin:0 0 10px;font-size:13px;font-weight:700;color:#0f172a;">${escapeHtml(DECLARATION_TITLE)}</p>
-                      ${clauses}
-                    </div>
                   </td>
                 </tr>
               </table>

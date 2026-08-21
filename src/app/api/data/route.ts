@@ -71,6 +71,12 @@ function serializeFounderInfo(): AllData["founderInfo"] {
   return {
     ...D.founderInfo,
     image: img(D.founderInfo.image),
+    portraitImage: img(D.founderInfo.portraitImage),
+    medalsImage: img(D.founderInfo.medalsImage),
+    honours: D.founderInfo.honours.map((honour) => ({
+      ...honour,
+      image: img(honour.image),
+    })),
   };
 }
 
@@ -112,7 +118,13 @@ function serializeDonationInfo(): AllData["donationInfo"] {
 }
 
 function serializeGalleryItems(): AllData["galleryItems"] {
-  return D.galleryItems.map((g) => ({ ...g, imageSrc: img(g.imageSrc) })) as AllData["galleryItems"];
+  return D.galleryItems.map((g) => ({
+    label: g.label,
+    type: g.type as AllData["galleryItems"][number]["type"],
+    theme: g.theme,
+    ...(g.imageSrc ? { imageSrc: img(g.imageSrc) } : {}),
+    ...(g.videoSrc ? { videoSrc: g.videoSrc } : {}),
+  }));
 }
 
 // ── Main handler ───────────────────────────────────────────

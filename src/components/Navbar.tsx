@@ -63,7 +63,7 @@ export default function Navbar({ navigationItems }: NavbarProps) {
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full border-b transition-colors duration-200 ${
+      className={`sticky top-0 z-50 w-full min-w-0 border-b transition-colors duration-200 ${
         scrolled ? "border-slate-200/90 bg-white shadow-md" : "border-slate-200 bg-white"
       }`}
     >
@@ -75,7 +75,7 @@ export default function Navbar({ navigationItems }: NavbarProps) {
       </a>
 
       <div className="container-premium mx-auto px-4 sm:px-6 lg:px-8">
-        <nav aria-label="Primary navigation" className="flex h-[72px] items-center justify-between gap-4">
+        <nav aria-label="Primary navigation" className="flex h-[72px] min-w-0 items-center justify-between gap-2 sm:gap-4">
           <Link
             href="/"
             className="flex min-w-0 items-center gap-3 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
@@ -129,7 +129,7 @@ export default function Navbar({ navigationItems }: NavbarProps) {
                   : "border-slate-200 bg-white text-slate-800 hover:border-emerald-300 hover:text-emerald-800"
               }`}
             >
-              Get Involved
+              Join Us
             </Link>
           </div>
 
@@ -143,7 +143,7 @@ export default function Navbar({ navigationItems }: NavbarProps) {
                   : "bg-emerald-600 text-white hover:bg-emerald-700"
               }`}
             >
-              Get Involved
+              Join Us
             </Link>
             <button
             ref={menuButtonRef}
@@ -209,7 +209,7 @@ export default function Navbar({ navigationItems }: NavbarProps) {
                   : "border-slate-200 bg-white text-slate-800 hover:border-emerald-300 hover:bg-emerald-50"
               }`}
             >
-              <span>Get Involved</span>
+              <span>Join Us</span>
               <span aria-hidden="true" className="text-lg">
                 →
               </span>

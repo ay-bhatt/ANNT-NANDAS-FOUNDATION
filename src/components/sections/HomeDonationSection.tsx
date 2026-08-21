@@ -12,7 +12,7 @@ export default function HomeDonationSection({
     <section className="section-padding px-3 sm:px-5" aria-labelledby="home-donation-title">
       <div className="container-premium">
         <div className="relative overflow-hidden rounded-[32px] bg-[linear-gradient(135deg,#071a3c_0%,#0d3b73_58%,#08775b_100%)] text-white shadow-[0_28px_80px_rgba(15,23,42,0.18)]">
-          <div className="absolute -right-24 -top-24 h-72 w-72 rounded-full bg-emerald-400/15 blur-3xl" aria-hidden="true" />
+          <div className="pointer-events-none absolute right-0 top-0 h-48 w-48 rounded-full bg-emerald-400/15 blur-3xl" aria-hidden="true" />
           <div className="relative grid gap-8 p-6 sm:p-9 lg:grid-cols-[0.95fr_1.05fr] lg:p-12">
             <div className="max-w-xl">
               <span className="section-label-dark">Give With Purpose</span>

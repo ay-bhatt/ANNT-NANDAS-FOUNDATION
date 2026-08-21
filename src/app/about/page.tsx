@@ -4,7 +4,8 @@ import { getAllData } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "About Us | ANNT NANDAS FOUNDATION",
-  description: "Discover the foundation’s grassroots journey, values, leadership, and commitment to Himalayan communities.",
+  description:
+    "Meet founder Kalam Singh Bisht — ex-serviceman, COAS and GOC-in-C commendation awardee, Governor Award recipient, and 120 KM Hajar Ultra champion — and the Himalayan mission of ANNT NANDAS FOUNDATION.",
   alternates: { canonical: "/about" },
 };
 import { CTASection, PageHero, SectionHeading } from "@/components/site/SectionBlocks";
@@ -43,13 +44,16 @@ export default async function AboutPage() {
             />
             <div className="space-y-4 text-base leading-8 text-slate-600">
               <p>
-                ANNT NANDAS FOUNDATION is a registered non-profit organisation committed to long-term social impact through education, sports, healthcare, environment, women empowerment, and community development.
+                Nestled in the Himalayan village of Mundoli, Chamoli, Uttarakhand, ANNT NANDAS FOUNDATION is more than a non-profit organisation — it is a movement dedicated to transforming lives through opportunity, compassion, and purpose.
               </p>
               <p>
-                Our work is guided by a simple belief: every child deserves access to encouragement, mentorship, and a fair chance to pursue a stronger future.
+                Founded on 1st May 2023 as an unregistered community effort under the name Mundoli Riders Club, the work began with an extraordinary dream and the simplest of resources: two bicycles and twelve children. On 27 May 2026 the organisation was registered as अनंत नन्दा फाउण्डेशन (ANNT NANDAS FOUNDATION), a Section 8 non-profit.
               </p>
               <p>
-                We believe real transformation happens when programmes are locally rooted, deeply human, and shaped with communities instead of for them.
+                Every child possesses a gift. Some discover it early. Many never do. We believe talent is not determined by wealth, geography, or social status. It exists in every village, every home, and every child waiting for someone to believe in them.
+              </p>
+              <p>
+                Whether that journey leads to becoming a national athlete, a skilled professional, an entrepreneur, a government officer, or a responsible citizen, we stand beside every child throughout the journey. We are not simply creating athletes. We are building confident leaders and transforming generations.
               </p>
             </div>
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -74,6 +78,34 @@ export default async function AboutPage() {
       </section>
 
       <section className="section-padding bg-white/70 px-3 sm:px-5">
+        <div className="container-premium grid gap-8 lg:grid-cols-3">
+          {[
+            {
+              eyebrow: "Why we exist",
+              title: "The problem is not ability. It is opportunity.",
+              body: "The Himalayan region is home to extraordinary resilience and remarkable human potential. Yet thousands of children in remote villages still face scarce sports facilities, limited educational resources, and almost no career guidance. Hidden talent remains undiscovered, and poverty continues across generations. We exist to change that reality — by empowering people with knowledge, skills, discipline, confidence, and lifelong independence.",
+            },
+            {
+              eyebrow: "Our vision",
+              title: "A future where every child has the chance to rise",
+              body: "We envision a society where no child’s future is determined by poverty, geography, or circumstance. Every village should become a place of opportunity. Every young person should have the confidence, knowledge, and skills to build an independent life — and to represent their community with pride at district, state, national, and international levels.",
+            },
+            {
+              eyebrow: "Our mission",
+              title: "Transforming potential into purpose",
+              body: "Rather than providing temporary relief, we focus on building lifelong capabilities. We identify hidden talent, nurture it with dedication, and create pathways in education, sports, leadership, entrepreneurship, skill development, environmental awareness, and community participation. When talent meets opportunity, lives change. When lives change, families grow stronger. When families grow stronger, villages prosper.",
+            },
+          ].map((block) => (
+            <article key={block.title} className="surface-card p-6 sm:p-7">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700">{block.eyebrow}</p>
+              <h2 className="mt-3 text-xl font-bold tracking-[-0.03em] text-slate-950">{block.title}</h2>
+              <p className="mt-4 text-sm leading-7 text-slate-600">{block.body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="section-padding px-3 sm:px-5">
         <div className="container-premium">
           <SectionHeading
             eyebrow="Our Journey"
@@ -101,7 +133,7 @@ export default async function AboutPage() {
         <div className="container-premium grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="surface-dark relative overflow-hidden p-8 sm:p-10">
             <div className="absolute inset-0">
-              <Image src={founderInfo.image} alt="" fill sizes="100vw" className="object-cover opacity-20" />
+              <Image src={founderInfo.image} alt={`${founderInfo.name}, founder of ANNT NANDAS FOUNDATION`} fill sizes="100vw" className="object-cover opacity-20" />
               <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(2,6,23,0.95),rgba(15,23,42,0.78),rgba(30,64,175,0.34))]" />
             </div>
             <div className="relative z-10">
