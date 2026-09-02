@@ -37,7 +37,8 @@ export default function ScrollToTop() {
           type="button"
           onClick={scrollToTop}
           aria-label="Back to top"
-          className="fixed bottom-28 right-4 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-blue-600 text-white shadow-xl sm:bottom-8 sm:right-6"
+          title="Back to top"
+          className="fixed z-30 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-emerald-500 to-blue-600 text-white shadow-xl bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-4 lg:bottom-8 lg:right-6"
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0, opacity: 0 }}

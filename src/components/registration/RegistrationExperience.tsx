@@ -3,33 +3,48 @@
 import type { RegistrationType, SportKind } from "@/lib/registration/types";
 import { REGISTRATION_TYPE_META } from "@/lib/registration/constants";
 import RegistrationWizard from "./RegistrationWizard";
+import { useI18n } from "@/components/i18n/LanguageProvider";
 
 export default function RegistrationExperience({
   initialType = "",
   initialSport = "",
   heading,
   description,
+  showHeader = true,
 }: {
   initialType?: RegistrationType | "";
   initialSport?: SportKind | "";
   heading?: string;
   description?: string;
+  showHeader?: boolean;
 }) {
   const meta = initialType ? REGISTRATION_TYPE_META[initialType] : null;
+  const { t } = useI18n();
 
   return (
     <div className="relative bg-slate-50 pb-8">
       <div className="pointer-events-none absolute inset-x-0 top-0 h-72 bg-[linear-gradient(180deg,rgba(219,234,254,0.55)_0%,rgba(236,253,245,0.35)_48%,transparent_100%)]" />
       <div className="container-premium relative z-10 px-4 py-8 sm:px-6 sm:py-12 lg:py-16">
-        <div className="mb-8 max-w-3xl">
-          <p className="section-label">Join Us</p>
-          <h1 className="display-title text-3xl sm:text-5xl">{heading || meta?.label || "Join the foundation"}</h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-            {description ||
-              meta?.description ||
-              "Choose how you would like to take part — as a volunteer, member, sports participant, event guest, or team applicant."}
-          </p>
-        </div>
+        {showHeader ? (
+          <div className="mb-8 max-w-3xl">
+            <p className="section-label">{t("Join Us")}</p>
+            <h1 className="display-title text-3xl sm:text-5xl">{t(heading || meta?.label || "Join the foundation")}</h1>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
+              {t(
+                description ||
+                  meta?.description ||
+                  "Choose how you would like to take part — as a volunteer, member, sports participant, event guest, or team applicant.",
+              )}
+            </p>
+          </div>
+        ) : description ? (
+          <div className="mb-8 max-w-3xl">
+            <h2 className="text-2xl font-bold tracking-[-0.03em] text-slate-950 sm:text-3xl">
+              {t(heading || "Complete the registration form")}
+            </h2>
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">{t(description)}</p>
+          </div>
+        ) : null}
         <RegistrationWizard initialType={initialType} initialSport={initialSport} />
       </div>
     </div>

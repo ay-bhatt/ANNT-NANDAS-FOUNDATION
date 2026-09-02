@@ -30,6 +30,7 @@ export interface SocialLinks {
 
 export interface SiteConfig {
   name: string;
+  hindiName: string;
   shortName: string;
   tagline: string;
   motto: string;
@@ -183,6 +184,17 @@ export interface UpcomingEvent {
 //  News
 // ─────────────────────────
 
+export interface SiteNotice {
+  id: string;
+  kind: "event" | "news" | "volunteer";
+  eyebrow: string;
+  title: string;
+  summary: string;
+  meta: string;
+  cta: string;
+  href: string;
+}
+
 export interface NewsItem {
   title: string;
   date: string;
@@ -234,6 +246,34 @@ export interface VolunteerOpportunity {
   title: string;
   description: string;
   href: string;
+  image?: ImageSrc;
+}
+
+export interface VisualMoment {
+  src: ImageSrc;
+  label: string;
+}
+
+export interface PageVisuals {
+  ourWorkHero: ImageSrc;
+  ourWorkCta: ImageSrc;
+  programsHero: ImageSrc;
+  programsCta: ImageSrc;
+  eventsHero: ImageSrc;
+  eventsCta: ImageSrc;
+  galleryHero: ImageSrc;
+  galleryCta: ImageSrc;
+  donateHero: ImageSrc;
+  donateCta: ImageSrc;
+  contactHero: ImageSrc;
+  contactCta: ImageSrc;
+  newsCta: ImageSrc;
+  homeCta: ImageSrc;
+  overviewPrimary: ImageSrc;
+  overviewSecondary: ImageSrc;
+  aboutHero: ImageSrc;
+  aboutCta: ImageSrc;
+  communityRooted: ImageSrc;
 }
 
 // ─────────────────────────
@@ -278,6 +318,7 @@ export interface AllData {
   impactAreas: ImpactArea[];
   featureCards: FeatureCard[];
   upcomingEvents: UpcomingEvent[];
+  siteNotices: SiteNotice[];
   newsItems: NewsItem[];
   testimonials: Testimonial[];
   partners: Partner[];
@@ -289,6 +330,9 @@ export interface AllData {
   galleryItems: GalleryItem[];
   collageImages: ImageSrc[];
   homeVisualGrid: ImageSrc[];
+  homeGalleryPreview: ImageSrc[];
+  homeMoments: VisualMoment[];
+  pageVisuals: PageVisuals;
   newsHeroImage: ImageSrc;
   formOptions: FormOptions;
 }

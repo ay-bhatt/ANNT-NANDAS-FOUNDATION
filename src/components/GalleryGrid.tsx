@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import type { GalleryItem } from "@/lib/types";
+import { useI18n } from "@/components/i18n/LanguageProvider";
 
 interface GalleryGridProps {
   items: GalleryItem[];
@@ -19,6 +20,7 @@ function PlayIcon({ className = "h-6 w-6" }: { className?: string }) {
 }
 
 export default function GalleryGrid({ items, categories }: GalleryGridProps) {
+  const { t } = useI18n();
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -27,7 +29,8 @@ export default function GalleryGrid({ items, categories }: GalleryGridProps) {
   const filteredItems = useMemo(() => {
     if (activeCategory === "All") return items;
     if (activeCategory === "Photos") return items.filter((item) => item.type === "photo");
-    return items.filter((item) => item.type === "video");
+    if (activeCategory === "Videos") return items.filter((item) => item.type === "video");
+    return items.filter((item) => item.theme === activeCategory);
   }, [activeCategory, items]);
 
   const selected = selectedIndex !== null ? filteredItems[selectedIndex] : null;
@@ -70,7 +73,7 @@ export default function GalleryGrid({ items, categories }: GalleryGridProps) {
                     : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                 }`}
               >
-                {category}
+                {t(category)}
               </button>
             ))}
           </div>
@@ -109,9 +112,9 @@ export default function GalleryGrid({ items, categories }: GalleryGridProps) {
                   ) : null}
                   <div className="absolute inset-x-0 bottom-0 p-4 text-left text-white">
                     <p className="text-xs uppercase tracking-[0.22em] text-emerald-200">
-                      {item.type === "video" ? "Video" : item.theme}
+                      {item.type === "video" ? t("Video") : t(item.theme)}
                     </p>
-                    <p className="mt-2 text-sm font-semibold sm:text-base">{item.label}</p>
+                    <p className="mt-2 text-sm font-semibold sm:text-base">{t(item.label)}</p>
                   </div>
                 </div>
               </motion.button>

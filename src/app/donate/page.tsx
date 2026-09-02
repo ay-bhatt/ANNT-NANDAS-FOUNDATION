@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getAllData } from "@/lib/api";
 import { CTASection, PageHero, SectionHeading } from "@/components/site/SectionBlocks";
 import DonationWidget from "@/components/donation/DonationWidget";
+import { T } from "@/components/i18n/T";
 
 export const metadata: Metadata = {
   title: "Donate | ANNT NANDAS FOUNDATION",
@@ -11,14 +12,14 @@ export const metadata: Metadata = {
 
 export default async function DonatePage() {
   const data = await getAllData();
-  const { donationImpacts, donationInfo, donationAmounts, heroContent } = data;
+  const { donationImpacts, donationInfo, donationAmounts, pageVisuals } = data;
   return (
     <div className="pb-8">
       <PageHero
         eyebrow="Support Us"
         title="Make a donation that reaches real communities"
         description="Your contribution supports grassroots programmes across education, healthcare, environment, sports, youth development, and women empowerment."
-        image={heroContent.image}
+        image={pageVisuals.donateHero}
         actions={[
           { label: "Contact for Partnership", href: "/contact" },
           { label: "Become a Volunteer", href: "/volunteer-registration", variant: "secondary" },
@@ -44,7 +45,7 @@ export default async function DonatePage() {
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-700">
                     {index + 1}
                   </span>
-                  <span>{instruction}</span>
+                  <span><T>{instruction}</T></span>
                 </li>
               ))}
             </ol>
@@ -62,7 +63,7 @@ export default async function DonatePage() {
                   <p className="text-3xl font-bold tracking-[-0.03em] text-slate-950">
                     ₹{item.amount.toLocaleString("en-IN")}
                   </p>
-                  <p className="mt-3 text-sm leading-7 text-slate-600">{item.impact}</p>
+                  <p className="mt-3 text-sm leading-7 text-slate-600"><T>{item.impact}</T></p>
                 </div>
               ))}
             </div>
@@ -75,7 +76,7 @@ export default async function DonatePage() {
         description="You can also volunteer, partner with the team, or help expand the foundation’s reach in your network and community."
         primary={{ label: "Contact the Team", href: "/contact" }}
         secondary={{ label: "Volunteer Registration", href: "/volunteer-registration" }}
-        image={heroContent.supportingVisuals[0]}
+        image={pageVisuals.donateCta}
       />
     </div>
   );

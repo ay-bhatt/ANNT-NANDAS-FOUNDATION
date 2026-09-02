@@ -47,10 +47,130 @@
       "date": "2026-08-21"
     },
     "files": {
-      "photograph": "uploads/sports/ANF-SPT-260821-6DM8-photograph.jpg",
-      "signature": "uploads/sports/ANF-SPT-260821-6DM8-signature.jpg"
+      "photograph": "uploads/photographs/sports/ANF-SPT-260821-6DM8_ayush-bhatt_photograph.jpg",
+      "signature": "uploads/signatures/sports/ANF-SPT-260821-6DM8_ayush-bhatt_signature.jpg"
     },
     "name": "ayush bhatt",
     "joinedAs": "sports"
+  },
+  {
+    "id": "ANF-THN-260901-ON38",
+    "type": "talent-hunt",
+    "submittedAt": "2026-09-01T07:58:31.050Z",
+    "personal": {
+      "fullName": "ayush bhatt",
+      "fatherName": "ayush",
+      "motherName": "bhatt",
+      "dob": "2015-02-10",
+      "age": "11",
+      "gender": "Male",
+      "nationality": "Indian",
+      "address": "177 SHASTRI NAGAR SEEMADWAR DEHRADUN UTTRAKHAND",
+      "postOffice": "GARHICANTT POST OFFI",
+      "tehsil": "dd",
+      "district": "Dehradun",
+      "state": "Uttarakhand",
+      "country": "India",
+      "pinCode": "248001",
+      "phone": "+917310756069",
+      "email": "aybhatt0022@gmail.com",
+      "whatsapp": "",
+      "bloodGroup": "B-",
+      "education": "Intermediate / 12th",
+      "specialEducation": "",
+      "occupation": "Athlete",
+      "emergencyName": "ayush bhatt",
+      "emergencyRelation": "Relative",
+      "emergencyPhone": "+917310756069"
+    },
+    "talentHunt": {
+      "talentCategory": "Running / Long Distance",
+      "otherTalent": "",
+      "schoolName": "aps",
+      "classGrade": "Class 10",
+      "aadhaarNumber": "9103 9031 4881",
+      "previousAchievements": "qqq",
+      "parentName": "ayush bhatt",
+      "parentRelation": "Guardian",
+      "parentPhone": "07310756069",
+      "parentEmail": "aybhatt0022@gmail.com",
+      "whyParticipate": "qwqw",
+      "additionalComments": ""
+    },
+    "declaration": {
+      "accepted": true,
+      "place": "dehradun",
+      "date": "2026-09-01"
+    },
+    "payment": {
+      "amount": 100,
+      "currency": "INR",
+      "payee": "ANNT NANDAS FOUNDATION"
+    },
+    "files": {
+      "photograph": "uploads/photographs/talent-hunt/ANF-THN-260901-ON38_ayush-bhatt_photograph.jpg",
+      "signature": "uploads/signatures/talent-hunt/ANF-THN-260901-ON38_ayush-bhatt_signature.jpg",
+      "aadhaar": "uploads/aadhaar/talent-hunt/ANF-THN-260901-ON38_ayush-bhatt_aadhaar.jpg",
+      "paymentProof": "uploads/payments/talent-hunt/ANF-THN-260901-ON38_ayush-bhatt_payment.jpg"
+    },
+    "name": "ayush bhatt",
+    "joinedAs": "talent-hunt"
+  },
+  {
+    "id": "ANF-EMP-260901-CKIV",
+    "type": "employee",
+    "submittedAt": "2026-09-01T08:08:11.263Z",
+    "personal": {
+      "fullName": "test sub",
+      "fatherName": "test",
+      "motherName": "test",
+      "dob": "2004-12-16",
+      "age": "21",
+      "gender": "Male",
+      "nationality": "Indian",
+      "address": "177 SHASTRI NAGAR SEEMADWAR DEHRADUN UTTRAKHAND",
+      "postOffice": "test",
+      "tehsil": "abc",
+      "district": "Dehradun",
+      "state": "Uttarakhand",
+      "country": "India",
+      "pinCode": "248005",
+      "phone": "+917310756069",
+      "email": "test@example.com",
+      "whatsapp": "32456789654",
+      "bloodGroup": "O-",
+      "education": "Graduate",
+      "specialEducation": "",
+      "occupation": "",
+      "emergencyName": "ayush bhatt",
+      "emergencyRelation": "Friend",
+      "emergencyPhone": "+917310756069"
+    },
+    "employee": {
+      "position": "test",
+      "qualifications": "test",
+      "experience": "",
+      "availabilityToJoin": "",
+      "whyJoin": "test",
+      "additionalComments": ""
+    },
+    "declaration": {
+      "accepted": true,
+      "place": "test",
+      "date": "2026-09-01"
+    },
+    "payment": {
+      "amount": 100,
+      "currency": "INR",
+      "payee": "ANNT NANDAS FOUNDATION"
+    },
+    "files": {
+      "photograph": "uploads/photographs/employee/ANF-EMP-260901-CKIV_test-sub_photograph.jpg",
+      "signature": "uploads/signatures/employee/ANF-EMP-260901-CKIV_test-sub_signature.jpg",
+      "aadhaar": null,
+      "paymentProof": "uploads/payments/employee/ANF-EMP-260901-CKIV_test-sub_payment.jpg"
+    },
+    "name": "test sub",
+    "joinedAs": "employee"
   }
 ]

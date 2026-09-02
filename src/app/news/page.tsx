@@ -8,10 +8,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/news" },
 };
 import { CTASection, PageHero, SectionHeading } from "@/components/site/SectionBlocks";
+import { T } from "@/components/i18n/T";
 
 export default async function NewsPage() {
   const data = await getAllData();
-  const { heroContent, newsHeroImage, newsItems } = data;
+  const { pageVisuals, newsHeroImage, newsItems } = data;
   return (
     <div className="pb-8">
       <PageHero
@@ -41,11 +42,11 @@ export default async function NewsPage() {
                 </div>
                 <div className="p-6">
                   <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em]">
-                    <span className="rounded-full bg-emerald-50 px-3 py-1 text-emerald-700">{item.category}</span>
-                    <span className="text-slate-400">{item.date}</span>
+                    <span className="rounded-full bg-emerald-50 px-3 py-1 text-emerald-700"><T>{item.category}</T></span>
+                    <span className="text-slate-400"><T>{item.date}</T></span>
                   </div>
-                  <h2 className="mt-4 text-xl font-semibold text-slate-950">{item.title}</h2>
-                  <p className="mt-3 text-sm leading-7 text-slate-600">{item.summary}</p>
+                  <h2 className="mt-4 text-xl font-semibold text-slate-950"><T>{item.title}</T></h2>
+                  <p className="mt-3 text-sm leading-7 text-slate-600"><T>{item.summary}</T></p>
                 </div>
               </article>
             ))}
@@ -58,7 +59,7 @@ export default async function NewsPage() {
         description="Reach out, follow our channels, or visit upcoming events to stay closely connected to the work happening on the ground."
         primary={{ label: "Contact Us", href: "/contact" }}
         secondary={{ label: "View Events", href: "/events" }}
-        image={heroContent.supportingVisuals[2]}
+        image={pageVisuals.newsCta}
       />
     </div>
   );

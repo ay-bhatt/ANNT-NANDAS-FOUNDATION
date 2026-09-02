@@ -1,13 +1,12 @@
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import fs from "fs/promises";
 import path from "path";
-import { REGISTRATION_TYPE_META, SPORT_OPTIONS } from "./constants";
-import { DECLARATION_CLAUSES } from "./declaration";
+import { REGISTRATION_FEE_AMOUNT, REGISTRATION_FEE_PAYEE, REGISTRATION_TYPE_META, SPORT_OPTIONS } from "./constants";
 import type { RegistrationFormState, RegistrationType } from "./types";
-import { formatDob, typeLabel } from "./validation";
+import { formatAadhaarNumber, formatDob, typeLabel } from "./validation";
 
 const PAGE = { width: 595.28, height: 841.89 };
-const MARGIN = 42;
+const MARGIN = 22;
 const NAVY = rgb(15 / 255, 23 / 255, 42 / 255);
 const BLUE = rgb(29 / 255, 78 / 255, 216 / 255);
 const GREEN = rgb(4 / 255, 120 / 255, 87 / 255);
@@ -87,66 +86,43 @@ class PdfWriter {
     this.y = PAGE.height - MARGIN;
   }
 
-  async ensure(space: number) {
-    if (this.y - space > MARGIN + 24) return;
-    this.page = this.doc.addPage([PAGE.width, PAGE.height]);
-    this.y = PAGE.height - MARGIN;
-    this.page.drawText("ANNT NANDAS FOUNDATION · Registration Record", {
-      x: MARGIN,
-      y: PAGE.height - 28,
-      size: 8,
-      font: this.font,
-      color: SLATE,
-    });
-    this.y = PAGE.height - 48;
-  }
-
   heading(title: string) {
-    if (this.y < MARGIN + 70) {
-      this.page = this.doc.addPage([PAGE.width, PAGE.height]);
-      this.y = PAGE.height - 48;
-    }
-    this.y -= 8;
+    this.y -= 5;
     this.page.drawRectangle({
       x: MARGIN,
-      y: this.y - 18,
+      y: this.y - 14,
       width: PAGE.width - MARGIN * 2,
-      height: 22,
+      height: 16,
       color: NAVY,
     });
     this.page.drawText(pdfSafe(title).toUpperCase(), {
-      x: MARGIN + 10,
-      y: this.y - 13,
-      size: 9,
+      x: MARGIN + 8,
+      y: this.y - 11,
+      size: 8,
       font: this.bold,
       color: rgb(1, 1, 1),
     });
-    this.y -= 28;
+    this.y -= 18;
   }
 
   row(label: string, value: string) {
-    const labelWidth = 168;
+    const labelWidth = 150;
     const valueWidth = PAGE.width - MARGIN * 2 - labelWidth - 8;
-    const lines = wrapText(this.font, value || "Not provided", 10, valueWidth);
-    const height = Math.max(18, lines.length * 13 + 8);
+    const lines = wrapText(this.font, value || "Not provided", 8.5, valueWidth);
+    const height = Math.max(13, lines.length * 10 + 4);
     this.y -= height;
-    if (this.y < MARGIN + 24) {
-      this.y += height;
-      this.page = this.doc.addPage([PAGE.width, PAGE.height]);
-      this.y = PAGE.height - 48 - height;
-    }
     this.page.drawText(pdfSafe(label), {
       x: MARGIN + 4,
-      y: this.y + height - 14,
-      size: 9,
+      y: this.y + height - 11,
+      size: 8,
       font: this.font,
       color: SLATE,
     });
     lines.forEach((line, index) => {
       this.page.drawText(line, {
         x: MARGIN + labelWidth,
-        y: this.y + height - 14 - index * 13,
-        size: 10,
+        y: this.y + height - 11 - index * 10,
+        size: 8.5,
         font: this.bold,
         color: NAVY,
       });
@@ -154,7 +130,57 @@ class PdfWriter {
     this.page.drawLine({
       start: { x: MARGIN, y: this.y },
       end: { x: PAGE.width - MARGIN, y: this.y },
-      thickness: 0.5,
+      thickness: 0.4,
+      color: LINE,
+    });
+  }
+
+  pairRow(label1: string, value1: string, label2?: string, value2?: string) {
+    const colW = (PAGE.width - MARGIN * 2) / 2;
+    const labelW = 88;
+    const valueW = colW - labelW - 6;
+    const lines1 = wrapText(this.font, value1 || "Not provided", 8, valueW);
+    const lines2 = label2 ? wrapText(this.font, value2 || "Not provided", 8, valueW) : [""];
+    const height = Math.max(13, Math.max(lines1.length, lines2.length) * 10 + 4);
+    this.y -= height;
+    this.page.drawText(pdfSafe(label1), {
+      x: MARGIN + 3,
+      y: this.y + height - 11,
+      size: 7.5,
+      font: this.font,
+      color: SLATE,
+    });
+    lines1.forEach((line, index) => {
+      this.page.drawText(line, {
+        x: MARGIN + labelW,
+        y: this.y + height - 11 - index * 10,
+        size: 8,
+        font: this.bold,
+        color: NAVY,
+      });
+    });
+    if (label2) {
+      this.page.drawText(pdfSafe(label2), {
+        x: MARGIN + colW + 3,
+        y: this.y + height - 11,
+        size: 7.5,
+        font: this.font,
+        color: SLATE,
+      });
+      lines2.forEach((line, index) => {
+        this.page.drawText(line, {
+          x: MARGIN + colW + labelW,
+          y: this.y + height - 11 - index * 10,
+          size: 8,
+          font: this.bold,
+          color: NAVY,
+        });
+      });
+    }
+    this.page.drawLine({
+      start: { x: MARGIN, y: this.y },
+      end: { x: PAGE.width - MARGIN, y: this.y },
+      thickness: 0.4,
       color: LINE,
     });
   }
@@ -176,16 +202,16 @@ export async function buildRegistrationPdf(options: {
 
   writer.page.drawRectangle({
     x: 0,
-    y: PAGE.height - 108,
+    y: PAGE.height - 58,
     width: PAGE.width,
-    height: 108,
+    height: 58,
     color: NAVY,
   });
   writer.page.drawRectangle({
     x: 0,
-    y: PAGE.height - 112,
+    y: PAGE.height - 61,
     width: PAGE.width,
-    height: 4,
+    height: 3,
     color: GREEN,
   });
 
@@ -195,9 +221,9 @@ export async function buildRegistrationPdf(options: {
       const embedded = await doc.embedPng(logoPng);
       writer.page.drawImage(embedded, {
         x: MARGIN,
-        y: PAGE.height - 96,
-        width: 54,
-        height: 54,
+        y: PAGE.height - 50,
+        width: 32,
+        height: 32,
       });
     } catch {
       // continue with text branding
@@ -205,21 +231,21 @@ export async function buildRegistrationPdf(options: {
   }
 
   writer.page.drawText("ANNT NANDAS FOUNDATION", {
-    x: MARGIN + 68,
-    y: PAGE.height - 58,
-    size: 16,
+    x: MARGIN + 42,
+    y: PAGE.height - 32,
+    size: 13,
     font: bold,
     color: rgb(1, 1, 1),
   });
-  writer.page.drawText("Official Registration Record", {
-    x: MARGIN + 68,
-    y: PAGE.height - 76,
-    size: 10,
+  writer.page.drawText("Official Registration Record · One page", {
+    x: MARGIN + 42,
+    y: PAGE.height - 46,
+    size: 8,
     font: font,
     color: rgb(0.75, 0.85, 1),
   });
 
-  writer.y = PAGE.height - 138;
+  writer.y = PAGE.height - 78;
   writer.page.drawText(pdfSafe(`Registration Type: ${typeLabel(type)}`), {
     x: MARGIN,
     y: writer.y,
@@ -264,158 +290,137 @@ export async function buildRegistrationPdf(options: {
   }
 
   const p = state.personal;
-  await writer.ensure(170);
   writer.page.drawText("Photograph", {
     x: MARGIN,
     y: writer.y,
-    size: 9,
+    size: 7,
     font: bold,
     color: SLATE,
   });
-  writer.y -= 8;
+  writer.y -= 4;
   if (photoImage) {
-    writer.page.drawImage(photoImage, { x: MARGIN, y: writer.y - 118, width: 96, height: 118 });
+    writer.page.drawImage(photoImage, { x: MARGIN, y: writer.y - 70, width: 58, height: 70 });
   } else {
     writer.page.drawRectangle({
       x: MARGIN,
-      y: writer.y - 118,
-      width: 96,
-      height: 118,
+      y: writer.y - 70,
+      width: 58,
+      height: 70,
       borderColor: LINE,
       borderWidth: 1,
     });
   }
-  const nameLines = wrapText(bold, p.fullName || "Not provided", 16, PAGE.width - MARGIN * 2 - 120);
-  let nameY = writer.y - 28;
+  const nameLines = wrapText(bold, p.fullName || "Not provided", 12, PAGE.width - MARGIN * 2 - 76);
+  let nameY = writer.y - 16;
   for (const line of nameLines) {
-    writer.page.drawText(line, { x: MARGIN + 112, y: nameY, size: 16, font: bold, color: NAVY });
-    nameY -= 18;
+    writer.page.drawText(line, { x: MARGIN + 70, y: nameY, size: 12, font: bold, color: NAVY });
+    nameY -= 13;
   }
   writer.page.drawText(pdfSafe(`${typeLabel(type)}  |  ${registrationId}`), {
-    x: MARGIN + 112,
-    y: nameY - 4,
-    size: 10,
+    x: MARGIN + 70,
+    y: nameY - 2,
+    size: 8,
     font: font,
     color: SLATE,
   });
-  writer.y -= 130;
+  writer.y -= 78;
 
   writer.heading("Personal Information");
-  writer.row("Name", p.fullName);
-  writer.row("Father’s Name", p.fatherName);
-  writer.row("Mother’s Name", p.motherName);
-  writer.row("Date of Birth", formatDob(p.dob));
-  writer.row("Age", p.age);
-  writer.row("Gender", p.gender);
-  writer.row("Blood Group", p.bloodGroup);
-  writer.row("Education", p.education);
-  writer.row("Special Education", p.specialEducation);
-  writer.row("Occupation", p.occupation);
-  writer.row("Nationality", p.nationality);
+  writer.pairRow("Name", p.fullName, "Father’s Name", p.fatherName);
+  writer.pairRow("Mother’s Name", p.motherName, "Date of Birth", formatDob(p.dob));
+  writer.pairRow("Age", p.age, "Gender", p.gender);
+  writer.pairRow("Blood Group", p.bloodGroup, "PIN Code", p.pinCode);
+  if (p.education.trim() || p.occupation.trim()) {
+    writer.pairRow("Education", p.education, "Occupation", p.occupation);
+  }
+  if (p.nationality.trim() || p.specialEducation.trim()) {
+    writer.pairRow("Nationality", p.nationality, "Special Education", p.specialEducation);
+  }
+  writer.pairRow("Post Office", p.postOffice, "Tehsil", p.tehsil);
+  writer.pairRow("District", p.district, "State", p.state);
+  writer.pairRow("Country", p.country, "Phone", p.phone);
+  writer.pairRow("Email", p.email, "WhatsApp", p.whatsapp);
   writer.row("Address", p.address);
-  writer.row("Post Office", p.postOffice);
-  writer.row("Tehsil", p.tehsil);
-  writer.row("District", p.district);
-  writer.row("State", p.state);
-  writer.row("Country", p.country);
-  writer.row("PIN Code", p.pinCode);
-  writer.row("Phone", p.phone);
-  writer.row("Email", p.email);
-  writer.row("WhatsApp", p.whatsapp);
-
-  writer.heading("Emergency Contact");
-  writer.row("Emergency Contact Person’s Name", p.emergencyName);
-  writer.row("Relation with the Person", p.emergencyRelation);
-  writer.row("Emergency Contact Number", p.emergencyPhone);
+  writer.pairRow("Emergency contact", p.emergencyName, "Relation", p.emergencyRelation);
+  writer.row("Emergency number", p.emergencyPhone);
 
   if (type === "volunteer") {
     const v = state.volunteer;
     writer.heading("Volunteer Information");
-    writer.row("Volunteer Name", v.volunteerName);
-    writer.row("Skills / Expertise", v.skills);
-    writer.row("Category / Role", v.roles.join(", "));
-    writer.row("Other Skill / Role", v.otherRole);
-    writer.row("Subjects", v.subjects);
-    writer.row("Experience", v.experience);
+    writer.pairRow("Volunteer Name", v.volunteerName, "Skills / Expertise", v.skills);
+    writer.pairRow("Category / Role", v.roles.join(", "), "Preferred Location", v.preferredLocation);
+    writer.pairRow("Preferred Duration", v.duration === "Specific duration" ? v.customDuration : v.duration, "Experience", v.experience);
     writer.row("Why They Want to Volunteer", v.motivation);
-    writer.row("Preferred Location", v.preferredLocation);
-    writer.row("Volunteer Timing", "Assigned by the foundation according to the activity, location, and operational requirements");
-    writer.row("Food & Stay", "Provided by the foundation according to the volunteering activity and location");
-    writer.row("Preferred Duration", v.duration === "Specific duration" ? v.customDuration : v.duration);
-    writer.row("Additional Requirements", v.otherSupport);
-    writer.row("Additional Comments", v.additionalComments);
+    if (v.otherSupport.trim()) writer.row("Additional Requirements", v.otherSupport);
+    if (v.additionalComments.trim()) writer.row("Additional Comments", v.additionalComments);
   } else if (type === "membership") {
     const m = state.membership;
     writer.heading("Membership Information");
-    writer.row("Membership Type", m.membershipType);
+    writer.pairRow("Membership Type", m.membershipType, "How They Heard About Us", m.howHeard);
     writer.row("Areas of Interest", m.areasOfInterest.join(", "));
     writer.row("Contribution", m.contribution);
-    writer.row("How They Heard About Us", m.howHeard);
-    writer.row("Additional Comments", m.additionalComments);
+    if (m.additionalComments.trim()) writer.row("Additional Comments", m.additionalComments);
   } else if (type === "sports") {
     const s = state.sports;
     writer.heading("Sports Information");
-    writer.row("Sport", sportLabel(state));
-    writer.row("Category", s.category);
-    writer.row("Experience Level", s.experienceLevel);
-    writer.row("Previous Participation", s.previousParticipation);
-    writer.row("Medical Information", s.medicalInfo);
-    writer.row("Medically Fit", s.medicallyFit ? "Yes" : "No");
-    writer.row("T-shirt Size", s.tshirtSize);
-    writer.row("Additional Comments", s.additionalComments);
+    writer.pairRow("Sport", sportLabel(state), "Category", s.category);
+    writer.pairRow("Experience Level", s.experienceLevel, "T-shirt Size", s.tshirtSize);
+    writer.pairRow("Medically Fit", s.medicallyFit ? "Yes" : "No", "Previous Participation", s.previousParticipation);
+    if (s.medicalInfo.trim()) writer.row("Medical Information", s.medicalInfo);
+    if (s.additionalComments.trim()) writer.row("Additional Comments", s.additionalComments);
+  } else if (type === "talent-hunt") {
+    const t = state.talentHunt;
+    writer.heading("Runner Talent Hunt Program");
+    writer.pairRow("Talent category", t.talentCategory === "Other" ? t.otherTalent : t.talentCategory, "Class studying in", t.classGrade);
+    writer.row("School name", t.schoolName);
+    writer.row("Aadhaar number", formatAadhaarNumber(t.aadhaarNumber));
+    writer.pairRow("Parent / consultant", t.parentName, "Relation", t.parentRelation);
+    writer.pairRow("Parent phone", t.parentPhone, "Parent email", t.parentEmail);
+    writer.row("Why they want to take part", t.whyParticipate);
+    if (t.previousAchievements.trim()) writer.row("Previous achievements", t.previousAchievements);
+    if (t.additionalComments.trim()) writer.row("Additional comments", t.additionalComments);
   } else if (type === "employee") {
     const e = state.employee;
     writer.heading("Employment Information");
-    writer.row("Position Applied For", e.position);
+    writer.pairRow("Position Applied For", e.position, "Availability to Join", e.availabilityToJoin);
     writer.row("Qualifications", e.qualifications);
     writer.row("Experience", e.experience);
-    writer.row("Availability to Join", e.availabilityToJoin);
     writer.row("Why They Want to Join", e.whyJoin);
-    writer.row("Additional Comments", e.additionalComments);
+    if (e.additionalComments.trim()) writer.row("Additional Comments", e.additionalComments);
   } else {
     const ev = state.event;
     writer.heading("Event Information");
-    writer.row("Event / Activity", ev.eventInterest);
-    writer.row("Participation Mode", ev.participationMode);
-    writer.row("Additional Comments", ev.additionalComments);
+    writer.pairRow("Event / Activity", ev.eventInterest, "Participation Mode", ev.participationMode);
+    if (ev.additionalComments.trim()) writer.row("Additional Comments", ev.additionalComments);
   }
 
-  await writer.ensure(40);
+  writer.heading("Registration fee");
+  writer.pairRow("Amount", `Rs ${REGISTRATION_FEE_AMOUNT}`, "Payee", REGISTRATION_FEE_PAYEE);
+  writer.row("Status", "Paid. Payment screenshot is on file and is not printed on this page.");
+
   writer.heading("Declaration");
   writer.row("Declaration accepted", state.declaration.accepted ? "Yes" : "No");
-  for (const [index, clause] of DECLARATION_CLAUSES.entries()) {
-    const text = `${index + 1}. ${clause.title}. ${clause.body}`;
-    const lines = wrapText(writer.font, text, 8.5, PAGE.width - MARGIN * 2);
-    await writer.ensure(lines.length * 11 + 8);
-    for (const line of lines) {
-      writer.y -= 11;
-      writer.page.drawText(line, { x: MARGIN, y: writer.y, size: 8.5, font: writer.font, color: SLATE });
-    }
-    writer.y -= 4;
-  }
+  writer.row("Note", "The applicant has read and accepted the Declaration & Responsibility in full.");
 
-  await writer.ensure(150);
   writer.heading("Applicant Signature");
-  writer.row("Name", p.fullName);
-  writer.row("Date", formatDob(state.declaration.date));
+  writer.pairRow("Name", p.fullName, "Date", formatDob(state.declaration.date));
   writer.row("Place", state.declaration.place);
-  writer.y -= 10;
-  writer.page.drawText("Signature", { x: MARGIN, y: writer.y, size: 9, font: bold, color: SLATE });
-  writer.y -= 8;
+  writer.y -= 6;
+  writer.page.drawText("Signature", { x: MARGIN, y: writer.y, size: 8, font: bold, color: SLATE });
+  writer.y -= 6;
   if (signImage) {
-    await writer.ensure(80);
-    writer.page.drawImage(signImage, { x: MARGIN, y: writer.y - 72, width: 180, height: 72 });
-    writer.y -= 84;
+    writer.page.drawImage(signImage, { x: MARGIN, y: writer.y - 46, width: 150, height: 46 });
+    writer.y -= 52;
   } else {
     writer.page.drawRectangle({
       x: MARGIN,
-      y: writer.y - 72,
-      width: 180,
-      height: 72,
+      y: writer.y - 46,
+      width: 150,
+      height: 46,
       borderColor: LINE,
       borderWidth: 1,
     });
-    writer.y -= 84;
+    writer.y -= 52;
   }
 
   writer.page.drawText(`ANNT NANDAS FOUNDATION · ${meta.label} · ${registrationId}`, {

@@ -12,6 +12,7 @@ import EventsTestimonialsSection from "@/components/sections/EventsTestimonialsS
 import NewsGalleryPreviewSection from "@/components/sections/NewsGalleryPreviewSection";
 import HomeDonationSection from "@/components/sections/HomeDonationSection";
 import VolunteerOpportunitiesSection from "@/components/sections/VolunteerOpportunitiesSection";
+import HomeOverviewSection from "@/components/sections/HomeOverviewSection";
 
 export const metadata: Metadata = {
   title: "ANNT NANDAS FOUNDATION | Building Futures Without Limits",
@@ -19,7 +20,10 @@ export const metadata: Metadata = {
     "ANNT NANDAS FOUNDATION is a Himalayan non-profit founded by Kalam Singh Bisht, COAS and GOC-in-C commendation awardee and 120 KM Hajar Ultra Trail Run champion, empowering communities through education, health, and sports.",
   keywords:
     "ANNT NANDAS FOUNDATION, Kalam Singh Bisht, NGO Uttarakhand, Himalayas, COAS Commendation, GOC-in-C Commendation, Governor Award, Hajar Ultra Trail Run, ultra trail running, education, healthcare, sports development",
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+    types: { "text/markdown": "/index.md" },
+  },
 };
 
 export default async function Home() {
@@ -36,6 +40,8 @@ export default async function Home() {
     newsItems,
     collageImages,
     homeVisualGrid,
+    homeGalleryPreview,
+    pageVisuals,
     donationInfo,
     donationAmounts,
     volunteerOpportunities,
@@ -45,12 +51,19 @@ export default async function Home() {
     <>
       <JsonLd />
       <HeroSection heroContent={heroContent} />
+      <HomeOverviewSection
+        images={[
+          { src: pageVisuals.overviewPrimary, label: "Foundation team in the high Himalaya" },
+          { src: pageVisuals.overviewSecondary, label: "Celebrating endurance and grit" },
+        ]}
+      />
       <FeatureCardsSection featureCards={featureCards} />
       <AboutStatsSection
         heroContent={heroContent}
         founderInfo={founderInfo}
         impactStats={impactStats}
         collageImages={collageImages}
+        communityImage={pageVisuals.communityRooted}
       />
       <FounderAchievementsSection founderInfo={founderInfo} />
       <StoryJourneySection
@@ -63,14 +76,14 @@ export default async function Home() {
         testimonials={testimonials}
       />
       <VolunteerOpportunitiesSection opportunities={volunteerOpportunities} />
-      <NewsGalleryPreviewSection newsItems={newsItems} homeVisualGrid={homeVisualGrid} />
+      <NewsGalleryPreviewSection newsItems={newsItems} homeVisualGrid={homeGalleryPreview} />
       <HomeDonationSection donation={donationInfo} amounts={donationAmounts} />
       <CTASection
         title="Help us build brighter futures in the Himalayas"
         description="Whether you volunteer, donate, or collaborate, your support helps create meaningful long-term change."
         primary={{ label: "Become a Volunteer", href: "/volunteer-registration" }}
         secondary={{ label: "Donate Today", href: "/donate" }}
-        image={heroContent.image}
+        image={pageVisuals.homeCta}
       />
     </>
   );

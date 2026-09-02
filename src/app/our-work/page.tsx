@@ -1,6 +1,7 @@
 import { getAllData } from "@/lib/api";
 import type { Metadata } from "next";
 import { CTASection, PageHero, SectionHeading, StatGrid } from "@/components/site/SectionBlocks";
+import { T } from "@/components/i18n/T";
 
 export const metadata: Metadata = {
   title: "Our Work | ANNT NANDAS FOUNDATION",
@@ -10,14 +11,14 @@ export const metadata: Metadata = {
 
 export default async function OurWorkPage() {
   const data = await getAllData();
-  const { impactAreas, impactStats, storyChapters, talentDiscoverySteps, heroContent } = data;
+  const { impactAreas, impactStats, storyChapters, talentDiscoverySteps, pageVisuals } = data;
   return (
     <div className="pb-8">
       <PageHero
         eyebrow="Our Work"
         title="Local action that creates lasting change"
         description="We work across programme areas with a grassroots approach—building trust, discovering potential, and helping communities grow stronger over time."
-        image={heroContent.supportingVisuals[2]}
+        image={pageVisuals.ourWorkHero}
         actions={[
           { label: "View Programs", href: "/programs" },
           { label: "Join Our Mission", href: "/volunteer-registration", variant: "secondary" },
@@ -53,8 +54,8 @@ export default async function OurWorkPage() {
               <div key={item.step} className="surface-card flex gap-4 p-5">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-slate-950 font-bold text-white">{item.step}</div>
                 <div className="min-w-0">
-                  <h3 className="text-lg font-semibold text-slate-950">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-7 text-slate-600">{item.desc}</p>
+                  <h3 className="text-lg font-semibold text-slate-950"><T>{item.title}</T></h3>
+                  <p className="mt-2 text-sm leading-7 text-slate-600"><T>{item.desc}</T></p>
                 </div>
               </div>
             ))}
@@ -63,8 +64,8 @@ export default async function OurWorkPage() {
             {impactAreas.map((item) => (
               <div key={item.title} className="surface-card p-5">
                 <div className="mb-3 text-3xl">{item.icon}</div>
-                <h3 className="text-lg font-semibold text-slate-950">{item.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-slate-600">{item.description}</p>
+                <h3 className="text-lg font-semibold text-slate-950"><T>{item.title}</T></h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600"><T>{item.description}</T></p>
               </div>
             ))}
           </div>
@@ -84,8 +85,8 @@ export default async function OurWorkPage() {
               <div key={step.title} className="surface-card flex gap-4 p-5">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-sm font-bold text-emerald-700">{index + 1}</div>
                 <div className="min-w-0">
-                  <h3 className="text-base font-semibold text-slate-950">{step.title}</h3>
-                  <p className="mt-2 text-sm leading-7 text-slate-600">{step.description}</p>
+                  <h3 className="text-base font-semibold text-slate-950"><T>{step.title}</T></h3>
+                  <p className="mt-2 text-sm leading-7 text-slate-600"><T>{step.description}</T></p>
                 </div>
               </div>
             ))}
@@ -104,8 +105,8 @@ export default async function OurWorkPage() {
           <div className="grid gap-4 sm:grid-cols-2">
             {storyChapters.map((chapter) => (
               <div key={chapter.title} className="surface-card p-5">
-                <h3 className="text-lg font-semibold text-slate-950">{chapter.title}</h3>
-                <p className="mt-2 text-sm leading-7 text-slate-600">{chapter.description}</p>
+                <h3 className="text-lg font-semibold text-slate-950"><T>{chapter.title}</T></h3>
+                <p className="mt-2 text-sm leading-7 text-slate-600"><T>{chapter.description}</T></p>
               </div>
             ))}
           </div>
@@ -117,7 +118,7 @@ export default async function OurWorkPage() {
         description="Your contribution helps us reach more villages, strengthen more programmes, and create greater community-led impact."
         primary={{ label: "Donate Now", href: "/donate" }}
         secondary={{ label: "Volunteer With Us", href: "/volunteer-registration" }}
-        image={heroContent.image}
+        image={pageVisuals.ourWorkCta}
       />
     </div>
   );

@@ -1,0 +1,136 @@
+import type { GalleryItem } from "@/lib/types";
+
+export const generatedGalleryItems: GalleryItem[] = [
+  {
+    label: "Adi Kailash Parikrama finish",
+    type: "photo",
+    imageSrc: "/gallery/photos/sports/raj2423.webp",
+    theme: "Sports",
+  },
+  {
+    label: "Mawla Ghaati Ultra trophy",
+    type: "photo",
+    imageSrc: "/gallery/photos/sports/mgu-2025-4140.webp",
+    theme: "Sports",
+  },
+  {
+    label: "Mawla Ghaati Ultra finish",
+    type: "photo",
+    imageSrc: "/gallery/photos/sports/mgu-2025-4144.webp",
+    theme: "Sports",
+  },
+  {
+    label: "Night trail camp, SSU 2025",
+    type: "photo",
+    imageSrc: "/gallery/photos/sports/ssu-2025-3123.webp",
+    theme: "Sports",
+  },
+  {
+    label: "Athletes preparing at ultra camp",
+    type: "photo",
+    imageSrc: "/gallery/photos/sports/ssu-2025-3431.webp",
+    theme: "Sports",
+  },
+  {
+    label: "Ultra camp team, Himalayas",
+    type: "photo",
+    imageSrc: "/gallery/photos/sports/ssu-2025-3435.webp",
+    theme: "Sports",
+  },
+  {
+    label: "Village runner celebrating",
+    type: "photo",
+    imageSrc: "/gallery/photos/community/img-20260603-wa0003.webp",
+    theme: "Sports",
+  },
+  {
+    label: "Snow peaks above the high Himalaya",
+    type: "photo",
+    imageSrc: "/gallery/photos/community/img-20260313-wa0010.webp",
+    theme: "Landscape",
+  },
+  {
+    label: "Mundoli training camp in the press",
+    type: "photo",
+    imageSrc: "/gallery/photos/community/img-20260112-081344.webp",
+    theme: "News",
+  },
+  {
+    label: "Harela Festival tree plantation, 2026",
+    type: "photo",
+    imageSrc: "/gallery/photos/events/harela-festival-20260720-071441-0000.webp",
+    theme: "Events",
+  },
+  {
+    label: "Holi with the community",
+    type: "photo",
+    imageSrc: "/gallery/photos/events/colourful-festive-happy-holi-wishes-instagram-post-20250313-131525-0000.webp",
+    theme: "Events",
+  },
+  {
+    label: "Community gathering, Mundoli",
+    type: "photo",
+    imageSrc: "/gallery/photos/community/img-20260608-wa0007.webp",
+    theme: "Community",
+  },
+  {
+    label: "Youth sports session",
+    type: "photo",
+    imageSrc: "/gallery/photos/community/img-20260626-wa0085.webp",
+    theme: "Sports",
+  },
+  {
+    label: "Foundation fieldwork, 2026",
+    type: "photo",
+    imageSrc: "/gallery/photos/community/img-20260213-wa0039.webp",
+    theme: "Community",
+  },
+  {
+    label: "Village programme",
+    type: "photo",
+    imageSrc: "/gallery/photos/community/img-20260419-wa0011.webp",
+    theme: "Community",
+  },
+  {
+    label: "Community outreach",
+    type: "photo",
+    imageSrc: "/gallery/photos/community/img-20260505-wa0020.webp",
+    theme: "Community",
+  },
+  {
+    label: "Himalayan trail day",
+    type: "photo",
+    imageSrc: "/gallery/photos/community/img-20260313-wa0005.webp",
+    theme: "Landscape",
+  },
+  {
+    label: "Winter in the high hills",
+    type: "photo",
+    imageSrc: "/gallery/photos/community/img-20260313-wa0011.webp",
+    theme: "Landscape",
+  },
+  {
+    label: "Field video · community sports",
+    type: "video",
+    videoSrc: "/gallery/videos/06.mp4",
+    theme: "Sports",
+  },
+  {
+    label: "Field video · village programme",
+    type: "video",
+    videoSrc: "/gallery/videos/07.mp4",
+    theme: "Events",
+  },
+  {
+    label: "Field video · youth training",
+    type: "video",
+    videoSrc: "/gallery/videos/08.mp4",
+    theme: "Sports",
+  },
+  {
+    label: "Field video · foundation event",
+    type: "video",
+    videoSrc: "/gallery/videos/09.mp4",
+    theme: "Events",
+  },
+];

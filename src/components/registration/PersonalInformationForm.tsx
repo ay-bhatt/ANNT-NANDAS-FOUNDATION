@@ -15,10 +15,18 @@ export default function PersonalInformationForm({
   value,
   errors,
   onChange,
+  minAge = 8,
+  maxAge = 90,
+  ageHint,
+  compact = false,
 }: {
   value: PersonalInformation;
   errors: FieldErrors;
   onChange: (next: PersonalInformation) => void;
+  minAge?: number;
+  maxAge?: number;
+  ageHint?: string;
+  compact?: boolean;
 }) {
   const set = <K extends keyof PersonalInformation>(key: K, next: PersonalInformation[K]) => {
     onChange({ ...value, [key]: next });
@@ -41,7 +49,9 @@ export default function PersonalInformationForm({
             required
             value={value.dob}
             error={errors.dob}
-            hint="Date / Month / Year (DD/MM/YYYY)"
+            hint={ageHint || "Date / Month / Year (DD/MM/YYYY)"}
+            minAge={minAge}
+            maxAge={maxAge}
             onChange={(next) => set("dob", next)}
           />
           <TextField
@@ -52,24 +62,30 @@ export default function PersonalInformationForm({
             value={value.age}
             error={errors.age}
             hint="Calculated automatically from the date of birth."
-            min="8"
-            max="90"
+            min={String(minAge)}
+            max={String(maxAge)}
             readOnly={Boolean(value.dob)}
             onChange={(next) => set("age", next)}
           />
           <SelectField id="gender" label="Gender" required value={value.gender} error={errors.gender} options={GENDER_OPTIONS} onChange={(next) => set("gender", next)} />
-          <TextField id="nationality" label="Nationality" required value={value.nationality} error={errors.nationality} onChange={(next) => set("nationality", next)} />
+          {compact ? null : (
+            <TextField id="nationality" label="Nationality" required value={value.nationality} error={errors.nationality} onChange={(next) => set("nationality", next)} />
+          )}
           <SelectField id="bloodGroup" label="Blood Group" required value={value.bloodGroup} error={errors.bloodGroup} options={BLOOD_GROUPS} onChange={(next) => set("bloodGroup", next)} />
-          <SelectField id="education" label="Education" required value={value.education} error={errors.education} options={EDUCATION_OPTIONS} onChange={(next) => set("education", next)} />
-          <TextField
-            id="specialEducation"
-            label="Special Education / Qualification"
-            value={value.specialEducation}
-            error={errors.specialEducation}
-            hint="Certifications, vocational training, or specialised study."
-            onChange={(next) => set("specialEducation", next)}
-          />
-          <SelectField id="occupation" label="Occupation" value={value.occupation} error={errors.occupation} options={OCCUPATION_OPTIONS} onChange={(next) => set("occupation", next)} />
+          {compact ? null : (
+            <>
+              <SelectField id="education" label="Education" required value={value.education} error={errors.education} options={EDUCATION_OPTIONS} onChange={(next) => set("education", next)} />
+              <TextField
+                id="specialEducation"
+                label="Special Education / Qualification"
+                value={value.specialEducation}
+                error={errors.specialEducation}
+                hint="Certifications, vocational training, or specialised study."
+                onChange={(next) => set("specialEducation", next)}
+              />
+              <SelectField id="occupation" label="Occupation" value={value.occupation} error={errors.occupation} options={OCCUPATION_OPTIONS} onChange={(next) => set("occupation", next)} />
+            </>
+          )}
           <TextField id="phone" label="Phone Number" type="tel" required value={value.phone} error={errors.phone} autoComplete="tel" inputMode="tel" onChange={(next) => set("phone", next)} />
           <TextField id="email" label="Email" type="email" required value={value.email} error={errors.email} autoComplete="email" onChange={(next) => set("email", next)} />
           <TextField id="whatsapp" label="WhatsApp Number" type="tel" value={value.whatsapp} error={errors.whatsapp} inputMode="tel" onChange={(next) => set("whatsapp", next)} />

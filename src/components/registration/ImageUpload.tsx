@@ -13,7 +13,9 @@ interface ImageUploadProps {
   value: UploadedImage | null;
   onChange: (value: UploadedImage | null) => void;
   error?: string;
-  variant?: "photo" | "signature";
+  variant?: "photo" | "signature" | "document";
+  showPreview?: boolean;
+  uploadedLabel?: string;
 }
 
 export default function ImageUpload({
@@ -24,6 +26,8 @@ export default function ImageUpload({
   onChange,
   error,
   variant = "photo",
+  showPreview = true,
+  uploadedLabel,
 }: ImageUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);
@@ -40,8 +44,8 @@ export default function ImageUpload({
     setLocalError("");
     try {
       const compressed = await compressImageFile(file, {
-        maxWidth: variant === "photo" ? 480 : 720,
-        maxHeight: variant === "photo" ? 600 : 280,
+        maxWidth: variant === "photo" ? 480 : variant === "document" ? 1080 : 720,
+        maxHeight: variant === "photo" ? 600 : variant === "document" ? 1600 : 280,
         quality: 0.7,
       });
       onChange(compressed);
@@ -68,15 +72,28 @@ export default function ImageUpload({
       >
         {value ? (
           <div className="p-4">
-            <div
-              className={cn(
-                "relative overflow-hidden rounded-2xl border border-slate-200 bg-white",
-                variant === "photo" ? "aspect-[4/5] max-w-[220px]" : "aspect-[3/1] max-w-md",
-              )}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={value.dataUrl} alt={`${label} preview`} className="h-full w-full object-contain" />
-            </div>
+            {showPreview ? (
+              <div
+                className={cn(
+                  "relative overflow-hidden rounded-2xl border border-slate-200 bg-white",
+                  variant === "photo"
+                    ? "aspect-[4/5] max-w-[220px]"
+                    : variant === "document"
+                      ? "aspect-[3/4] max-w-[240px]"
+                      : "aspect-[3/1] max-w-md",
+                )}
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={value.dataUrl} alt={`${label} preview`} className="h-full w-full object-contain" />
+              </div>
+            ) : (
+              <div className="rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-4">
+                <p className="text-sm font-semibold text-emerald-900">{uploadedLabel || "File uploaded"}</p>
+                <p className="mt-1 text-xs leading-5 text-slate-600">
+                  The image is saved with your application. It is not shown on the form.
+                </p>
+              </div>
+            )}
             <div className="mt-4 flex flex-wrap gap-2">
               <button
                 type="button"
@@ -105,7 +122,7 @@ export default function ImageUpload({
             className="flex min-h-[180px] w-full flex-col items-center justify-center gap-3 px-5 py-8 text-center"
           >
             <span className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm">
-              {variant === "photo" ? "📷" : "✍️"}
+              {variant === "signature" ? "✍️" : variant === "document" ? "📎" : "📷"}
             </span>
             <span className="text-sm font-semibold text-slate-900">
               {busy ? "Preparing preview…" : `Tap to upload ${label.toLowerCase()}`}
@@ -119,7 +136,7 @@ export default function ImageUpload({
         id={id}
         name={id}
         type="file"
-        accept="image/jpeg,image/png,image/webp"
+        accept="image/jpeg,image/png,image/webp,image/heic,image/heif,image/*"
         className="sr-only"
         onChange={(event) => {
           void handleFile(event.target.files?.[0]);

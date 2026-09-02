@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import QRCode from "qrcode";
 import { DONATION_AMOUNTS, formatRupees, googlePayUri, upiPaymentUri } from "@/lib/donation";
+import { useI18n } from "@/components/i18n/LanguageProvider";
 
 interface DonationWidgetProps {
   upiId: string;
@@ -31,6 +32,7 @@ export default function DonationWidget({
   }, []);
   const isAndroid = canOpenUpiApp && /Android/i.test(navigator.userAgent || "");
   const dark = variant === "dark";
+  const { t } = useI18n();
 
   useEffect(() => {
     let active = true;
@@ -57,7 +59,7 @@ export default function DonationWidget({
   };
 
   const donate = () => {
-    setStatus("If a payment app does not open, scan the QR or copy the UPI ID below.");
+    setStatus(t("If a payment app does not open, scan the QR or copy the UPI ID below."));
     if (!canOpenUpiApp) return;
     try {
       if (isAndroid) {
@@ -66,14 +68,14 @@ export default function DonationWidget({
       }
       window.location.assign(uri);
     } catch {
-      setStatus("Scan the QR or copy the UPI ID to complete payment.");
+      setStatus(t("Scan the QR or copy the UPI ID to complete payment."));
     }
   };
 
   return (
     <div className={dark ? "text-white" : "text-slate-950"}>
       <p className={`text-[11px] font-semibold uppercase tracking-[0.2em] ${dark ? "text-emerald-200" : "text-emerald-700"}`}>
-        Select amount
+        {t("Select amount")}
       </p>
       <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
         {amounts.map((value) => {
@@ -96,7 +98,7 @@ export default function DonationWidget({
             >
               <span className="block text-xl font-bold tracking-[-0.03em]">{formatRupees(value)}</span>
               <span className={`mt-1 block text-[11px] ${selected ? "text-emerald-50" : dark ? "text-blue-100" : "text-slate-500"}`}>
-                {selected ? "Selected" : "Tap to choose"}
+                {selected ? t("Selected") : t("Tap to choose")}
               </span>
             </button>
           );
@@ -105,15 +107,15 @@ export default function DonationWidget({
 
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
         <button type="button" onClick={donate} className="btn-primary min-h-12 flex-1 sm:flex-none">
-          Donate Now {formatRupees(amount)} <span aria-hidden="true">→</span>
+          {t("Donate Now")} {formatRupees(amount)} <span aria-hidden="true">→</span>
         </button>
         {canOpenUpiApp ? (
           <p className={`text-xs leading-5 ${dark ? "text-blue-100" : "text-slate-500"}`}>
-            Opens Google Pay or another UPI app when available.
+            {t("Opens Google Pay or another UPI app when available.")}
           </p>
         ) : (
           <p className={`text-xs leading-5 ${dark ? "text-blue-100" : "text-slate-500"}`}>
-            Scan the QR with Google Pay or any UPI app, or copy the UPI ID.
+            {t("Scan the QR with Google Pay or any UPI app, or copy the UPI ID.")}
           </p>
         )}
       </div>
@@ -126,16 +128,16 @@ export default function DonationWidget({
             // eslint-disable-next-line @next/next/no-img-element
             <img src={qr} alt={`UPI QR code for ${formatRupees(amount)}`} className="h-full w-full" />
           ) : (
-            <div className="flex aspect-square items-center justify-center text-xs text-slate-500">Preparing QR</div>
+            <div className="flex aspect-square items-center justify-center text-xs text-slate-500">{t("Preparing QR")}</div>
           )}
         </div>
         <div>
           <p className={`text-[11px] font-semibold uppercase tracking-[0.18em] ${dark ? "text-emerald-200" : "text-emerald-700"}`}>
-            UPI ID
+            {t("UPI ID")}
           </p>
           <p className={`mt-1 break-all text-sm font-bold ${dark ? "text-white" : "text-slate-950"}`}>{upiId}</p>
           <p className={`mt-2 text-sm ${dark ? "text-blue-100" : "text-slate-600"}`}>
-            Payee: {payeeName} · Amount: {formatRupees(amount)}
+            {t("Payee:")} {payeeName} · {t("Amount")}: {formatRupees(amount)}
           </p>
           <div className="mt-3 flex flex-wrap gap-2">
             <button
@@ -143,7 +145,7 @@ export default function DonationWidget({
               onClick={() => void copyUpi()}
               className={dark ? "btn-secondary !min-h-10 !px-4 text-xs" : "btn-outline-dark !min-h-10 !px-4 text-xs"}
             >
-              {copied ? "UPI ID copied" : "Copy UPI ID"}
+              {copied ? t("UPI ID copied") : t("Copy UPI ID")}
             </button>
           </div>
         </div>

@@ -3,10 +3,12 @@
 import { WIZARD_STEPS } from "@/lib/registration/constants";
 import type { WizardStep } from "@/lib/registration/types";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/components/i18n/LanguageProvider";
 
 const FLOW_STEPS = WIZARD_STEPS.filter((step) => step.id !== "type");
 
 export default function FormProgress({ current }: { current: WizardStep }) {
+  const { t } = useI18n();
   const visible = current === "type" ? [] : FLOW_STEPS;
   const currentIndex = visible.findIndex((step) => step.id === current);
 
@@ -16,11 +18,14 @@ export default function FormProgress({ current }: { current: WizardStep }) {
     <div className="mb-6">
       <div className="mb-3 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">
         <span>
-          Step {currentIndex + 1} of {visible.length}
+          {t("Step")} {currentIndex + 1} {t("of")} {visible.length}
         </span>
-        <span className="text-slate-800">{visible[currentIndex]?.label}</span>
+        <span className="text-slate-800">{t(visible[currentIndex]?.label ?? "")}</span>
       </div>
-      <ol className="grid grid-cols-4 gap-2">
+      <ol
+        className="grid gap-2"
+        style={{ gridTemplateColumns: `repeat(${visible.length}, minmax(0, 1fr))` }}
+      >
         {visible.map((step, index) => {
           const complete = index < currentIndex;
           const active = index === currentIndex;
@@ -38,7 +43,7 @@ export default function FormProgress({ current }: { current: WizardStep }) {
                   active ? "text-slate-950" : complete ? "text-emerald-700" : "text-slate-400",
                 )}
               >
-                {step.label}
+                {t(step.label)}
               </p>
             </li>
           );

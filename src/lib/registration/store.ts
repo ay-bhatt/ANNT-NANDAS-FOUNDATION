@@ -1,11 +1,30 @@
 import fs from "fs/promises";
 import path from "path";
-import type { RegistrationFormState, RegistrationType, SportKind } from "./types";
+import { REGISTRATION_FEE_AMOUNT, REGISTRATION_FEE_PAYEE } from "./constants";
+import { parseImageDataUrl } from "./image-bytes";
+import type { RegistrationFormState, RegistrationType, SportKind, UploadedImage } from "./types";
 
-const DATA_ROOT = path.join(process.cwd(), "anntnandasfoundation", "data");
-const PROJECT_DATA = path.join(process.cwd(), "data");
+export const DATA_ROOT = path.join(process.cwd(), "anntnandasfoundation", "data");
+export const PROJECT_DATA = path.join(process.cwd(), "data");
 
-export type StorageFolder = "volunteer" | "membership" | "sports" | "running" | "cycling" | "employee" | "event";
+export type StorageFolder =
+  | "volunteer"
+  | "membership"
+  | "sports"
+  | "running"
+  | "cycling"
+  | "employee"
+  | "event"
+  | "talent-hunt";
+
+export type UploadKind = "photograph" | "signature" | "aadhaar" | "payment";
+
+export const UPLOAD_KIND_FOLDERS: Record<UploadKind, string> = {
+  photograph: "photographs",
+  signature: "signatures",
+  aadhaar: "aadhaar",
+  payment: "payments",
+};
 
 export function storageFolder(type: RegistrationType, sport: SportKind | "" = ""): StorageFolder {
   if (type === "sports") {
@@ -13,62 +32,119 @@ export function storageFolder(type: RegistrationType, sport: SportKind | "" = ""
     if (sport === "cycling") return "cycling";
     return "sports";
   }
-  if (type === "volunteer" || type === "membership" || type === "employee" || type === "event") {
+  if (
+    type === "volunteer" ||
+    type === "membership" ||
+    type === "employee" ||
+    type === "event" ||
+    type === "talent-hunt"
+  ) {
     return type;
   }
   return "event";
 }
 
-function parseDataUrl(dataUrl: string): { buffer: Buffer; ext: string } | null {
-  const match = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
-  if (!match) return null;
-  const mime = match[1];
-  const ext = mime.includes("png") ? "png" : mime.includes("webp") ? "webp" : "jpg";
-  return { buffer: Buffer.from(match[2], "base64"), ext };
+export function safePersonSlug(name: string): string {
+  const cleaned = String(name || "")
+    .normalize("NFKD")
+    .replace(/[^\p{L}\p{N}\s-]+/gu, "")
+    .trim()
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .slice(0, 50);
+  return cleaned || "applicant";
+}
+
+export function buildUploadFileName(id: string, fullName: string, kind: UploadKind, ext: string): string {
+  return `${id}_${safePersonSlug(fullName)}_${kind}.${ext}`;
+}
+
+export function uploadRelativePath(kind: UploadKind, typeFolder: StorageFolder, filename: string): string {
+  return path.posix.join("uploads", UPLOAD_KIND_FOLDERS[kind], typeFolder, filename);
+}
+
+export function storageFolderFromType(type: string, sport = ""): StorageFolder {
+  return storageFolder((type as RegistrationType) || "event", sport as SportKind | "");
+}
+
+async function writeUploadFile(relativePath: string, buffer: Buffer) {
+  const destinations = [path.join(DATA_ROOT, relativePath), path.join(PROJECT_DATA, relativePath)];
+  for (const destination of destinations) {
+    await fs.mkdir(path.dirname(destination), { recursive: true });
+    await fs.writeFile(destination, buffer);
+  }
+}
+
+async function saveKindFile(options: {
+  kind: UploadKind;
+  id: string;
+  fullName: string;
+  typeFolder: StorageFolder;
+  image: UploadedImage | null;
+  invalidCode: string;
+}): Promise<string> {
+  const { kind, id, fullName, typeFolder, image, invalidCode } = options;
+  if (!image?.dataUrl) return "";
+  const parsed = parseImageDataUrl(image.dataUrl);
+  if (!parsed) throw new Error(invalidCode);
+  const filename = buildUploadFileName(id, fullName, kind, parsed.ext);
+  const relativePath = uploadRelativePath(kind, typeFolder, filename);
+  await writeUploadFile(relativePath, parsed.buffer);
+  return relativePath;
 }
 
 export async function saveRegistrationRecord(options: {
   id: string;
   submittedAt: string;
   state: RegistrationFormState;
-}): Promise<{ folder: StorageFolder; jsonPath: string; photographPath: string; signaturePath: string }> {
+}): Promise<{
+  folder: StorageFolder;
+  jsonPath: string;
+  photographPath: string;
+  signaturePath: string;
+  aadhaarPath: string;
+  paymentProofPath: string;
+}> {
   const { id, submittedAt, state } = options;
   const type = state.type as RegistrationType;
   const folder = storageFolder(type, state.sports.sport);
   const recordDir = path.join(DATA_ROOT, "registrations", folder);
-  const uploadDir = path.join(DATA_ROOT, "uploads", folder);
-  const rootUploadDir = path.join(PROJECT_DATA, "uploads");
+  const fullName = state.personal.fullName;
 
   await fs.mkdir(recordDir, { recursive: true });
-  await fs.mkdir(uploadDir, { recursive: true });
-  await fs.mkdir(rootUploadDir, { recursive: true });
 
-  let photographPath = "";
-  let signaturePath = "";
-  let rootPhotographPath = "";
-  let rootSignaturePath = "";
-
-  if (state.photograph?.dataUrl) {
-    const parsed = parseDataUrl(state.photograph.dataUrl);
-    if (parsed) {
-      const filename = `${id}-photograph.${parsed.ext}`;
-      await fs.writeFile(path.join(uploadDir, filename), parsed.buffer);
-      await fs.writeFile(path.join(rootUploadDir, filename), parsed.buffer);
-      photographPath = path.posix.join("uploads", folder, filename);
-      rootPhotographPath = path.posix.join("uploads", filename);
-    }
-  }
-
-  if (state.signature?.dataUrl) {
-    const parsed = parseDataUrl(state.signature.dataUrl);
-    if (parsed) {
-      const filename = `${id}-signature.${parsed.ext}`;
-      await fs.writeFile(path.join(uploadDir, filename), parsed.buffer);
-      await fs.writeFile(path.join(rootUploadDir, filename), parsed.buffer);
-      signaturePath = path.posix.join("uploads", folder, filename);
-      rootSignaturePath = path.posix.join("uploads", filename);
-    }
-  }
+  const photographPath = await saveKindFile({
+    kind: "photograph",
+    id,
+    fullName,
+    typeFolder: folder,
+    image: state.photograph,
+    invalidCode: "INVALID_PHOTOGRAPH",
+  });
+  const aadhaarPath = await saveKindFile({
+    kind: "aadhaar",
+    id,
+    fullName,
+    typeFolder: folder,
+    image: state.aadhaar,
+    invalidCode: "INVALID_AADHAAR",
+  });
+  const signaturePath = await saveKindFile({
+    kind: "signature",
+    id,
+    fullName,
+    typeFolder: folder,
+    image: state.signature,
+    invalidCode: "INVALID_SIGNATURE",
+  });
+  const paymentProofPath = await saveKindFile({
+    kind: "payment",
+    id,
+    fullName,
+    typeFolder: folder,
+    image: state.paymentProof,
+    invalidCode: "INVALID_PAYMENT_PROOF",
+  });
 
   const record = {
     id,
@@ -81,10 +157,18 @@ export async function saveRegistrationRecord(options: {
     sports: type === "sports" ? state.sports : undefined,
     employee: type === "employee" ? state.employee : undefined,
     event: type === "event" ? state.event : undefined,
+    talentHunt: type === "talent-hunt" ? state.talentHunt : undefined,
     declaration: state.declaration,
+    payment: {
+      amount: REGISTRATION_FEE_AMOUNT,
+      currency: "INR",
+      payee: REGISTRATION_FEE_PAYEE,
+    },
     files: {
       photograph: photographPath || null,
       signature: signaturePath || null,
+      aadhaar: aadhaarPath || null,
+      paymentProof: paymentProofPath || null,
     },
   };
 
@@ -94,13 +178,57 @@ export async function saveRegistrationRecord(options: {
   await appendToMembersDatabase(record);
   await appendToRootRegistrations({
     ...record,
-    files: {
-      photograph: rootPhotographPath || null,
-      signature: rootSignaturePath || null,
-    },
+    files: record.files,
   });
 
-  return { folder, jsonPath, photographPath, signaturePath };
+  return { folder, jsonPath, photographPath, signaturePath, aadhaarPath, paymentProofPath };
+}
+
+export async function listRegistrationRecords(): Promise<Record<string, unknown>[]> {
+  const sources = [path.join(DATA_ROOT, "members.json"), path.join(PROJECT_DATA, "registrations.json")];
+  const byId = new Map<string, Record<string, unknown>>();
+
+  for (const filePath of sources) {
+    try {
+      const raw = await fs.readFile(filePath, "utf-8");
+      const parsed = JSON.parse(raw) as unknown;
+      if (!Array.isArray(parsed)) continue;
+      for (const item of parsed) {
+        if (!item || typeof item !== "object") continue;
+        const record = item as Record<string, unknown>;
+        const id = String(record.id || "");
+        if (!id) continue;
+        const existing = byId.get(id) || {};
+        byId.set(id, { ...existing, ...record });
+      }
+    } catch {
+      // missing file is fine
+    }
+  }
+
+  return [...byId.values()].sort((a, b) => String(b.submittedAt || "").localeCompare(String(a.submittedAt || "")));
+}
+
+export async function resolveUploadFile(relativePath: string): Promise<{ absolutePath: string; mime: string } | null> {
+  const normalized = relativePath.replace(/\\/g, "/").replace(/^\/+/, "");
+  if (!normalized.startsWith("uploads/") || normalized.includes("..")) return null;
+
+  const candidates = [path.join(DATA_ROOT, normalized), path.join(PROJECT_DATA, normalized)];
+  for (const candidate of candidates) {
+    const resolvedCandidate = path.resolve(candidate);
+    const root = resolvedCandidate.startsWith(path.resolve(DATA_ROOT)) ? path.resolve(DATA_ROOT) : path.resolve(PROJECT_DATA);
+    if (resolvedCandidate !== root && !resolvedCandidate.startsWith(root + path.sep)) continue;
+    try {
+      const stat = await fs.stat(candidate);
+      if (!stat.isFile()) continue;
+      const ext = path.extname(candidate).toLowerCase();
+      const mime = ext === ".png" ? "image/png" : ext === ".webp" ? "image/webp" : "image/jpeg";
+      return { absolutePath: candidate, mime };
+    } catch {
+      // try next
+    }
+  }
+  return null;
 }
 
 async function appendJsonArray(filePath: string, record: Record<string, unknown>) {
@@ -171,6 +299,8 @@ async function appendToRootRegistrations(record: Record<string, unknown>) {
     sports: record.sports,
     employee: record.employee,
     event: record.event,
+    talentHunt: record.talentHunt,
+    payment: record.payment,
     declaration: record.declaration,
     files: record.files,
   };

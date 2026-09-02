@@ -9,10 +9,11 @@ export const metadata: Metadata = {
   alternates: { canonical: "/events" },
 };
 import { CTASection, PageHero, SectionHeading } from "@/components/site/SectionBlocks";
+import { T } from "@/components/i18n/T";
 
 export default async function EventsPage() {
   const data = await getAllData();
-  const { heroContent, upcomingEvents } = data;
+  const { pageVisuals, upcomingEvents } = data;
 
   return (
     <div className="pb-8">
@@ -20,7 +21,7 @@ export default async function EventsPage() {
         eyebrow="Events"
         title="Join the next wave of action"
         description="Our events bring people together through participation, service, learning, health outreach, and community-building experiences."
-        image={heroContent.supportingVisuals[0]}
+        image={pageVisuals.eventsHero}
         actions={[
           { label: "Register for Events", href: "/general-registration" },
           { label: "Volunteer With Us", href: "/volunteer-registration", variant: "secondary" },
@@ -44,19 +45,19 @@ export default async function EventsPage() {
                   </div>
                   <div className="p-6 sm:p-8">
                     <div className="mb-4 flex flex-wrap gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
-                      <span>{event.type}</span>
+                      <span><T>{event.type}</T></span>
                       <span className="text-slate-300">•</span>
-                      <span>{event.date}</span>
+                      <span><T>{event.date}</T></span>
                     </div>
-                    <h2 className="text-2xl font-bold text-slate-950">{event.title}</h2>
-                    <p className="mt-3 text-sm leading-7 text-slate-600">{event.description}</p>
+                    <h2 className="text-2xl font-bold text-slate-950"><T>{event.title}</T></h2>
+                    <p className="mt-3 text-sm leading-7 text-slate-600"><T>{event.description}</T></p>
                     <div className="mt-5 grid gap-3 text-sm text-slate-700 sm:grid-cols-2">
-                      <div className="rounded-2xl bg-slate-50 p-4">📍 {event.location}</div>
-                      <div className="rounded-2xl bg-slate-50 p-4">🕒 {event.time}</div>
+                      <div className="rounded-2xl bg-slate-50 p-4">📍 <T>{event.location}</T></div>
+                      <div className="rounded-2xl bg-slate-50 p-4">🕒 <T>{event.time}</T></div>
                     </div>
                     <div className="mt-6 flex flex-wrap gap-3">
-                      <Link href={event.href} className="btn-primary">Register now</Link>
-                      <Link href="/contact" className="btn-outline-dark">Ask a question</Link>
+                      <Link href={event.href} className="btn-primary"><T>Register now</T></Link>
+                      <Link href="/contact" className="btn-outline-dark"><T>Ask a question</T></Link>
                     </div>
                   </div>
                 </div>
@@ -71,7 +72,7 @@ export default async function EventsPage() {
         description="Take part in upcoming events as a runner, supporter, learner, volunteer, or community partner."
         primary={{ label: "General Registration", href: "/general-registration" }}
         secondary={{ label: "Volunteer Registration", href: "/volunteer-registration" }}
-        image={heroContent.supportingVisuals[1]}
+        image={pageVisuals.eventsCta}
       />
     </div>
   );

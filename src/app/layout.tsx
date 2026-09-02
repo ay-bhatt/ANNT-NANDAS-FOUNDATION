@@ -1,10 +1,15 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { cookies } from "next/headers";
+import { Inter, Noto_Sans_Devanagari, Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
+import RouteProgress from "@/components/site/RouteProgress";
+import SiteNotices from "@/components/site/SiteNotices";
+import { LanguageProvider } from "@/components/i18n/LanguageProvider";
 import { getAllData } from "@/lib/api";
+import { LOCALE_COOKIE, localeLang, parseLocale } from "@/lib/i18n";
 import logoImage from "@/assets/logo.webp";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://anntnandasfoundation.com";
@@ -13,6 +18,12 @@ const poppins = Poppins({
   subsets: ["latin"],
   weight: ["500", "600", "700"],
   variable: "--font-poppins",
+  display: "swap",
+});
+const notoDevanagari = Noto_Sans_Devanagari({
+  subsets: ["devanagari"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-devanagari",
   display: "swap",
 });
 
@@ -68,22 +79,36 @@ export default async function RootLayout({
   // Fetch shared data needed by Navbar + Footer.
   // In a real CMS this would be a separate lightweight endpoint.
   const data = await getAllData();
+  const cookieStore = await cookies();
+  const initialLocale = parseLocale(cookieStore.get(LOCALE_COOKIE)?.value);
 
   return (
-    <html lang="en-IN" className={`scroll-smooth ${inter.variable} ${poppins.variable}`}>
+    <html
+      lang={localeLang(initialLocale)}
+      suppressHydrationWarning
+      className={`scroll-smooth ${inter.variable} ${poppins.variable} ${notoDevanagari.variable} ${
+        initialLocale === "hi" ? "lang-hi" : ""
+      }`}
+    >
       <head>
         <link rel="icon" href={logoImage.src} type="image/webp" sizes="any" />
         <link rel="apple-touch-icon" href={logoImage.src} />
+        <link rel="describedby" href="/llms.txt" />
+        <link rel="alternate" type="text/markdown" href="/index.md" title="Markdown version" />
       </head>
-      <body suppressHydrationWarning className="min-h-screen min-w-0 overflow-x-clip bg-slate-50 text-slate-950 antialiased">
-        <Navbar navigationItems={data.navigationItems} />
-        <main id="main-content" className="relative min-w-0">{children}</main>
-        <Footer
-          siteConfig={data.siteConfig}
-          navigationItems={data.navigationItems}
-          impactAreas={data.impactAreas}
-        />
-        <ScrollToTop />
+      <body suppressHydrationWarning className="min-h-screen min-w-0 bg-slate-50 text-slate-950 antialiased">
+        <LanguageProvider initialLocale={initialLocale}>
+          <Navbar navigationItems={data.navigationItems} />
+          <RouteProgress />
+          <main id="main-content" className="relative min-w-0 overflow-x-clip">{children}</main>
+          <Footer
+            siteConfig={data.siteConfig}
+            navigationItems={data.navigationItems}
+            impactAreas={data.impactAreas}
+          />
+          <SiteNotices notices={data.siteNotices} />
+          <ScrollToTop />
+        </LanguageProvider>
       </body>
     </html>
   );

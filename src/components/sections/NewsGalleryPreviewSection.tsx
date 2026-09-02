@@ -1,7 +1,10 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { SectionHeading } from "@/components/site/SectionBlocks";
 import type { NewsItem, ImageSrc } from "@/lib/types";
+import { useI18n } from "@/components/i18n/LanguageProvider";
 
 interface NewsGalleryPreviewSectionProps {
   newsItems: NewsItem[];
@@ -12,6 +15,8 @@ export default function NewsGalleryPreviewSection({
   newsItems,
   homeVisualGrid,
 }: NewsGalleryPreviewSectionProps) {
+  const { t, localize } = useI18n();
+  const items = localize(newsItems);
   const galleryImages = homeVisualGrid.slice(0, 3);
 
   return (
@@ -20,7 +25,7 @@ export default function NewsGalleryPreviewSection({
         <div>
           <SectionHeading eyebrow="Latest News" title="Stay updated with our activities" />
           <div className="space-y-4">
-            {newsItems.slice(0, 3).map((item) => (
+            {items.slice(0, 3).map((item) => (
               <article key={item.title} className="surface-card flex flex-col gap-4 overflow-hidden sm:flex-row">
                 <div className="relative h-56 sm:h-auto sm:w-56 sm:shrink-0">
                   <Image
@@ -40,7 +45,7 @@ export default function NewsGalleryPreviewSection({
                     className="mt-5 inline-flex text-sm font-semibold text-blue-700 hover:text-emerald-700"
                     aria-label={`Read more about ${item.title}`}
                   >
-                    Read more →
+                    {t("Read more")} →
                   </Link>
                 </div>
               </article>
@@ -69,7 +74,7 @@ export default function NewsGalleryPreviewSection({
             ))}
           </div>
           <Link href="/gallery" className="btn-outline-dark mt-6">
-            View full gallery
+            {t("View full gallery")}
           </Link>
         </div>
       </div>

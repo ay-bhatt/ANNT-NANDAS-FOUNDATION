@@ -1,4 +1,7 @@
+"use client";
+
 import type { ReactNode } from "react";
+import { useI18n } from "@/components/i18n/LanguageProvider";
 
 export function LegalPage({
   title,
@@ -9,14 +12,15 @@ export function LegalPage({
   description: string;
   children: ReactNode;
 }) {
+  const { t } = useI18n();
   return (
     <div className="pb-8">
       <section className="bg-slate-950 px-4 py-12 text-white sm:py-16">
         <div className="container-premium max-w-3xl">
-          <p className="section-label-dark">Legal</p>
-          <h1 className="text-3xl font-bold tracking-[-0.04em] sm:text-5xl">{title}</h1>
-          <p className="mt-4 text-sm leading-7 text-slate-300 sm:text-base">{description}</p>
-          <p className="mt-3 text-xs text-slate-400">Last updated: 21 August 2026</p>
+          <p className="section-label-dark">{t("Legal")}</p>
+          <h1 className="text-3xl font-bold tracking-[-0.04em] sm:text-5xl">{t(title)}</h1>
+          <p className="mt-4 text-sm leading-7 text-slate-300 sm:text-base">{t(description)}</p>
+          <p className="mt-3 text-xs text-slate-400">{t("Last updated: 21 August 2026")}</p>
         </div>
       </section>
       <section className="px-4 py-10 sm:py-12">
@@ -29,9 +33,10 @@ export function LegalPage({
 }
 
 export function LegalSection({ title, children }: { title: string; children: ReactNode }) {
+  const { t } = useI18n();
   return (
     <section>
-      <h2 className="text-xl font-bold tracking-[-0.03em] text-slate-950">{title}</h2>
+      <h2 className="text-xl font-bold tracking-[-0.03em] text-slate-950">{t(title)}</h2>
       <div className="mt-3 space-y-3">{children}</div>
     </section>
   );

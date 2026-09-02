@@ -2,7 +2,12 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { REGISTRATION_TYPE_META } from "@/lib/registration/constants";
+import {
+  REGISTRATION_TYPE_META,
+  TALENT_HUNT_AGE_LABEL,
+  TALENT_HUNT_MAX_AGE,
+  TALENT_HUNT_MIN_AGE,
+} from "@/lib/registration/constants";
 import { createEmptyForm, toPayload } from "@/lib/registration/form-state";
 import { ageFromDob, validateStep } from "@/lib/registration/validation";
 import type {
@@ -16,6 +21,7 @@ import type {
 import DeclarationSection from "./DeclarationSection";
 import DocumentsForm from "./DocumentsForm";
 import EmployeeForm from "./EmployeeForm";
+import PaymentFeeForm from "./PaymentFeeForm";
 import EventForm from "./EventForm";
 import FormProgress from "./FormProgress";
 import MembershipForm from "./MembershipForm";
@@ -23,9 +29,11 @@ import PersonalInformationForm from "./PersonalInformationForm";
 import RegistrationSuccess from "./RegistrationSuccess";
 import RegistrationTypeSelector from "./RegistrationTypeSelector";
 import SportsForm from "./SportsForm";
+import TalentHuntForm from "./TalentHuntForm";
 import VolunteerForm from "./VolunteerForm";
+import { useI18n } from "@/components/i18n/LanguageProvider";
 
-const FLOW: WizardStep[] = ["type", "personal", "details", "documents", "declaration"];
+const FLOW: WizardStep[] = ["type", "personal", "details", "documents", "payment", "declaration"];
 
 function nextStep(step: WizardStep): WizardStep {
   return FLOW[Math.min(FLOW.indexOf(step) + 1, FLOW.length - 1)];
@@ -60,6 +68,7 @@ export default function RegistrationWizard({
   const [result, setResult] = useState<RegistrationSuccessResult | null>(null);
 
   const selectedMeta = state.type ? REGISTRATION_TYPE_META[state.type] : null;
+  const { t } = useI18n();
 
   const update = (partial: Partial<RegistrationFormState>) => {
     setState((current) => ({ ...current, ...partial }));
@@ -124,9 +133,15 @@ export default function RegistrationWizard({
       update({ declaration });
     }
 
+    const paymentErrors = validateStep("payment", nextState);
     const declarationErrors = validateStep("declaration", nextState);
-    if (Object.keys(declarationErrors).length > 0) {
-      setErrors(declarationErrors);
+    const submitErrors = { ...paymentErrors, ...declarationErrors };
+    if (Object.keys(submitErrors).length > 0) {
+      setErrors(submitErrors);
+      if (Object.keys(paymentErrors).length > 0) {
+        setStep("payment");
+        setSubmitError("Please complete the ₹100 registration fee before submitting.");
+      }
       return;
     }
     const payload = toPayload(nextState);
@@ -143,6 +158,8 @@ export default function RegistrationWizard({
           ...payload,
           photograph: undefined,
           signature: undefined,
+          aadhaar: undefined,
+          paymentProof: undefined,
         }),
       );
       if (payload.photograph?.dataUrl) {
@@ -150,6 +167,12 @@ export default function RegistrationWizard({
       }
       if (payload.signature?.dataUrl) {
         body.append("signature", dataUrlToFile(payload.signature, "signature.jpg"));
+      }
+      if (payload.aadhaar?.dataUrl) {
+        body.append("aadhaar", dataUrlToFile(payload.aadhaar, "aadhaar.jpg"));
+      }
+      if (payload.paymentProof?.dataUrl) {
+        body.append("paymentProof", dataUrlToFile(payload.paymentProof, "payment.jpg"));
       }
 
       const response = await fetch("/api/registration", {
@@ -203,8 +226,8 @@ export default function RegistrationWizard({
       {selectedMeta && step !== "type" ? (
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-[22px] border border-slate-200 bg-white px-4 py-3">
           <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">Registering as</p>
-            <p className="text-sm font-semibold text-slate-950">{selectedMeta.label}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-emerald-700">{t("Registering as")}</p>
+            <p className="text-sm font-semibold text-slate-950">{t(selectedMeta.label)}</p>
           </div>
           <button
             type="button"
@@ -214,7 +237,7 @@ export default function RegistrationWizard({
             }}
             className="text-sm font-semibold text-blue-700 underline-offset-4 hover:underline"
           >
-            Change type
+            {t("Change type")}
           </button>
         </div>
       ) : null}
@@ -230,7 +253,19 @@ export default function RegistrationWizard({
           {step === "type" ? <RegistrationTypeSelector onSelectType={openType} /> : null}
 
           {step === "personal" ? (
-            <PersonalInformationForm value={state.personal} errors={errors} onChange={handlePersonalChange} />
+            <PersonalInformationForm
+              value={state.personal}
+              errors={errors}
+              onChange={handlePersonalChange}
+              compact={state.type === "talent-hunt"}
+              minAge={state.type === "talent-hunt" ? TALENT_HUNT_MIN_AGE : 8}
+              maxAge={state.type === "talent-hunt" ? TALENT_HUNT_MAX_AGE : 90}
+              ageHint={
+                state.type === "talent-hunt"
+                  ? `Only dates for ages ${TALENT_HUNT_AGE_LABEL} are available. Date / Month / Year (DD/MM/YYYY)`
+                  : undefined
+              }
+            />
           ) : null}
 
           {step === "details" && state.type === "volunteer" ? (
@@ -256,14 +291,36 @@ export default function RegistrationWizard({
           {step === "details" && state.type === "event" ? (
             <EventForm value={state.event} errors={errors} onChange={(event) => update({ event })} />
           ) : null}
+          {step === "details" && state.type === "talent-hunt" ? (
+            <TalentHuntForm
+              value={state.talentHunt}
+              errors={errors}
+              onChange={(talentHunt) => update({ talentHunt })}
+            />
+          ) : null}
 
           {step === "documents" ? (
             <DocumentsForm
               photograph={state.photograph}
               signature={state.signature}
+              aadhaar={state.aadhaar}
+              aadhaarNumber={state.talentHunt.aadhaarNumber}
               errors={errors}
+              variant={state.type === "talent-hunt" ? "talent-hunt" : "standard"}
               onPhotographChange={(photograph) => update({ photograph })}
               onSignatureChange={(signature) => update({ signature })}
+              onAadhaarChange={(aadhaar) => update({ aadhaar })}
+              onAadhaarNumberChange={(aadhaarNumber) =>
+                update({ talentHunt: { ...state.talentHunt, aadhaarNumber } })
+              }
+            />
+          ) : null}
+
+          {step === "payment" ? (
+            <PaymentFeeForm
+              value={state.paymentProof}
+              error={errors.paymentProof}
+              onChange={(paymentProof) => update({ paymentProof })}
             />
           ) : null}
 
@@ -291,22 +348,22 @@ export default function RegistrationWizard({
 
       {step !== "type" ? (
         <>
-          <div className="mt-8 flex gap-3">
-            <button type="button" onClick={goBack} className="btn-outline-dark flex-1 sm:flex-none">
-              Back
+          <div className="mt-8 hidden gap-3 lg:flex">
+            <button type="button" onClick={goBack} className="btn-outline-dark">
+              {t("Back")}
             </button>
             {step !== "declaration" ? (
-              <button type="button" onClick={goNext} className="btn-primary flex-[2] sm:flex-none">
-                Continue
+              <button type="button" onClick={goNext} className="btn-primary">
+                {t("Continue")}
               </button>
             ) : (
               <button
                 type="button"
                 onClick={() => void handleSubmit()}
                 disabled={submitting || !state.declaration.accepted}
-                className="btn-primary flex-[2] disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none"
+                className="btn-primary disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {submitting ? "Submitting…" : "Submit Registration"}
+                {submitting ? t("Submitting…") : t("Submit Registration")}
               </button>
             )}
           </div>
@@ -314,11 +371,11 @@ export default function RegistrationWizard({
           <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-slate-200 bg-white px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(15,23,42,0.12)] lg:hidden">
             <div className="mx-auto flex max-w-[1240px] gap-3">
               <button type="button" onClick={goBack} className="btn-outline-dark flex-1">
-                Back
+                {t("Back")}
               </button>
               {step !== "declaration" ? (
                 <button type="button" onClick={goNext} className="btn-primary flex-[2]">
-                  Continue
+                  {t("Continue")}
                 </button>
               ) : (
                 <button
@@ -327,7 +384,7 @@ export default function RegistrationWizard({
                   disabled={submitting || !state.declaration.accepted}
                   className="btn-primary flex-[2] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {submitting ? "Submitting…" : "Submit Registration"}
+                  {submitting ? t("Submitting…") : t("Submit Registration")}
                 </button>
               )}
             </div>

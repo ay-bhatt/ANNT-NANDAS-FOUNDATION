@@ -10,24 +10,16 @@ import type {
   RegistrationPayload,
   RegistrationType,
   SportKind,
+  TalentHuntDetails,
   UploadedImage,
 } from "@/lib/registration/types";
-import {
-  typeLabel,
-  validateDeclaration,
-  validateDocuments,
-  validateEmployee,
-  validateEvent,
-  validateMembership,
-  validatePersonal,
-  validateSports,
-  validateVolunteer,
-} from "@/lib/registration/validation";
+import { inferImageMime, isPlausibleImageBuffer, parseImageDataUrl } from "@/lib/registration/image-bytes";
+import { typeLabel, validateStep } from "@/lib/registration/validation";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-const VALID_TYPES: RegistrationType[] = ["volunteer", "membership", "sports", "employee", "event"];
+const VALID_TYPES: RegistrationType[] = ["volunteer", "membership", "sports", "employee", "event", "talent-hunt"];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return Boolean(value) && typeof value === "object" && !Array.isArray(value);
@@ -48,31 +40,23 @@ function asStringArray(value: unknown): string[] {
 
 function parseImage(value: unknown): UploadedImage | null {
   if (!isRecord(value) || typeof value.dataUrl !== "string") return null;
-  if (!value.dataUrl.startsWith("data:image/")) return null;
-  if (value.dataUrl.length > 2_500_000) return null;
+  const parsed = parseImageDataUrl(value.dataUrl);
+  if (!parsed) return null;
   return {
     dataUrl: value.dataUrl,
     name: asString(value.name) || "upload.jpg",
-    mime: asString(value.mime) || "image/jpeg",
-    size: typeof value.size === "number" ? value.size : 0,
+    mime: parsed.mime,
+    size: parsed.buffer.length,
   };
-}
-
-function parseDataUrl(dataUrl: string): { mime: string; buffer: Buffer; ext: string } | null {
-  const match = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
-  if (!match) return null;
-  const mime = match[1];
-  const ext = mime.includes("png") ? "png" : mime.includes("webp") ? "webp" : "jpg";
-  return { mime, buffer: Buffer.from(match[2], "base64"), ext };
 }
 
 async function fileToImage(entry: FormDataEntryValue | null): Promise<UploadedImage | null> {
   if (!entry || typeof entry === "string") return null;
   const file = entry as File;
-  if (!file.size) return null;
-  if (file.size > 1_200_000) return null;
-  const mime = file.type && file.type.startsWith("image/") ? file.type : "image/jpeg";
+  if (!file.size || file.size > 5_000_000) return null;
   const buffer = Buffer.from(await file.arrayBuffer());
+  if (!isPlausibleImageBuffer(buffer)) return null;
+  const mime = inferImageMime(file.name, file.type);
   return {
     dataUrl: `data:${mime};base64,${buffer.toString("base64")}`,
     name: file.name || "upload.jpg",
@@ -94,6 +78,8 @@ async function readIncoming(request: Request): Promise<unknown> {
     }
     payload.photograph = await fileToImage(form.get("photograph"));
     payload.signature = await fileToImage(form.get("signature"));
+    payload.aadhaar = await fileToImage(form.get("aadhaar"));
+    payload.paymentProof = await fileToImage(form.get("paymentProof"));
     return payload;
   }
   return request.json();
@@ -110,6 +96,7 @@ function normalizeType(value: unknown): RegistrationType | "" {
   const type = asString(value);
   if (type === "running") return "sports";
   if (type === "general") return "event";
+  if (type === "talentHunt" || type === "talent_hunt") return "talent-hunt";
   if (VALID_TYPES.includes(type as RegistrationType)) return type as RegistrationType;
   return "";
 }
@@ -230,8 +217,14 @@ function normalizePayload(raw: unknown): RegistrationFormState | null {
       participationMode: asString(eventRaw.participationMode),
       additionalComments: asString(eventRaw.additionalComments),
     },
+    talentHunt: {
+      ...state.talentHunt,
+      ...normalizeTalentHunt(raw),
+    },
     photograph: parseImage(raw.photograph),
     signature: parseImage(raw.signature),
+    aadhaar: parseImage(raw.aadhaar),
+    paymentProof: parseImage(raw.paymentProof),
     declaration: {
       accepted: asBoolean(declarationRaw.accepted || raw.agreeTerms),
       place: asString(declarationRaw.place),
@@ -240,16 +233,31 @@ function normalizePayload(raw: unknown): RegistrationFormState | null {
   };
 }
 
+function normalizeTalentHunt(raw: Record<string, unknown>): TalentHuntDetails {
+  const source = isRecord(raw.talentHunt) ? raw.talentHunt : raw;
+  return {
+    talentCategory: asString(source.talentCategory),
+    otherTalent: asString(source.otherTalent),
+    schoolName: asString(source.schoolName),
+    classGrade: asString(source.classGrade),
+    aadhaarNumber: asString(source.aadhaarNumber),
+    previousAchievements: asString(source.previousAchievements),
+    parentName: asString(source.parentName),
+    parentRelation: asString(source.parentRelation),
+    parentPhone: asString(source.parentPhone),
+    parentEmail: asString(source.parentEmail),
+    whyParticipate: asString(source.whyParticipate),
+    additionalComments: asString(source.additionalComments),
+  };
+}
+
 function collectErrors(state: RegistrationFormState): string[] {
   const buckets = [
-    validatePersonal(state.personal),
-    state.type === "volunteer" ? validateVolunteer(state.volunteer) : {},
-    state.type === "membership" ? validateMembership(state.membership) : {},
-    state.type === "sports" ? validateSports(state.sports) : {},
-    state.type === "employee" ? validateEmployee(state.employee) : {},
-    state.type === "event" ? validateEvent(state.event) : {},
-    validateDocuments(state.photograph, state.signature),
-    validateDeclaration(state.declaration),
+    validateStep("personal", state),
+    validateStep("details", state),
+    validateStep("documents", state),
+    validateStep("payment", state),
+    validateStep("declaration", state),
   ];
   return buckets.flatMap((bucket) => Object.values(bucket));
 }
@@ -263,6 +271,7 @@ function recordWithoutImages(state: RegistrationFormState, id: string, submitted
     sports: state.type === "sports" ? state.sports : undefined,
     employee: state.type === "employee" ? state.employee : undefined,
     event: state.type === "event" ? state.event : undefined,
+    talentHunt: state.type === "talent-hunt" ? state.talentHunt : undefined,
     declaration: state.declaration,
   };
 
@@ -288,8 +297,13 @@ function recordWithoutImages(state: RegistrationFormState, id: string, submitted
     submittedAt,
     hasPhotograph: Boolean(state.photograph),
     hasSignature: Boolean(state.signature),
+    hasAadhaar: Boolean(state.aadhaar),
+    hasPaymentProof: Boolean(state.paymentProof),
+    aadhaarNumber: state.type === "talent-hunt" ? state.talentHunt.aadhaarNumber : "",
     photographName: state.photograph?.name || "",
     signatureName: state.signature?.name || "",
+    aadhaarName: state.aadhaar?.name || "",
+    paymentProofName: state.paymentProof?.name || "",
     payload,
   };
 }
@@ -326,15 +340,34 @@ export async function POST(request: Request) {
       });
       record.photographName = stored.photographPath;
       record.signatureName = stored.signaturePath;
+      record.aadhaarName = stored.aadhaarPath;
+      record.paymentProofName = stored.paymentProofPath;
     } catch (storeError) {
+      const message = storeError instanceof Error ? storeError.message : "";
+      if (
+        message === "INVALID_PHOTOGRAPH" ||
+        message === "INVALID_SIGNATURE" ||
+        message === "INVALID_AADHAAR" ||
+        message === "INVALID_PAYMENT_PROOF"
+      ) {
+        return NextResponse.json(
+          {
+            success: false,
+            message: "A photograph, Aadhaar, signature, or payment screenshot could not be saved. Please upload a clearer JPG or PNG and try again.",
+          },
+          { status: 400 },
+        );
+      }
       console.error("REGISTRATION STORE WARNING:", storeError);
     }
 
     const smtpReady = Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
     if (smtpReady) {
       try {
-        const photoParsed = state.photograph ? parseDataUrl(state.photograph.dataUrl) : null;
-        const signatureParsed = state.signature ? parseDataUrl(state.signature.dataUrl) : null;
+        const photoParsed = state.photograph ? parseImageDataUrl(state.photograph.dataUrl) : null;
+        const signatureParsed = state.signature ? parseImageDataUrl(state.signature.dataUrl) : null;
+        const aadhaarParsed = state.aadhaar ? parseImageDataUrl(state.aadhaar.dataUrl) : null;
+        const paymentParsed = state.paymentProof ? parseImageDataUrl(state.paymentProof.dataUrl) : null;
         const photoCid = "photograph@registration";
         const signatureCid = "signature@registration";
 
@@ -380,6 +413,20 @@ export async function POST(request: Request) {
                 content: signatureParsed.buffer,
                 contentType: signatureParsed.mime,
                 cid: signatureCid,
+              }
+            : null,
+          aadhaarParsed
+            ? {
+                filename: `${registrationId}-aadhaar.${aadhaarParsed.ext}`,
+                content: aadhaarParsed.buffer,
+                contentType: aadhaarParsed.mime,
+              }
+            : null,
+          paymentParsed
+            ? {
+                filename: `${registrationId}-payment.${paymentParsed.ext}`,
+                content: paymentParsed.buffer,
+                contentType: paymentParsed.mime,
               }
             : null,
           pdfBuffer

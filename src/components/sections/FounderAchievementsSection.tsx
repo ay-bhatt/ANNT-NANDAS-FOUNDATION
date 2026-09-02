@@ -1,7 +1,11 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { SectionHeading } from "@/components/site/SectionBlocks";
 import type { FounderInfo } from "@/lib/types";
+import { useI18n } from "@/components/i18n/LanguageProvider";
+import { ORG_NAME_EN } from "@/lib/i18n";
 
 interface FounderAchievementsSectionProps {
   founderInfo: FounderInfo;
@@ -14,9 +18,12 @@ function honourFit(title: string) {
 }
 
 export default function FounderAchievementsSection({ founderInfo }: FounderAchievementsSectionProps) {
+  const { t, localize } = useI18n();
+  const info = localize(founderInfo);
   const [featured, ...rest] = founderInfo.honours;
   const hajar = rest.find((item) => item.title.includes("Hajar"));
   const others = rest.filter((item) => item !== hajar);
+  const honoursByTitle = new Map(info.honours.map((item, index) => [founderInfo.honours[index]?.title ?? item.title, item]));
 
   return (
     <section
@@ -30,13 +37,13 @@ export default function FounderAchievementsSection({ founderInfo }: FounderAchie
             <SectionHeading
               eyebrow="Founder"
               title="Kalam Singh Bisht – Achievements"
-              description={`${founderInfo.name} is an ex-serviceman of 4th Battalion, The Garhwal Rifles, an international ultra trail runner, and the founder of ANNT NANDAS FOUNDATION.`}
+              description={t(`${founderInfo.name} is an ex-serviceman of 4th Battalion, The Garhwal Rifles, an international ultra trail runner, and the founder of ANNT NANDAS FOUNDATION.`)}
             />
             <p className="max-w-xl text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">
-              From military service to Himalayan community work and international endurance racing, his journey is built on discipline, duty, and the belief that hidden talent deserves a fair chance.
+              {t("From military service to Himalayan community work and international endurance racing, his journey is built on discipline, duty, and the belief that hidden talent deserves a fair chance.")}
             </p>
             <Link href="/about" className="btn-outline-dark mt-6">
-              Read his full story
+              {t("Read his full story")}
             </Link>
           </div>
 
@@ -44,7 +51,7 @@ export default function FounderAchievementsSection({ founderInfo }: FounderAchie
             <div className="relative aspect-[3/4] overflow-hidden rounded-[28px] bg-slate-100 shadow-[0_14px_40px_rgba(15,23,42,0.10)]">
               <Image
                 src={founderInfo.portraitImage}
-                alt={`${founderInfo.name}, founder of ANNT NANDAS FOUNDATION, in uniform`}
+                alt={`${founderInfo.name}, founder of ${ORG_NAME_EN}, in uniform`}
                 fill
                 sizes="(max-width: 639px) 100vw, (max-width: 1023px) 50vw, 28vw"
                 className="object-cover object-top"
@@ -85,10 +92,10 @@ export default function FounderAchievementsSection({ founderInfo }: FounderAchie
               </div>
               <div className="p-5 sm:p-6">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
-                  {featured.category}
+                  {honoursByTitle.get(featured.title)?.category ?? featured.category}
                 </p>
-                <h3 className="mt-2 text-lg font-semibold text-slate-950">{featured.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-slate-600">{featured.description}</p>
+                <h3 className="mt-2 text-lg font-semibold text-slate-950">{honoursByTitle.get(featured.title)?.title ?? featured.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{honoursByTitle.get(featured.title)?.description ?? featured.description}</p>
               </div>
             </article>
           ) : null}
@@ -106,10 +113,10 @@ export default function FounderAchievementsSection({ founderInfo }: FounderAchie
               </div>
               <div className="p-5 sm:p-6">
                 <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
-                  {honour.category}
+                  {honoursByTitle.get(honour.title)?.category ?? honour.category}
                 </p>
-                <h3 className="mt-2 text-lg font-semibold text-slate-950">{honour.title}</h3>
-                <p className="mt-3 text-sm leading-7 text-slate-600">{honour.description}</p>
+                <h3 className="mt-2 text-lg font-semibold text-slate-950">{honoursByTitle.get(honour.title)?.title ?? honour.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-600">{honoursByTitle.get(honour.title)?.description ?? honour.description}</p>
               </div>
             </article>
           ))}
@@ -128,10 +135,10 @@ export default function FounderAchievementsSection({ founderInfo }: FounderAchie
                 </div>
                 <div className="flex flex-col justify-center p-5 sm:p-8">
                   <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-700">
-                    {hajar.category}
+                    {honoursByTitle.get(hajar.title)?.category ?? hajar.category}
                   </p>
-                  <h3 className="mt-2 text-xl font-semibold text-slate-950 sm:text-2xl">{hajar.title}</h3>
-                  <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">{hajar.description}</p>
+                  <h3 className="mt-2 text-xl font-semibold text-slate-950 sm:text-2xl">{honoursByTitle.get(hajar.title)?.title ?? hajar.title}</h3>
+                  <p className="mt-4 text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">{honoursByTitle.get(hajar.title)?.description ?? hajar.description}</p>
                 </div>
               </div>
             </article>

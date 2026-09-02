@@ -1,4 +1,12 @@
-import { ACCEPTED_IMAGE_TYPES, MAX_IMAGE_BYTES } from "./constants";
+import {
+  ACCEPTED_IMAGE_TYPES,
+  MAX_IMAGE_BYTES,
+  REGISTRATION_FEE_AMOUNT,
+  TALENT_HUNT_AGE_LABEL,
+  TALENT_HUNT_MAX_AGE,
+  TALENT_HUNT_MIN_AGE,
+} from "./constants";
+import { inferImageMime, isAcceptedImageMime, MIN_IMAGE_BYTES } from "./image-bytes";
 import type {
   DeclarationDetails,
   FieldErrors,
@@ -6,6 +14,7 @@ import type {
   RegistrationFormState,
   RegistrationType,
   SportsDetails,
+  TalentHuntDetails,
   UploadedImage,
   VolunteerDetails,
 } from "./types";
@@ -57,21 +66,78 @@ export function formatDob(value: string): string {
   return `${day}/${month}/${date.getFullYear()}`;
 }
 
-export function ageFromDob(dob: string): number | null {
+export function ageFromDob(dob: string, onDate = new Date()): number | null {
+  const years = ageInYears(dob, onDate);
+  if (years === null) return null;
+  return Math.floor(years);
+}
+
+export function completedAgeMonths(dob: string, onDate = new Date()): number | null {
   const birth = parseDob(dob);
   if (!birth) return null;
-  const today = new Date();
-  let age = today.getFullYear() - birth.getFullYear();
-  const monthDelta = today.getMonth() - birth.getMonth();
-  if (monthDelta < 0 || (monthDelta === 0 && today.getDate() < birth.getDate())) {
-    age -= 1;
-  }
-  return age;
+  if (onDate.getTime() < birth.getTime()) return null;
+  let months = (onDate.getFullYear() - birth.getFullYear()) * 12 + (onDate.getMonth() - birth.getMonth());
+  if (onDate.getDate() < birth.getDate()) months -= 1;
+  return months;
+}
+
+export function ageInYears(dob: string, onDate = new Date()): number | null {
+  const months = completedAgeMonths(dob, onDate);
+  if (months === null) return null;
+  return months / 12;
+}
+
+export function dateAtAge(onDate: Date, ageYears: number): Date {
+  const wholeYears = Math.floor(ageYears);
+  const extraMonths = Math.round((ageYears - wholeYears) * 12);
+  return new Date(onDate.getFullYear() - wholeYears, onDate.getMonth() - extraMonths, onDate.getDate());
+}
+
+export function dobRange(
+  minAge: number,
+  maxAge: number,
+  onDate = new Date(),
+): { earliest: Date; latest: Date } {
+  return {
+    latest: dateAtAge(onDate, minAge),
+    earliest: dateAtAge(onDate, maxAge),
+  };
+}
+
+export function isoDate(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+export function formatAgeBound(value: number): string {
+  const whole = Math.floor(value);
+  const fraction = value - whole;
+  if (Math.abs(fraction - 0.5) < 0.01) return `${whole}½`;
+  if (Math.abs(fraction) < 0.01) return String(whole);
+  return String(value);
+}
+
+export function digitsOnly(value: string): string {
+  return value.replace(/\D/g, "");
+}
+
+export function formatAadhaarNumber(value: string): string {
+  const digits = digitsOnly(value).slice(0, 12);
+  return digits.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
+}
+
+export function isValidAadhaarNumber(value: string): boolean {
+  return /^\d{12}$/.test(digitsOnly(value));
 }
 
 export function validateImage(file: File): string | null {
-  if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+  const mime = inferImageMime(file.name, file.type);
+  if (!isAcceptedImageMime(mime) && !ACCEPTED_IMAGE_TYPES.includes(file.type)) {
     return "Please upload a JPG, PNG, or WEBP image.";
+  }
+  if (file.size < MIN_IMAGE_BYTES) {
+    return "This image is empty or too small. Please upload a clearer photo.";
   }
   if (file.size > MAX_IMAGE_BYTES) {
     return "Image must be 5 MB or smaller.";
@@ -84,7 +150,10 @@ function required(value: string, label: string): string | undefined {
   return undefined;
 }
 
-export function validatePersonal(personal: PersonalInformation): FieldErrors {
+export function validatePersonal(
+  personal: PersonalInformation,
+  options?: { minAge?: number; maxAge?: number; onDate?: Date; skipProfileExtras?: boolean },
+): FieldErrors {
   const errors: FieldErrors = {};
   const nameError = required(personal.fullName, "Full name");
   const fatherError = required(personal.fatherName, "Father’s name");
@@ -112,7 +181,7 @@ export function validatePersonal(personal: PersonalInformation): FieldErrors {
   if (motherError) errors.motherName = motherError;
   if (dobError) errors.dob = dobError;
   if (genderError) errors.gender = genderError;
-  if (nationalityError) errors.nationality = nationalityError;
+  if (!options?.skipProfileExtras && nationalityError) errors.nationality = nationalityError;
   if (addressError) errors.address = addressError;
   if (postOfficeError) errors.postOffice = postOfficeError;
   if (tehsilError) errors.tehsil = tehsilError;
@@ -123,7 +192,7 @@ export function validatePersonal(personal: PersonalInformation): FieldErrors {
   if (phoneError) errors.phone = phoneError;
   if (emailError) errors.email = emailError;
   if (bloodError) errors.bloodGroup = bloodError;
-  if (educationError) errors.education = educationError;
+  if (!options?.skipProfileExtras && educationError) errors.education = educationError;
   if (emergencyNameError) errors.emergencyName = emergencyNameError;
   if (emergencyRelationError) errors.emergencyRelation = emergencyRelationError;
   if (emergencyPhoneError) errors.emergencyPhone = emergencyPhoneError;
@@ -153,9 +222,15 @@ export function validatePersonal(personal: PersonalInformation): FieldErrors {
   }
 
   if (personal.dob) {
-    const computed = ageFromDob(personal.dob);
-    if (computed === null) {
+    const onDate = options?.onDate ?? new Date();
+    const computed = ageFromDob(personal.dob, onDate);
+    const precise = ageInYears(personal.dob, onDate);
+    if (computed === null || precise === null) {
       errors.dob = "Enter a valid date of birth in DD/MM/YYYY format.";
+    } else if (options?.minAge != null && precise < options.minAge) {
+      errors.dob = `This competition is for children ${TALENT_HUNT_AGE_LABEL} (${formatAgeBound(options.minAge)}–${formatAgeBound(options.maxAge ?? options.minAge)}).`;
+    } else if (options?.maxAge != null && precise > options.maxAge) {
+      errors.dob = `This competition is for children ${TALENT_HUNT_AGE_LABEL} (${formatAgeBound(options.minAge ?? options.maxAge)}–${formatAgeBound(options.maxAge)}).`;
     } else if (computed < 8 || computed > 90) {
       errors.dob = "Please enter a realistic date of birth.";
     } else if (personal.age && Number(personal.age) !== computed) {
@@ -225,10 +300,61 @@ export function validateEvent(details: RegistrationFormState["event"]): FieldErr
   return errors;
 }
 
-export function validateDocuments(photograph: UploadedImage | null, signature: UploadedImage | null): FieldErrors {
+export function validateTalentHunt(details: TalentHuntDetails): FieldErrors {
   const errors: FieldErrors = {};
-  if (!photograph) errors.photograph = "Please upload a recent photograph.";
-  if (!signature) errors.signature = "Please upload your signature.";
+  if (!details.talentCategory) errors.talentCategory = "Select a talent category.";
+  if (details.talentCategory === "Other" && !details.otherTalent.trim()) {
+    errors.otherTalent = "Please describe the talent.";
+  }
+  if (!details.schoolName.trim()) errors.schoolName = "School name is required.";
+  if (!details.classGrade) errors.classGrade = "Select the class the student currently studies in.";
+  if (!details.parentName.trim()) errors.parentName = "Parent / consultant name is required.";
+  if (!details.parentRelation) errors.parentRelation = "Select the relation.";
+  if (!details.parentPhone.trim()) errors.parentPhone = "Parent contact number is required.";
+  else if (!isValidPhone(details.parentPhone)) errors.parentPhone = "Enter a valid parent contact number.";
+  if (details.parentEmail && !isValidEmail(details.parentEmail)) {
+    errors.parentEmail = "Enter a valid parent email address.";
+  }
+  if (!details.whyParticipate.trim()) errors.whyParticipate = "Please tell us why you want to take part.";
+  return errors;
+}
+
+export function validateDocuments(
+  photograph: UploadedImage | null,
+  signature: UploadedImage | null,
+  options?: {
+    aadhaar?: UploadedImage | null;
+    aadhaarNumber?: string;
+    requireAadhaar?: boolean;
+    signatureLabel?: string;
+  },
+): FieldErrors {
+  const errors: FieldErrors = {};
+  if (!photograph || photograph.size < MIN_IMAGE_BYTES || !photograph.dataUrl.startsWith("data:image/")) {
+    errors.photograph = "Please upload a recent photograph.";
+  }
+  if (!signature || signature.size < MIN_IMAGE_BYTES || !signature.dataUrl.startsWith("data:image/")) {
+    errors.signature = options?.signatureLabel
+      ? `Please upload the ${options.signatureLabel.toLowerCase()}.`
+      : "Please upload your signature.";
+  }
+  if (options?.requireAadhaar) {
+    if (!options.aadhaar || options.aadhaar.size < MIN_IMAGE_BYTES || !options.aadhaar.dataUrl.startsWith("data:image/")) {
+      errors.aadhaar = "Please upload a clear picture of the Aadhaar card.";
+    }
+    if (!options.aadhaarNumber?.trim()) errors.aadhaarNumber = "Aadhaar number is required.";
+    else if (!isValidAadhaarNumber(options.aadhaarNumber)) {
+      errors.aadhaarNumber = "Enter a valid 12-digit Aadhaar number.";
+    }
+  }
+  return errors;
+}
+
+export function validatePayment(proof: UploadedImage | null): FieldErrors {
+  const errors: FieldErrors = {};
+  if (!proof || proof.size < MIN_IMAGE_BYTES || !proof.dataUrl.startsWith("data:image/")) {
+    errors.paymentProof = `Please upload a screenshot of the ₹${REGISTRATION_FEE_AMOUNT} payment.`;
+  }
   return errors;
 }
 
@@ -242,15 +368,34 @@ export function validateDeclaration(declaration: DeclarationDetails): FieldError
   return errors;
 }
 
-export function validateStep(step: "personal" | "details" | "documents" | "declaration", state: RegistrationFormState): FieldErrors {
-  if (step === "personal") return validatePersonal(state.personal);
-  if (step === "documents") return validateDocuments(state.photograph, state.signature);
+export function validateStep(
+  step: "personal" | "details" | "documents" | "payment" | "declaration",
+  state: RegistrationFormState,
+): FieldErrors {
+  if (step === "personal") {
+    return validatePersonal(
+      state.personal,
+      state.type === "talent-hunt"
+        ? { minAge: TALENT_HUNT_MIN_AGE, maxAge: TALENT_HUNT_MAX_AGE, skipProfileExtras: true }
+        : undefined,
+    );
+  }
+  if (step === "documents") {
+    return validateDocuments(state.photograph, state.signature, {
+      aadhaar: state.aadhaar,
+      aadhaarNumber: state.talentHunt.aadhaarNumber,
+      requireAadhaar: state.type === "talent-hunt",
+      signatureLabel: state.type === "talent-hunt" ? "parent / consultant signature" : undefined,
+    });
+  }
+  if (step === "payment") return validatePayment(state.paymentProof);
   if (step === "declaration") return validateDeclaration(state.declaration);
   if (!state.type) return { type: "Select a registration type." };
   if (state.type === "volunteer") return validateVolunteer(state.volunteer);
   if (state.type === "membership") return validateMembership(state.membership);
   if (state.type === "sports") return validateSports(state.sports);
   if (state.type === "employee") return validateEmployee(state.employee);
+  if (state.type === "talent-hunt") return validateTalentHunt(state.talentHunt);
   return validateEvent(state.event);
 }
 
@@ -259,5 +404,6 @@ export function typeLabel(type: RegistrationType): string {
   if (type === "membership") return "Membership";
   if (type === "sports") return "Sports";
   if (type === "employee") return "Team / Employee";
+  if (type === "talent-hunt") return "Runner Talent Hunt";
   return "Event";
 }

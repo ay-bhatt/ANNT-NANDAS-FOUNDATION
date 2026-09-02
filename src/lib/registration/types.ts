@@ -3,13 +3,14 @@ export type RegistrationType =
   | "membership"
   | "sports"
   | "employee"
-  | "event";
+  | "event"
+  | "talent-hunt";
 
 export type SportKind = "running" | "cycling" | "community" | "other";
 
 export type SupportChoice = "" | "can_provide" | "require" | "not_needed";
 
-export type WizardStep = "type" | "personal" | "details" | "documents" | "declaration";
+export type WizardStep = "type" | "personal" | "details" | "documents" | "payment" | "declaration";
 
 export interface UploadedImage {
   dataUrl: string;
@@ -101,6 +102,21 @@ export interface EventDetails {
   additionalComments: string;
 }
 
+export interface TalentHuntDetails {
+  talentCategory: string;
+  otherTalent: string;
+  schoolName: string;
+  classGrade: string;
+  aadhaarNumber: string;
+  previousAchievements: string;
+  parentName: string;
+  parentRelation: string;
+  parentPhone: string;
+  parentEmail: string;
+  whyParticipate: string;
+  additionalComments: string;
+}
+
 export interface DeclarationDetails {
   accepted: boolean;
   place: string;
@@ -115,8 +131,11 @@ export interface RegistrationFormState {
   sports: SportsDetails;
   employee: EmployeeDetails;
   event: EventDetails;
+  talentHunt: TalentHuntDetails;
   photograph: UploadedImage | null;
   signature: UploadedImage | null;
+  aadhaar: UploadedImage | null;
+  paymentProof: UploadedImage | null;
   declaration: DeclarationDetails;
 }
 
@@ -128,8 +147,11 @@ export interface RegistrationPayload {
   sports?: SportsDetails;
   employee?: EmployeeDetails;
   event?: EventDetails;
+  talentHunt?: TalentHuntDetails;
   photograph?: UploadedImage | null;
   signature?: UploadedImage | null;
+  aadhaar?: UploadedImage | null;
+  paymentProof?: UploadedImage | null;
   declaration: DeclarationDetails;
 }
 

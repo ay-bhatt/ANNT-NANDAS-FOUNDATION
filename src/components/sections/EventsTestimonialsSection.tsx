@@ -6,6 +6,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { SectionHeading } from "@/components/site/SectionBlocks";
 import type { UpcomingEvent, Testimonial } from "@/lib/types";
+import { useI18n } from "@/components/i18n/LanguageProvider";
 
 interface EventsTestimonialsSectionProps {
   upcomingEvents: UpcomingEvent[];
@@ -16,17 +17,20 @@ export default function EventsTestimonialsSection({
   upcomingEvents,
   testimonials,
 }: EventsTestimonialsSectionProps) {
+  const { t, localize } = useI18n();
+  const events = localize(upcomingEvents);
+  const stories = localize(testimonials);
   const [story, setStory] = useState(0);
 
   useEffect(() => {
-    if (testimonials.length < 2) return;
+    if (stories.length < 2) return;
     const timer = window.setInterval(() => {
-      setStory((current) => (current + 1) % testimonials.length);
+      setStory((current) => (current + 1) % stories.length);
     }, 6500);
     return () => window.clearInterval(timer);
-  }, [testimonials.length]);
+  }, [stories.length]);
 
-  const active = testimonials[story] ?? testimonials[0];
+  const active = stories[story] ?? stories[0];
 
   return (
     <section className="section-padding px-3 sm:px-5">
@@ -34,7 +38,7 @@ export default function EventsTestimonialsSection({
         <div className="min-w-0">
           <SectionHeading eyebrow="Upcoming Events" title="Be part of our next initiatives" />
           <div className="grid gap-4 sm:grid-cols-2">
-            {upcomingEvents.map((event, index) => (
+            {events.map((event, index) => (
               <motion.article
                 key={event.title}
                 initial={{ opacity: 0, y: 16 }}
@@ -62,7 +66,7 @@ export default function EventsTestimonialsSection({
                     href={event.href}
                     className="mt-5 inline-flex rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
                   >
-                    Register for {event.title}
+                    {t("Register for")} {event.title}
                   </Link>
                 </div>
               </motion.article>
@@ -95,7 +99,7 @@ export default function EventsTestimonialsSection({
                 </motion.article>
               </AnimatePresence>
               <div className="mt-6 flex gap-2">
-                {testimonials.map((item, index) => (
+                {stories.map((item, index) => (
                   <button
                     key={item.name}
                     type="button"

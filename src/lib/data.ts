@@ -3,6 +3,13 @@ import heroAltImage from "@/assets/hero/HERO (1).webp";
 import heroVisualOne from "@/assets/hero/HERO (2).webp";
 import heroVisualTwo from "@/assets/hero/HERO (3).webp";
 import heroVisualThree from "@/assets/hero/HERO (4).webp";
+import heroVisualFour from "@/assets/hero/HERO (5).webp";
+import founderMawlaTrophy from "@/assets/Kalam singh bisht/mawla-ghaati-trophy.webp";
+import eventIbexTeam from "@/assets/events/ibex-bakri-team.webp";
+import eventUltraCamp from "@/assets/events/ultra-camp.webp";
+import eventHarela from "@/assets/events/harela-festival.webp";
+
+import { generatedGalleryItems } from "@/lib/generated-gallery";
 import founderImage from "@/assets/Kalam singh bisht/event-011.jpg.webp";
 import founderCollageOne from "@/assets/Kalam singh bisht/collage (4).webp";
 import founderCollageTwo from "@/assets/Kalam singh bisht/collage (5).webp";
@@ -57,8 +64,23 @@ import collageFour from "@/assets/collage/gallery (1).webp";
 import collageFive from "@/assets/collage/gallery (2).webp";
 import donationQr from "@/assets/qr.png";
 
+const PHOTO = {
+  trek: "/gallery/photos/community/dscn2385.webp",
+  womenFlags: "/gallery/photos/community/img20240815083120-01.webp",
+  classroom: "/gallery/photos/community/img20241118155715.webp",
+  ropeGame: "/gallery/photos/community/img20250523173605-01.webp",
+  riverKids: "/gallery/photos/community/img20240613092042.webp",
+  plantation: "/gallery/photos/community/img20240811162158-1.webp",
+  cyclingLine: "/gallery/photos/community/img20240714161833.webp",
+  musicClass: "/gallery/photos/community/img20241206114426.webp",
+  snowPeaks: "/gallery/photos/community/img-20260313-wa0010.webp",
+  womanRunner: "/gallery/photos/community/img-20260603-wa0003.webp",
+  press: "/gallery/photos/community/img-20260112-081344.webp",
+};
+
 export const siteConfig = {
   name: "ANNT NANDAS FOUNDATION",
+  hindiName: "अनंत नन्दा फाउण्डेशन",
   shortName: "ANF",
   tagline: "From the Heart of the Himalayas, Building Futures Without Limits",
   motto: "Our Effort, In Search of Hidden Talent.",
@@ -106,12 +128,12 @@ export const heroContent = {
   image: heroAltImage,
   backgroundImage: heroImage,
   floatingCards: [
-    { title: "Sports & Youth Development", image: eventOne },
+    { title: "Sports & Youth Development", image: galleryPhotoCycling },
     { title: "Education & Skill Development", image: educationImage },
     { title: "Environment Conservation", image: environmentImage },
     { title: "Women Empowerment", image: womenImage },
   ],
-  supportingVisuals: [heroVisualOne, heroVisualTwo, heroVisualThree],
+  supportingVisuals: [heroVisualOne, heroVisualTwo, heroVisualThree, heroVisualFour],
 };
 
 export const impactStats = [
@@ -217,7 +239,7 @@ export const coreValues = [
   { icon: "🌄", title: "Local Pride", desc: "We preserve Himalayan traditions, languages, values, and culture while creating opportunities rooted in the land that raised us." },
 ];
 
-export const foundersGallery = [founderImage, founderCollageOne, founderCollageTwo];
+export const foundersGallery = [founderImage, founderCollageOne, founderCollageTwo, founderMawlaTrophy];
 
 export const founderInfo = {
   name: "Kalam Singh Bisht",
@@ -265,7 +287,7 @@ export const founderInfo = {
       category: "Endurance Sport",
       description:
         "Represents India on demanding ultra trail courses worldwide, carrying Himalayan grit from village roads to international start lines.",
-      image: founderCollageOne,
+      image: founderMawlaTrophy,
     },
     {
       title: "1st Place, 120 KM Hajar Ultra Trail Run, Oman (2025)",
@@ -309,7 +331,7 @@ export const impactAreas = [
       "Health camps, hygiene awareness, preventive care, women’s health, and community wellness initiatives.",
     color: "from-rose-500 to-orange-400",
     image: healthcareImage,
-    gallery: [healthcareImage, eventTwo, collageFour],
+    gallery: [healthcareImage, newsTwo, galleryPhotoMeal],
     story: [
       "A child cannot grow through education or sport without good health. Remote communities often have limited access to preventive care, nutrition guidance, and regular wellness support.",
       "ANNT NANDAS FOUNDATION organises health and awareness camps, hygiene education, women’s health outreach, and family-welfare conversations with village families. We also encourage yoga, fitness, and daily discipline as part of a healthy life.",
@@ -331,7 +353,7 @@ export const impactAreas = [
       "Tree plantation, ecological awareness, cleaner villages, and practical stewardship for the Himalayan landscape.",
     color: "from-emerald-500 to-lime-400",
     image: environmentImage,
-    gallery: [environmentImage, gallerySix, galleryEight],
+    gallery: [environmentImage, PHOTO.plantation, collageThree],
     story: [
       "Development should never come at the cost of the Himalayas. Forests, water, soil, and village landscapes are not a backdrop to our work — they are part of the future we are trying to protect.",
       "Children in our programmes learn that caring for nature is a daily responsibility. Tree plantation, plastic-free drives, forest care, and climate awareness are woven into training, events, and village gatherings.",
@@ -353,7 +375,7 @@ export const impactAreas = [
       "Leadership, confidence, participation, and skill-based support for women and girls in rural communities.",
     color: "from-violet-500 to-fuchsia-500",
     image: womenImage,
-    gallery: [womenImage, womenImageTwo, womenImageThree],
+    gallery: [womenImage, womenImageTwo, PHOTO.womenFlags],
     story: [
       "No village can rise if its women and girls are left behind. We work for equal access to education, health, skill development, employment pathways, and leadership — regardless of caste, religion, or financial background.",
       "Through mentorship, community participation, and skill-based support, women and girls are encouraged to take space in public life, support their families, and build independent livelihoods.",
@@ -374,8 +396,8 @@ export const impactAreas = [
     description:
       "Training, discipline, teamwork, and exposure that help rural youth pursue bigger dreams through sport.",
     color: "from-amber-500 to-orange-500",
-    image: eventOne,
-    gallery: [eventOne, eventThree, eventFour],
+    image: galleryPhotoCycling,
+    gallery: [galleryPhotoCycling, eventThree, eventFour],
     story: [
       "Our journey began with two bicycles and twelve children in Mundoli. Those morning sessions were never only about running faster or cycling farther. Every run was a lesson in determination. Every conversation was a chance to build confidence.",
       "Today the Foundation trains children and youth in running, cycling, fitness, self-defence, mountaineering spirit, teamwork, and competitive exposure. We look for hidden athletic ability — and for leadership, grit, and character.",
@@ -424,6 +446,32 @@ export const featureCards = impactAreas.map((area) => ({
 
 export const upcomingEvents = [
   {
+    title: "Ultra Trail Run",
+    date: "12 Oct 2026",
+    day: "12",
+    month: "Oct",
+    location: "Chamoli, Uttarakhand",
+    time: "05:00 AM start",
+    description:
+      "A Himalayan ultra trail run for endurance athletes and youth. Register to take part in this upcoming foundation event.",
+    type: "Sports",
+    image: heroImage,
+    href: "/running-registration",
+  },
+  {
+    title: "Runner Talent Hunt Program",
+    date: "18 Oct 2026",
+    day: "18",
+    month: "Oct",
+    location: "Mundoli, Chamoli",
+    time: "09:00 AM – 04:00 PM",
+    description:
+      "रनर टैलेंट हंट प्रोग्राम — search for future Olympic long-distance athletes. Age group 12–14 years (registration 11½ to 14½). Selected athletes receive free running shoes, nutrition support, and advanced training. Limited seats.",
+    type: "Competition",
+    image: PHOTO.womanRunner,
+    href: "/talent-hunt-registration",
+  },
+  {
     title: "Volunteer Drive · Mundoli Village",
     date: "15 Jun 2026",
     day: "15",
@@ -433,7 +481,7 @@ export const upcomingEvents = [
     description:
       "A grassroots volunteer day focused on community support, mentorship, and direct participation in local initiatives.",
     type: "Volunteer",
-    image: eventOne,
+    image: galleryPhotoSportsMeet,
     href: "/volunteer-registration",
   },
   {
@@ -459,7 +507,7 @@ export const upcomingEvents = [
     description:
       "Interactive sessions for children and families focused on learning support, guidance, and skill-building.",
     type: "Education",
-    image: educationImageTwo,
+    image: educationImageThree,
     href: "/general-registration",
   },
   {
@@ -472,12 +520,20 @@ export const upcomingEvents = [
     description:
       "Preventive care, health awareness, and community wellness support through a local outreach camp.",
     type: "Healthcare",
-    image: healthcareImage,
+    image: eventTwo,
     href: "/general-registration",
   },
 ];
 
 export const newsItems = [
+  {
+    title: "Latest update from ANNT NANDAS FOUNDATION",
+    date: "28 Aug 2026",
+    summary:
+      "Stay informed with the newest programmes, events, and community work from ANNT NANDAS FOUNDATION across the Himalayas.",
+    category: "Foundation",
+    image: newsHero,
+  },
   {
     title: "Sports Training Program Expands to 16 New Villages",
     date: "16 May 2025",
@@ -589,25 +645,71 @@ export const donationInfo = {
 
 export const donationAmounts = [500, 1000, 5000, 10000];
 
+export const siteNotices = [
+  {
+    id: "talent-hunt",
+    kind: "event" as const,
+    eyebrow: "Upcoming event",
+    title: "Runner Talent Hunt Program",
+    summary: "Olympic long-distance talent hunt. Ages 12–14. Free shoes and nutrition for selected athletes.",
+    meta: "Mundoli · Ages 12–14",
+    cta: "Fill the talent hunt form",
+    href: "/talent-hunt-registration",
+  },
+  {
+    id: "ultra-trail-run",
+    kind: "event" as const,
+    eyebrow: "Upcoming event",
+    title: "Ultra Trail Run",
+    summary: "Register now for the Himalayan ultra trail run. Open for endurance athletes and youth supported by the foundation.",
+    meta: "12 Oct 2026 · Chamoli · 05:00 AM",
+    cta: "Register for the run",
+    href: "/running-registration",
+  },
+  {
+    id: "latest-news",
+    kind: "news" as const,
+    eyebrow: "Latest news",
+    title: "Latest update from ANNT NANDAS FOUNDATION",
+    summary: "Stay informed with the newest programmes, events, and community work from the foundation.",
+    meta: "28 Aug 2026 · Foundation",
+    cta: "Open news page",
+    href: "/news",
+  },
+  {
+    id: "volunteer-drive",
+    kind: "volunteer" as const,
+    eyebrow: "Volunteer",
+    title: "Volunteer Drive · Mundoli Village",
+    summary: "Join a grassroots volunteer day focused on community support, mentorship, and local initiatives.",
+    meta: "Mundoli · Join the team",
+    cta: "Volunteer with us",
+    href: "/volunteer-registration",
+  },
+];
+
 export const volunteerOpportunities = [
   {
     title: "Teaching & Mentorship",
     description: "Support village learning sessions and help children build confidence in school subjects.",
     href: "/volunteer-registration",
+    image: educationImageTwo,
   },
   {
     title: "Sports Coaching",
     description: "Help run running, cycling, and youth fitness activities in Himalayan communities.",
     href: "/sports-registration",
+    image: galleryEight,
   },
   {
     title: "Community Outreach",
     description: "Join health camps, environment drives, and village events as they are announced.",
     href: "/volunteer-registration",
+    image: womenImageTwo,
   },
 ];
 
-export const galleryCategories = ["All", "Photos", "Videos"];
+export const galleryCategories = ["All", "Photos", "Videos", "Sports", "Community", "Events", "Education", "Landscape"];
 
 export const galleryItems = [
   { label: "Cycling with the Tricolour", type: "photo", imageSrc: galleryPhotoCycling, theme: "Sports" },
@@ -618,11 +720,11 @@ export const galleryItems = [
   { label: "Marathon Medal and Trophy", type: "photo", imageSrc: galleryPhotoCommunity, theme: "Sports" },
   { label: "Award Ceremony, Haldwani", type: "photo", imageSrc: galleryPhotoFlag, theme: "Events" },
   { label: "Carrying the Tricolour, Oman", type: "photo", imageSrc: heroImage, theme: "Sports" },
-  { label: "Radio Ibex Tarana Interview", type: "photo", imageSrc: educationImage, theme: "News" },
+  { label: "Mundoli training camp in the press", type: "photo", imageSrc: PHOTO.press, theme: "News" },
   { label: "Mawla Ghaati Ultra Champion", type: "photo", imageSrc: galleryOne, theme: "Sports" },
-  { label: "Cultural Programme", type: "photo", imageSrc: eventOne, theme: "Events" },
-  { label: "Village Cycling Day", type: "photo", imageSrc: environmentImage, theme: "Sports" },
-  { label: "Community Reading Session", type: "photo", imageSrc: womenImage, theme: "Community" },
+  { label: "Independence Day with village women", type: "photo", imageSrc: PHOTO.womenFlags, theme: "Events" },
+  { label: "Village cycling day on the hill road", type: "photo", imageSrc: PHOTO.cyclingLine, theme: "Sports" },
+  { label: "Village classroom session", type: "photo", imageSrc: PHOTO.classroom, theme: "Education" },
   { label: "Himalayan Trek", type: "photo", imageSrc: galleryTwo, theme: "Landscape" },
   { label: "Himalayan Peaks", type: "photo", imageSrc: galleryThree, theme: "Landscape" },
   { label: "National Cycling Championship", type: "photo", imageSrc: eventThree, theme: "Sports" },
@@ -668,10 +770,44 @@ export const galleryItems = [
     videoSrc: "/gallery/videos/05.mp4",
     theme: "Events",
   },
+  { label: "Ibex Bakri ultra team", type: "photo", imageSrc: eventIbexTeam, theme: "Sports" },
+  { label: "Ultra camp in the Himalayas", type: "photo", imageSrc: eventUltraCamp, theme: "Sports" },
+  { label: "Harela Festival plantation drive", type: "photo", imageSrc: eventHarela, theme: "Events" },
+  ...generatedGalleryItems,
 ];
 
-export const collageImages = [collageOne, collageTwo, collageThree, collageFour, collageFive];
-export const homeVisualGrid = [galleryOne, galleryTwo, galleryThree, galleryFour];
+export const collageImages = [collageFour, collageFive, collageOne];
+export const homeVisualGrid = [galleryTwelve, galleryThirteen, galleryFourteen, galleryPhotoAward];
+export const homeGalleryPreview = [PHOTO.snowPeaks, PHOTO.womanRunner, PHOTO.press];
+export const homeMoments = [
+  { src: PHOTO.cyclingLine, label: "Children ready to ride" },
+  { src: PHOTO.classroom, label: "Learning in the village" },
+  { src: PHOTO.plantation, label: "Harela plantation drive" },
+  { src: PHOTO.womenFlags, label: "Women of Mundoli" },
+  { src: PHOTO.riverKids, label: "Mundoli Riders by the river" },
+  { src: PHOTO.ropeGame, label: "Play, courage, community" },
+];
+export const pageVisuals = {
+  ourWorkHero: galleryFive,
+  ourWorkCta: PHOTO.plantation,
+  programsHero: PHOTO.musicClass,
+  programsCta: PHOTO.classroom,
+  eventsHero: eventOne,
+  eventsCta: galleryPhotoFlag,
+  galleryHero: PHOTO.snowPeaks,
+  galleryCta: PHOTO.cyclingLine,
+  donateHero: galleryPhotoMeal,
+  donateCta: collageTwo,
+  contactHero: galleryFourteen,
+  contactCta: PHOTO.trek,
+  newsCta: PHOTO.press,
+  homeCta: PHOTO.trek,
+  overviewPrimary: eventIbexTeam,
+  overviewSecondary: galleryOne,
+  aboutHero: PHOTO.riverKids,
+  aboutCta: PHOTO.plantation,
+  communityRooted: PHOTO.classroom,
+};
 export const newsHeroImage = newsHero;
 
 export const genderOptions = ["Male", "Female", "Other", "Prefer not to say"];

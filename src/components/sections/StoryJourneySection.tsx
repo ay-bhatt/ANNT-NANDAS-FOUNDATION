@@ -1,5 +1,8 @@
+"use client";
+
 import { ImageCard, SectionHeading } from "@/components/site/SectionBlocks";
 import type { StoryChapter, ImageSrc } from "@/lib/types";
+import { useI18n } from "@/components/i18n/LanguageProvider";
 
 interface StoryJourneySectionProps {
   storyChapters: StoryChapter[];
@@ -10,6 +13,8 @@ export default function StoryJourneySection({
   storyChapters,
   homeVisualGrid,
 }: StoryJourneySectionProps) {
+  const { localize } = useI18n();
+  const chapters = localize(storyChapters);
   return (
     <section className="section-padding px-3 sm:px-5">
       <div className="container-premium grid min-w-0 gap-8 lg:grid-cols-[1fr_1fr] lg:items-start">
@@ -19,7 +24,7 @@ export default function StoryJourneySection({
             title="Built step by step through service and consistency"
           />
           <div className="space-y-4">
-            {storyChapters.map((chapter, index) => (
+            {chapters.map((chapter, index) => (
               <div key={chapter.title} className="surface-card flex gap-4 p-5">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-50 font-bold text-emerald-700">
                   {String(index + 1).padStart(2, "0")}

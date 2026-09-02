@@ -9,17 +9,18 @@ export const metadata: Metadata = {
   alternates: { canonical: "/programs" },
 };
 import { CTASection, PageHero, SectionHeading } from "@/components/site/SectionBlocks";
+import { T } from "@/components/i18n/T";
 
 export default async function ProgramsPage() {
   const data = await getAllData();
-  const { impactAreas, heroContent } = data;
+  const { impactAreas, pageVisuals } = data;
   return (
     <div className="pb-8">
       <PageHero
         eyebrow="Our Programs"
         title="Creating lasting change through holistic community development"
         description="Real development cannot be achieved by focusing on a single issue. A child cannot excel in education without good health. A talented athlete cannot succeed without discipline and guidance. Every programme is designed to turn potential into achievement."
-        image={heroContent.supportingVisuals[0]}
+        image={pageVisuals.programsHero}
         actions={[
           { label: "Support Our Programs", href: "/donate" },
           { label: "Join as Volunteer", href: "/volunteer-registration", variant: "secondary" },
@@ -36,18 +37,18 @@ export default async function ProgramsPage() {
             />
             <div className="space-y-4 text-base leading-8 text-slate-600">
               <p>
-                We believe education without health is incomplete. Sports without discipline have little meaning. Employment without skills cannot create lasting independence. Development without protecting nature cannot sustain future generations.
+                <T>We believe education without health is incomplete. Sports without discipline have little meaning. Employment without skills cannot create lasting independence. Development without protecting nature cannot sustain future generations.</T>
               </p>
               <p>
-                Therefore every initiative integrates physical development, education, environmental responsibility, cultural identity, leadership, and social values. Our objective is not simply to improve lives for a day. Our objective is to transform communities.
+                <T>Therefore every initiative integrates physical development, education, environmental responsibility, cultural identity, leadership, and social values. Our objective is not simply to improve lives for a day. Our objective is to transform communities.</T>
               </p>
               <p>
-                From Mundoli, Chamoli, Uttarakhand, we take opportunities to children rather than waiting for children to find them — discovering hidden talent, guiding each person toward the right path, and building self-reliant Himalayan villages.
+                <T>From Mundoli, Chamoli, Uttarakhand, we take opportunities to children rather than waiting for children to find them — discovering hidden talent, guiding each person toward the right path, and building self-reliant Himalayan villages.</T>
               </p>
             </div>
           </div>
           <div className="surface-card p-6 sm:p-8">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700">Our five commitments</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-emerald-700"><T>Our five commitments</T></p>
             <ul className="mt-5 space-y-4 text-sm leading-7 text-slate-700">
               {[
                 "Discover hidden talent in remote villages.",
@@ -58,7 +59,7 @@ export default async function ProgramsPage() {
               ].map((item) => (
                 <li key={item} className="flex gap-3">
                   <span className="mt-1 text-emerald-600">✓</span>
-                  <span>{item}</span>
+                  <span><T>{item}</T></span>
                 </li>
               ))}
             </ul>
@@ -86,25 +87,25 @@ export default async function ProgramsPage() {
                       <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-emerald-400/15 to-blue-500/15 text-3xl">
                         {program.icon}
                       </div>
-                      <h2 className="text-2xl font-bold text-slate-950 sm:text-3xl">{program.title}</h2>
+                      <h2 className="text-2xl font-bold text-slate-950 sm:text-3xl"><T>{program.title}</T></h2>
                     </div>
-                    <p className="text-base leading-8 text-slate-600">{program.description}</p>
+                    <p className="text-base leading-8 text-slate-600"><T>{program.description}</T></p>
                     {program.story?.map((paragraph) => (
                       <p key={paragraph.slice(0, 40)} className="mt-4 text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">
-                        {paragraph}
+                        <T>{paragraph}</T>
                       </p>
                     ))}
                     <ul className="mt-6 grid gap-3">
                       {program.points.map((point) => (
                         <li key={point} className="flex gap-3 rounded-2xl border border-slate-200/80 bg-slate-50/70 p-4 text-sm leading-7 text-slate-700">
                           <span className="mt-1 text-emerald-600">✓</span>
-                          <span>{point}</span>
+                          <span><T>{point}</T></span>
                         </li>
                       ))}
                     </ul>
                     <div className="mt-6 flex flex-wrap gap-3">
-                      <Link href="/contact" className="btn-outline-dark">Partner with us</Link>
-                      <Link href="/donate" className="btn-primary">Support this work</Link>
+                      <Link href="/contact" className="btn-outline-dark"><T>Partner with us</T></Link>
+                      <Link href="/donate" className="btn-primary"><T>Support this work</T></Link>
                     </div>
                   </div>
                 </div>
@@ -119,7 +120,7 @@ export default async function ProgramsPage() {
         description="Every contribution helps expand access to learning, health, opportunity, and local leadership across the communities we serve."
         primary={{ label: "Donate Now", href: "/donate" }}
         secondary={{ label: "Contact the Team", href: "/contact" }}
-        image={heroContent.supportingVisuals[1]}
+        image={pageVisuals.programsCta}
       />
     </div>
   );

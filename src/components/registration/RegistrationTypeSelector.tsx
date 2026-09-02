@@ -3,9 +3,10 @@
 import { motion } from "framer-motion";
 import { REGISTRATION_TYPE_META } from "@/lib/registration/constants";
 import type { RegistrationType } from "@/lib/registration/types";
+import { useI18n } from "@/components/i18n/LanguageProvider";
 
 const PRIMARY_TYPES: RegistrationType[] = ["volunteer", "membership", "sports"];
-const EXTRA_TYPES: RegistrationType[] = ["event", "employee"];
+const EXTRA_TYPES: RegistrationType[] = ["event", "talent-hunt", "employee"];
 
 const ICONS: Record<RegistrationType, string> = {
   volunteer: "🌿",
@@ -13,6 +14,7 @@ const ICONS: Record<RegistrationType, string> = {
   sports: "🏅",
   employee: "🗂️",
   event: "📅",
+  "talent-hunt": "🏃",
 };
 
 export default function RegistrationTypeSelector({
@@ -20,13 +22,14 @@ export default function RegistrationTypeSelector({
 }: {
   onSelectType: (type: RegistrationType) => void;
 }) {
+  const { t } = useI18n();
   return (
     <div className="space-y-8">
       <div>
-        <p className="section-label">Choose a path</p>
-        <h2 className="text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl">How would you like to register?</h2>
+        <p className="section-label">{t("Choose a path")}</p>
+        <h2 className="text-3xl font-bold tracking-[-0.04em] text-slate-950 sm:text-4xl">{t("How would you like to register?")}</h2>
         <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
-          Tap a card to open that form immediately. Each path is a short, guided experience.
+          {t("Tap a card to open that form immediately. Each path is a short, guided experience.")}
         </p>
       </div>
 
@@ -48,10 +51,10 @@ export default function RegistrationTypeSelector({
               <span className={`mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br ${meta.accent} text-xl text-white`}>
                 {ICONS[type]}
               </span>
-              <h3 className="text-xl font-bold tracking-[-0.03em] text-slate-950">{meta.label}</h3>
-              <p className="mt-2 text-sm leading-6 text-slate-600">{meta.description}</p>
+              <h3 className="text-xl font-bold tracking-[-0.03em] text-slate-950">{t(meta.label)}</h3>
+              <p className="mt-2 text-sm leading-6 text-slate-600">{t(meta.description)}</p>
               <p className="mt-5 text-sm font-semibold text-emerald-700">
-                Begin {meta.shortLabel.toLowerCase()} <span aria-hidden="true">→</span>
+                {t("Begin")} {t(meta.shortLabel)} <span aria-hidden="true">→</span>
               </p>
             </motion.button>
           );
@@ -59,7 +62,7 @@ export default function RegistrationTypeSelector({
       </div>
 
       <div>
-        <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">Also available</p>
+        <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-slate-400">{t("Also available")}</p>
         <div className="grid gap-3 sm:grid-cols-2">
           {EXTRA_TYPES.map((type) => {
             const meta = REGISTRATION_TYPE_META[type];
@@ -71,9 +74,9 @@ export default function RegistrationTypeSelector({
                 className="group rounded-[24px] border border-slate-200 bg-white px-4 py-4 text-left transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-[0_14px_40px_rgba(15,23,42,0.08)]"
               >
                 <p className="font-semibold text-slate-950">
-                  {ICONS[type]} {meta.label}
+                  {ICONS[type]} {t(meta.label)}
                 </p>
-                <p className="mt-1 text-sm leading-6 text-slate-600">{meta.description}</p>
+                <p className="mt-1 text-sm leading-6 text-slate-600">{t(meta.description)}</p>
               </button>
             );
           })}

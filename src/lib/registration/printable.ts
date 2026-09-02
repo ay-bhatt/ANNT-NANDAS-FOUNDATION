@@ -1,7 +1,7 @@
-import { REGISTRATION_TYPE_META, SPORT_OPTIONS } from "./constants";
+import { REGISTRATION_FEE_AMOUNT, REGISTRATION_FEE_PAYEE, REGISTRATION_TYPE_META, SPORT_OPTIONS } from "./constants";
 import { DECLARATION_CLAUSES, DECLARATION_TITLE } from "./declaration";
 import type { PersonalInformation, RegistrationFormState, RegistrationType } from "./types";
-import { formatDob, typeLabel } from "./validation";
+import { formatAadhaarNumber, formatDob, typeLabel } from "./validation";
 
 export function escapeHtml(value: unknown): string {
   return String(value ?? "")
@@ -17,6 +17,10 @@ function display(value: unknown, fallback = "Not provided"): string {
   return text ? escapeHtml(text) : fallback;
 }
 
+function filled(value: unknown): boolean {
+  return Boolean(String(value ?? "").trim());
+}
+
 function formatDate(value: string): string {
   if (!value) return "Not provided";
   const date = new Date(`${value}T00:00:00`);
@@ -28,20 +32,44 @@ function formatDate(value: string): string {
   });
 }
 
-function row(label: string, value: string): string {
-  return `
-    <tr>
-      <td style="width:38%;padding:9px 12px;border-bottom:1px solid #e2e8f0;color:#475569;font-size:13px;vertical-align:top;">${escapeHtml(label)}</td>
-      <td style="padding:9px 12px;border-bottom:1px solid #e2e8f0;color:#0f172a;font-size:13px;font-weight:600;vertical-align:top;">${value}</td>
-    </tr>
-  `;
+function cell(label: string, value: string, span = false): string {
+  const width = span ? 'width="21%"' : 'width="21%"';
+  const valueWidth = span ? 'width="79%"' : 'width="29%"';
+  return `<td ${width} style="padding:2px 6px;border-bottom:1px solid #e2e8f0;border-right:1px solid #e2e8f0;color:#475569;font-size:9.5px;line-height:1.25;vertical-align:top;">${escapeHtml(label)}</td><td ${valueWidth} colspan="${span ? 3 : 1}" style="padding:2px 6px;border-bottom:1px solid #e2e8f0;color:#0f172a;font-size:9.5px;line-height:1.25;font-weight:700;vertical-align:top;">${value}</td>`;
+}
+
+function pairRow(left: [string, string], right?: [string, string]): string {
+  if (!right) {
+    return `<tr>${cell(left[0], left[1], true)}</tr>`;
+  }
+  return `<tr>${cell(left[0], left[1])}${cell(right[0], right[1])}</tr>`;
+}
+
+function rowsFromPairs(entries: Array<[string, string] | { label: string; value: string; span: true } | null>): string {
+  const html: string[] = [];
+  const compact = entries.filter((entry): entry is [string, string] | { label: string; value: string; span: true } => Boolean(entry));
+  for (let i = 0; i < compact.length; i += 1) {
+    const current = compact[i];
+    if (!Array.isArray(current)) {
+      html.push(pairRow([current.label, current.value]));
+      continue;
+    }
+    const next = compact[i + 1];
+    if (next && Array.isArray(next)) {
+      html.push(pairRow(current, next));
+      i += 1;
+    } else {
+      html.push(pairRow(current));
+    }
+  }
+  return html.join("");
 }
 
 function section(title: string, rows: string): string {
   return `
-    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#ffffff;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 5px;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;background:#ffffff;">
       <tr>
-        <td style="padding:12px 14px;background:#0f172a;color:#ffffff;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;">
+        <td style="padding:4px 8px;background:#0f172a;color:#ffffff;font-size:9.5px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;">
           ${escapeHtml(title)}
         </td>
       </tr>
@@ -59,38 +87,30 @@ function personalRows(personal: PersonalInformation): string {
     .filter(Boolean)
     .join(" · ");
 
-  return [
-    row("Name", display(personal.fullName)),
-    row("Father’s Name", display(personal.fatherName)),
-    row("Mother’s Name", display(personal.motherName)),
-    row("Date of Birth", escapeHtml(formatDob(personal.dob))),
-    row("Age", display(personal.age)),
-    row("Gender", display(personal.gender)),
-    row("Blood Group", display(personal.bloodGroup)),
-    row("Education", display(personal.education)),
-    row("Special Education / Qualification", display(personal.specialEducation)),
-    row("Occupation", display(personal.occupation)),
-    row("Nationality", display(personal.nationality)),
-    row("Address", display(personal.address)),
-    row("Post Office", display(personal.postOffice)),
-    row("Tehsil", display(personal.tehsil)),
-    row("District", display(personal.district)),
-    row("State", display(personal.state)),
-    row("Country", display(personal.country)),
-    row("PIN Code", display(personal.pinCode)),
-    row("Contact Information", display(contact)),
-  ].join("");
-}
-
-function emergencyRows(personal: PersonalInformation): string {
-  return section(
-    "Emergency Contact",
-    [
-      row("Emergency Contact Person’s Name", display(personal.emergencyName)),
-      row("Relation with the Person", display(personal.emergencyRelation)),
-      row("Emergency Contact Number", display(personal.emergencyPhone)),
-    ].join(""),
-  );
+  return rowsFromPairs([
+    ["Name", display(personal.fullName)],
+    ["Father’s Name", display(personal.fatherName)],
+    ["Mother’s Name", display(personal.motherName)],
+    ["Date of Birth", escapeHtml(formatDob(personal.dob))],
+    ["Age", display(personal.age)],
+    ["Gender", display(personal.gender)],
+    ["Blood Group", display(personal.bloodGroup)],
+    filled(personal.education) ? ["Education", display(personal.education)] : null,
+    filled(personal.specialEducation) ? ["Special Education", display(personal.specialEducation)] : null,
+    filled(personal.occupation) ? ["Occupation", display(personal.occupation)] : null,
+    filled(personal.nationality) ? ["Nationality", display(personal.nationality)] : null,
+    ["PIN Code", display(personal.pinCode)],
+    ["Post Office", display(personal.postOffice)],
+    ["Tehsil", display(personal.tehsil)],
+    ["District", display(personal.district)],
+    ["State", display(personal.state)],
+    ["Country", display(personal.country)],
+    { label: "Address", value: display(personal.address), span: true },
+    { label: "Contact Information", value: display(contact), span: true },
+    ["Emergency contact", display(personal.emergencyName)],
+    ["Relation", display(personal.emergencyRelation)],
+    { label: "Emergency number", value: display(personal.emergencyPhone), span: true },
+  ]);
 }
 
 function sportLabel(state: RegistrationFormState): string {
@@ -104,27 +124,19 @@ function categorySpecificRows(state: RegistrationFormState): string {
     const v = state.volunteer;
     return section(
       "Volunteer Information",
-      [
-        row("Volunteer Name", display(v.volunteerName)),
-        row("Skills / Expertise", display(v.skills)),
-        row("Category / Role", display(v.roles.join(", "))),
-        row("Other Skill / Role", display(v.otherRole)),
-        row("Subjects They Can Teach", display(v.subjects)),
-        row("Experience", display(v.experience)),
-        row("Why They Want to Volunteer", display(v.motivation)),
-        row("Preferred Location", display(v.preferredLocation)),
-        row(
-          "Volunteer Timing",
-          "Assigned by the foundation according to the activity, location, and operational requirements",
-        ),
-        row(
-          "Food & Stay",
-          "Provided by the foundation according to the volunteering activity and location",
-        ),
-        row("Preferred Duration", display(v.duration === "Specific duration" ? v.customDuration : v.duration)),
-        row("Additional Requirements", display(v.otherSupport)),
-        row("Additional Comments", display(v.additionalComments)),
-      ].join(""),
+      rowsFromPairs([
+        ["Volunteer Name", display(v.volunteerName)],
+        ["Skills / Expertise", display(v.skills)],
+        ["Category / Role", display(v.roles.join(", "))],
+        filled(v.otherRole) ? ["Other Skill / Role", display(v.otherRole)] : null,
+        filled(v.subjects) ? ["Subjects They Can Teach", display(v.subjects)] : null,
+        filled(v.experience) ? ["Experience", display(v.experience)] : null,
+        ["Preferred Location", display(v.preferredLocation)],
+        ["Preferred Duration", display(v.duration === "Specific duration" ? v.customDuration : v.duration)],
+        { label: "Why They Want to Volunteer", value: display(v.motivation), span: true },
+        filled(v.otherSupport) ? { label: "Additional Requirements", value: display(v.otherSupport), span: true } : null,
+        filled(v.additionalComments) ? { label: "Additional Comments", value: display(v.additionalComments), span: true } : null,
+      ]),
     );
   }
 
@@ -132,13 +144,13 @@ function categorySpecificRows(state: RegistrationFormState): string {
     const m = state.membership;
     return section(
       "Membership Information",
-      [
-        row("Membership Type", display(m.membershipType)),
-        row("Areas of Interest", display(m.areasOfInterest.join(", "))),
-        row("Contribution", display(m.contribution)),
-        row("How They Heard About Us", display(m.howHeard)),
-        row("Additional Comments", display(m.additionalComments)),
-      ].join(""),
+      rowsFromPairs([
+        ["Membership Type", display(m.membershipType)],
+        filled(m.howHeard) ? ["How They Heard About Us", display(m.howHeard)] : null,
+        { label: "Areas of Interest", value: display(m.areasOfInterest.join(", ")), span: true },
+        { label: "Contribution", value: display(m.contribution), span: true },
+        filled(m.additionalComments) ? { label: "Additional Comments", value: display(m.additionalComments), span: true } : null,
+      ]),
     );
   }
 
@@ -146,16 +158,16 @@ function categorySpecificRows(state: RegistrationFormState): string {
     const s = state.sports;
     return section(
       "Sports Information",
-      [
-        row("Sport", display(sportLabel(state))),
-        row("Category", display(s.category)),
-        row("Experience Level", display(s.experienceLevel)),
-        row("Previous Participation", display(s.previousParticipation)),
-        row("Medical Information", display(s.medicalInfo)),
-        row("Medically Fit", s.medicallyFit ? "Yes" : "No"),
-        row("T-shirt Size", display(s.tshirtSize)),
-        row("Additional Comments", display(s.additionalComments)),
-      ].join(""),
+      rowsFromPairs([
+        ["Sport", display(sportLabel(state))],
+        ["Category", display(s.category)],
+        ["Experience Level", display(s.experienceLevel)],
+        filled(s.tshirtSize) ? ["T-shirt Size", display(s.tshirtSize)] : null,
+        ["Medically Fit", s.medicallyFit ? "Yes" : "No"],
+        filled(s.previousParticipation) ? ["Previous Participation", display(s.previousParticipation)] : null,
+        filled(s.medicalInfo) ? { label: "Medical Information", value: display(s.medicalInfo), span: true } : null,
+        filled(s.additionalComments) ? { label: "Additional Comments", value: display(s.additionalComments), span: true } : null,
+      ]),
     );
   }
 
@@ -163,25 +175,45 @@ function categorySpecificRows(state: RegistrationFormState): string {
     const e = state.employee;
     return section(
       "Employment Information",
-      [
-        row("Position Applied For", display(e.position)),
-        row("Qualifications", display(e.qualifications)),
-        row("Experience", display(e.experience)),
-        row("Availability to Join", display(e.availabilityToJoin)),
-        row("Why They Want to Join", display(e.whyJoin)),
-        row("Additional Comments", display(e.additionalComments)),
-      ].join(""),
+      rowsFromPairs([
+        ["Position Applied For", display(e.position)],
+        filled(e.availabilityToJoin) ? ["Availability to Join", display(e.availabilityToJoin)] : null,
+        { label: "Qualifications", value: display(e.qualifications), span: true },
+        filled(e.experience) ? { label: "Experience", value: display(e.experience), span: true } : null,
+        { label: "Why They Want to Join", value: display(e.whyJoin), span: true },
+        filled(e.additionalComments) ? { label: "Additional Comments", value: display(e.additionalComments), span: true } : null,
+      ]),
+    );
+  }
+
+  if (state.type === "talent-hunt") {
+    const t = state.talentHunt;
+    return section(
+      "Runner Talent Hunt Program",
+      rowsFromPairs([
+        ["Talent category", display(t.talentCategory === "Other" ? t.otherTalent : t.talentCategory)],
+        ["School name", display(t.schoolName)],
+        ["Class studying in", display(t.classGrade)],
+        ["Aadhaar number", display(formatAadhaarNumber(t.aadhaarNumber))],
+        ["Parent / consultant name", display(t.parentName)],
+        ["Relation", display(t.parentRelation)],
+        ["Parent phone", display(t.parentPhone)],
+        filled(t.parentEmail) ? { label: "Parent email", value: display(t.parentEmail), span: true } : null,
+        { label: "Why they want to take part", value: display(t.whyParticipate), span: true },
+        filled(t.previousAchievements) ? { label: "Previous achievements", value: display(t.previousAchievements), span: true } : null,
+        filled(t.additionalComments) ? { label: "Additional comments", value: display(t.additionalComments), span: true } : null,
+      ]),
     );
   }
 
   const ev = state.event;
   return section(
     "Event Information",
-    [
-      row("Event / Activity", display(ev.eventInterest)),
-      row("Participation Mode", display(ev.participationMode)),
-      row("Additional Comments", display(ev.additionalComments)),
-    ].join(""),
+    rowsFromPairs([
+      ["Event / Activity", display(ev.eventInterest)],
+      ["Participation Mode", display(ev.participationMode)],
+      filled(ev.additionalComments) ? { label: "Additional Comments", value: display(ev.additionalComments), span: true } : null,
+    ]),
   );
 }
 
@@ -203,17 +235,18 @@ export function buildPrintableHtml(options: {
   const personal = state.personal;
 
   const photoBlock = photoSrc
-    ? `<img src="${photoSrc}" alt="Applicant photograph" style="width:132px;height:160px;object-fit:cover;border:1px solid #cbd5e1;border-radius:8px;background:#f8fafc;" />`
-    : `<div style="width:132px;height:160px;border:1px dashed #94a3b8;border-radius:8px;background:#f8fafc;color:#64748b;font-size:11px;text-align:center;line-height:160px;">No photo</div>`;
+    ? `<img src="${photoSrc}" alt="Applicant photograph" style="width:78px;height:96px;object-fit:cover;border:1px solid #cbd5e1;border-radius:4px;background:#f8fafc;" />`
+    : `<div style="width:78px;height:96px;border:1px dashed #94a3b8;border-radius:4px;background:#f8fafc;color:#64748b;font-size:9px;text-align:center;line-height:96px;">No photo</div>`;
 
   const signatureBlock = signatureSrc
-    ? `<img src="${signatureSrc}" alt="Applicant signature" style="width:220px;height:88px;object-fit:contain;border:1px solid #cbd5e1;border-radius:8px;background:#ffffff;padding:6px;" />`
-    : `<div style="width:220px;height:88px;border:1px dashed #94a3b8;border-radius:8px;background:#f8fafc;color:#64748b;font-size:11px;text-align:center;line-height:88px;">No signature</div>`;
+    ? `<img src="${signatureSrc}" alt="Applicant signature" style="width:140px;height:40px;object-fit:contain;border:1px solid #cbd5e1;border-radius:4px;background:#ffffff;padding:2px;" />`
+    : `<div style="width:140px;height:40px;border:1px dashed #94a3b8;border-radius:4px;background:#f8fafc;color:#64748b;font-size:9px;text-align:center;line-height:40px;">No signature</div>`;
 
-  const clauses = DECLARATION_CLAUSES.map(
-    (clause, index) =>
-      `<p style="margin:0 0 8px;font-size:12px;line-height:1.55;color:#334155;"><strong>${index + 1}. ${escapeHtml(clause.title)}.</strong> ${escapeHtml(clause.body)}</p>`,
-  ).join("");
+  const feeRows = rowsFromPairs([
+    ["Amount", `₹${REGISTRATION_FEE_AMOUNT}`],
+    ["Payee", display(REGISTRATION_FEE_PAYEE)],
+    ["Status", "Paid · payment screenshot on file (not printed)"],
+  ]);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -222,101 +255,80 @@ export function buildPrintableHtml(options: {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ANNT NANDAS FOUNDATION · ${escapeHtml(meta.label)} · ${escapeHtml(registrationId)}</title>
   <style>
-    @page { margin: 14mm; }
-    body { margin: 0; padding: 0; background: ${mode === "email" ? "#e2e8f0" : "#ffffff"}; }
+    @page { size: A4 portrait; margin: 8mm; }
+    html, body { margin: 0; padding: 0; background: ${mode === "email" ? "#e2e8f0" : "#ffffff"}; }
+    body { font-family: Arial, Helvetica, sans-serif; color: #0f172a; }
+    .sheet { width: 100%; max-width: 190mm; }
     @media print {
-      body { background: #ffffff !important; }
+      html, body { background: #ffffff !important; width: 210mm; height: 297mm; overflow: hidden; }
+      .sheet { page-break-after: avoid; page-break-inside: avoid; }
       .no-print { display: none !important; }
       a { color: inherit !important; text-decoration: none !important; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     }
   </style>
 </head>
 <body>
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:${mode === "email" ? "#e2e8f0" : "#ffffff"};padding:${mode === "email" ? "18px 10px" : "0"};">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:${mode === "email" ? "#e2e8f0" : "#ffffff"};padding:${mode === "email" ? "8px" : "0"};">
     <tr>
       <td align="center">
-        <table width="720" cellpadding="0" cellspacing="0" style="max-width:720px;width:100%;background:#ffffff;border:1px solid #dbe3ee;overflow:hidden;">
+        <table class="sheet" width="720" cellpadding="0" cellspacing="0" style="max-width:720px;width:100%;background:#ffffff;border:1px solid #dbe3ee;overflow:hidden;">
           <tr>
-            <td style="padding:22px 24px 18px;background:linear-gradient(135deg,#0f172a 0%,#1d4ed8 58%,#059669 100%);color:#ffffff;">
-              <p style="margin:0 0 6px;font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#dbeafe;">Official Registration Record</p>
-              <h1 style="margin:0;font-size:26px;line-height:1.15;letter-spacing:0.04em;">ANNT NANDAS FOUNDATION</h1>
-              <p style="margin:8px 0 0;font-size:13px;color:#d1fae5;">From the Heart of the Himalayas · Building Futures Without Limits</p>
+            <td style="padding:6px 10px;background:linear-gradient(135deg,#0f172a 0%,#1d4ed8 58%,#059669 100%);color:#ffffff;">
+              <p style="margin:0;font-size:8px;letter-spacing:0.18em;text-transform:uppercase;color:#dbeafe;">Official Registration Record · One page</p>
+              <h1 style="margin:1px 0 0;font-size:15px;line-height:1.15;letter-spacing:0.04em;">ANNT NANDAS FOUNDATION</h1>
             </td>
           </tr>
           <tr>
-            <td style="padding:16px 24px;background:#f8fafc;border-bottom:1px solid #e2e8f0;">
+            <td style="padding:5px 10px;background:#f8fafc;border-bottom:1px solid #e2e8f0;">
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td style="vertical-align:top;">
-                    <p style="margin:0 0 4px;font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.12em;">Registration Type</p>
-                    <p style="margin:0;font-size:18px;font-weight:700;color:#0f172a;">${escapeHtml(typeLabel(type))}</p>
+                  <td style="vertical-align:middle;">
+                    <p style="margin:0;font-size:8px;color:#64748b;text-transform:uppercase;letter-spacing:0.1em;">Registration Type</p>
+                    <p style="margin:1px 0 0;font-size:12px;font-weight:700;color:#0f172a;">${escapeHtml(typeLabel(type))}</p>
+                    <p style="margin:2px 0 0;font-size:9px;color:#475569;">Submitted: ${escapeHtml(submitted)}</p>
                   </td>
-                  <td style="vertical-align:top;text-align:right;">
-                    <p style="margin:0 0 4px;font-size:12px;color:#64748b;text-transform:uppercase;letter-spacing:0.12em;">Reference Number</p>
-                    <p style="margin:0;font-size:16px;font-weight:700;color:#1d4ed8;">${escapeHtml(registrationId)}</p>
+                  <td style="vertical-align:middle;text-align:right;">
+                    <p style="margin:0;font-size:8px;color:#64748b;text-transform:uppercase;letter-spacing:0.1em;">Reference Number</p>
+                    <p style="margin:1px 0 0;font-size:12px;font-weight:700;color:#1d4ed8;">${escapeHtml(registrationId)}</p>
                   </td>
-                </tr>
-                <tr>
-                  <td colspan="2" style="padding-top:10px;font-size:12px;color:#475569;">Submitted: ${escapeHtml(submitted)}</td>
+                  <td width="90" align="right" style="padding-left:10px;">${photoBlock}</td>
                 </tr>
               </table>
             </td>
           </tr>
           <tr>
-            <td style="padding:22px 24px 8px;">
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;">
-                <tr>
-                  <td align="center">
-                    <p style="margin:0 0 8px;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#64748b;">Photograph</p>
-                    ${photoBlock}
-                    <h2 style="margin:14px 0 4px;font-size:24px;line-height:1.2;color:#0f172a;">${display(personal.fullName)}</h2>
-                    <p style="margin:0;font-size:13px;color:#475569;">${escapeHtml(typeLabel(type))} · ${escapeHtml(registrationId)}</p>
-                  </td>
-                </tr>
-              </table>
+            <td style="padding:6px 10px 4px;">
+              <h2 style="margin:0 0 4px;font-size:14px;line-height:1.15;color:#0f172a;">${display(personal.fullName)}</h2>
               ${section("Personal Information", personalRows(personal))}
-              ${emergencyRows(personal)}
               ${categorySpecificRows(state)}
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#ffffff;">
+              ${section("Registration fee & identity", feeRows)}
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 4px;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;background:#ffffff;">
                 <tr>
-                  <td style="padding:12px 14px;background:#0f172a;color:#ffffff;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;">
-                    ${escapeHtml(DECLARATION_TITLE)}
+                  <td style="padding:3px 8px;background:#0f172a;color:#ffffff;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;font-weight:700;">
+                    ${escapeHtml(DECLARATION_TITLE)} &amp; Signature
                   </td>
                 </tr>
                 <tr>
-                  <td style="padding:16px 14px;">
-                    ${clauses}
-                    <p style="margin:12px 0 0;font-size:13px;color:#0f172a;"><strong>Declaration accepted:</strong> ${state.declaration.accepted ? "Yes" : "No"}</p>
-                  </td>
-                </tr>
-              </table>
-              <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 18px;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;background:#ffffff;">
-                <tr>
-                  <td style="padding:12px 14px;background:#0f172a;color:#ffffff;font-size:13px;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;">
-                    Applicant Signature
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:18px 14px 16px;">
+                  <td style="padding:5px 8px 6px;">
                     <table width="100%" cellpadding="0" cellspacing="0">
                       <tr>
                         <td style="vertical-align:bottom;">
-                          <p style="margin:0 0 8px;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#64748b;">Signature</p>
+                          <p style="margin:0 0 3px;font-size:8.5px;color:#334155;">Declaration accepted: <strong>${state.declaration.accepted ? "Yes" : "No"}</strong>. The applicant has read and accepted the Declaration &amp; Responsibility in full.</p>
                           ${signatureBlock}
-                          <p style="margin:12px 0 0;font-size:13px;color:#0f172a;"><strong>Name:</strong> ${display(personal.fullName)}</p>
+                          <p style="margin:3px 0 0;font-size:9px;color:#0f172a;"><strong>Name:</strong> ${display(personal.fullName)}</p>
                         </td>
                         <td style="vertical-align:bottom;text-align:right;">
-                          <p style="margin:0 0 8px;font-size:13px;color:#0f172a;"><strong>Date:</strong> ${formatDate(state.declaration.date)}</p>
-                          <p style="margin:0;font-size:13px;color:#0f172a;"><strong>Place:</strong> ${display(state.declaration.place)}</p>
+                          <p style="margin:0 0 3px;font-size:9px;color:#0f172a;"><strong>Date:</strong> ${formatDate(state.declaration.date)}</p>
+                          <p style="margin:0;font-size:9px;color:#0f172a;"><strong>Place:</strong> ${display(state.declaration.place)}</p>
                         </td>
                       </tr>
                     </table>
                   </td>
                 </tr>
               </table>
-              <p style="margin:0 0 18px;font-size:11px;line-height:1.6;color:#64748b;">
-                This document was generated from the ANNT NANDAS FOUNDATION website registration system.
-                It is intended as an official printable record for administrative review.
+              <p style="margin:0;font-size:8px;line-height:1.3;color:#64748b;">
+                One-page record from the ANNT NANDAS FOUNDATION registration system. Aadhaar card image and payment screenshot are stored privately and attached to the office email, not printed here.
               </p>
             </td>
           </tr>
@@ -344,7 +356,7 @@ export function buildDeclarationHtml(): string {
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ANNT NANDAS FOUNDATION · Declaration &amp; Responsibility</title>
   <style>
-    @page { margin: 16mm; }
+    @page { size: A4 portrait; margin: 16mm; }
     body { margin: 0; font-family: Arial, Helvetica, sans-serif; color: #0f172a; background: #ffffff; }
     @media print { .no-print { display: none !important; } }
   </style>

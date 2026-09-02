@@ -17,7 +17,8 @@
     "experience": "",
     "position": "",
     "qualifications": "",
-    "submittedAt": "2026-08-15T16:48:08.851Z"
+    "submittedAt": "2026-08-15T16:48:08.851Z",
+    "files": {}
   },
   {
     "id": "REG-1786812493556",
@@ -37,7 +38,8 @@
     "experience": "",
     "position": "",
     "qualifications": "",
-    "submittedAt": "2026-08-15T16:48:13.556Z"
+    "submittedAt": "2026-08-15T16:48:13.556Z",
+    "files": {}
   },
   {
     "id": "REG-1786812494975",
@@ -57,7 +59,8 @@
     "experience": "",
     "position": "",
     "qualifications": "",
-    "submittedAt": "2026-08-15T16:48:14.975Z"
+    "submittedAt": "2026-08-15T16:48:14.975Z",
+    "files": {}
   },
   {
     "id": "REG-1786812495458",
@@ -77,7 +80,8 @@
     "experience": "",
     "position": "",
     "qualifications": "",
-    "submittedAt": "2026-08-15T16:48:15.458Z"
+    "submittedAt": "2026-08-15T16:48:15.458Z",
+    "files": {}
   },
   {
     "id": "REG-1786812495605",
@@ -97,7 +101,8 @@
     "experience": "",
     "position": "",
     "qualifications": "",
-    "submittedAt": "2026-08-15T16:48:15.605Z"
+    "submittedAt": "2026-08-15T16:48:15.605Z",
+    "files": {}
   },
   {
     "id": "REG-1786812495733",
@@ -117,7 +122,8 @@
     "experience": "",
     "position": "",
     "qualifications": "",
-    "submittedAt": "2026-08-15T16:48:15.733Z"
+    "submittedAt": "2026-08-15T16:48:15.733Z",
+    "files": {}
   },
   {
     "id": "REG-1786812496382",
@@ -137,7 +143,8 @@
     "experience": "",
     "position": "",
     "qualifications": "",
-    "submittedAt": "2026-08-15T16:48:16.382Z"
+    "submittedAt": "2026-08-15T16:48:16.382Z",
+    "files": {}
   },
   {
     "id": "REG-1786812501919",
@@ -157,7 +164,8 @@
     "experience": "",
     "position": "",
     "qualifications": "",
-    "submittedAt": "2026-08-15T16:48:21.919Z"
+    "submittedAt": "2026-08-15T16:48:21.919Z",
+    "files": {}
   },
   {
     "id": "REG-1786812506093",
@@ -177,7 +185,8 @@
     "experience": "",
     "position": "",
     "qualifications": "",
-    "submittedAt": "2026-08-15T16:48:26.093Z"
+    "submittedAt": "2026-08-15T16:48:26.093Z",
+    "files": {}
   },
   {
     "id": "REG-1786812506118",
@@ -197,7 +206,8 @@
     "experience": "",
     "position": "",
     "qualifications": "",
-    "submittedAt": "2026-08-15T16:48:26.118Z"
+    "submittedAt": "2026-08-15T16:48:26.118Z",
+    "files": {}
   },
   {
     "id": "ANF-VOL-260819-G7NU",
@@ -260,6 +270,10 @@
         "place": "dehradun",
         "date": "2026-08-19"
       }
+    },
+    "files": {
+      "photograph": "uploads/photographs/volunteer/ANF-VOL-260819-G7NU_ayush-bhatt_photograph.jpg",
+      "signature": "uploads/signatures/volunteer/ANF-VOL-260819-G7NU_ayush-bhatt_signature.jpg"
     }
   },
   {
@@ -324,6 +338,10 @@
         "place": "Mundoli",
         "date": "2026-08-19"
       }
+    },
+    "files": {
+      "photograph": "uploads/photographs/volunteer/ANF-VOL-260819-7R79_Test-Applicant_photograph.png",
+      "signature": "uploads/signatures/volunteer/ANF-VOL-260819-7R79_Test-Applicant_signature.png"
     }
   },
   {
@@ -378,6 +396,10 @@
         "place": "Chamoli",
         "date": "2026-08-19"
       }
+    },
+    "files": {
+      "photograph": "uploads/photographs/sports/ANF-SPT-260819-2FJB_Sports-Tester_photograph.png",
+      "signature": "uploads/signatures/sports/ANF-SPT-260819-2FJB_Sports-Tester_signature.png"
     }
   },
   {
@@ -431,6 +453,120 @@
         "place": "Chamoli",
         "date": "2026-08-19"
       }
+    },
+    "files": {
+      "photograph": "uploads/photographs/membership/ANF-MEM-260819-MQW9_Member-Tester_photograph.png",
+      "signature": "uploads/signatures/membership/ANF-MEM-260819-MQW9_Member-Tester_signature.png"
+    }
+  },
+  {
+    "id": "ANF-THN-260901-ON38",
+    "type": "talent-hunt",
+    "submittedAt": "2026-09-01T07:58:31.050Z",
+    "name": "ayush bhatt",
+    "fatherName": "ayush",
+    "motherName": "bhatt",
+    "dob": "2015-02-10",
+    "age": "11",
+    "gender": "Male",
+    "nationality": "Indian",
+    "address": "177 SHASTRI NAGAR SEEMADWAR DEHRADUN UTTRAKHAND",
+    "postOffice": "GARHICANTT POST OFFI",
+    "tehsil": "dd",
+    "district": "Dehradun",
+    "state": "Uttarakhand",
+    "country": "India",
+    "pinCode": "248001",
+    "phone": "+917310756069",
+    "email": "aybhatt0022@gmail.com",
+    "whatsapp": "",
+    "bloodGroup": "B-",
+    "education": "Intermediate / 12th",
+    "occupation": "Athlete",
+    "emergencyName": "ayush bhatt",
+    "emergencyRelation": "Relative",
+    "emergencyPhone": "+917310756069",
+    "talentHunt": {
+      "talentCategory": "Running / Long Distance",
+      "otherTalent": "",
+      "schoolName": "aps",
+      "classGrade": "Class 10",
+      "aadhaarNumber": "9103 9031 4881",
+      "previousAchievements": "qqq",
+      "parentName": "ayush bhatt",
+      "parentRelation": "Guardian",
+      "parentPhone": "07310756069",
+      "parentEmail": "aybhatt0022@gmail.com",
+      "whyParticipate": "qwqw",
+      "additionalComments": ""
+    },
+    "payment": {
+      "amount": 100,
+      "currency": "INR",
+      "payee": "ANNT NANDAS FOUNDATION"
+    },
+    "declaration": {
+      "accepted": true,
+      "place": "dehradun",
+      "date": "2026-09-01"
+    },
+    "files": {
+      "photograph": "uploads/photographs/talent-hunt/ANF-THN-260901-ON38_ayush-bhatt_photograph.jpg",
+      "signature": "uploads/signatures/talent-hunt/ANF-THN-260901-ON38_ayush-bhatt_signature.jpg",
+      "aadhaar": "uploads/aadhaar/talent-hunt/ANF-THN-260901-ON38_ayush-bhatt_aadhaar.jpg",
+      "paymentProof": "uploads/payments/talent-hunt/ANF-THN-260901-ON38_ayush-bhatt_payment.jpg"
+    }
+  },
+  {
+    "id": "ANF-EMP-260901-CKIV",
+    "type": "employee",
+    "submittedAt": "2026-09-01T08:08:11.263Z",
+    "name": "test sub",
+    "fatherName": "test",
+    "motherName": "test",
+    "dob": "2004-12-16",
+    "age": "21",
+    "gender": "Male",
+    "nationality": "Indian",
+    "address": "177 SHASTRI NAGAR SEEMADWAR DEHRADUN UTTRAKHAND",
+    "postOffice": "test",
+    "tehsil": "abc",
+    "district": "Dehradun",
+    "state": "Uttarakhand",
+    "country": "India",
+    "pinCode": "248005",
+    "phone": "+917310756069",
+    "email": "test@example.com",
+    "whatsapp": "32456789654",
+    "bloodGroup": "O-",
+    "education": "Graduate",
+    "occupation": "",
+    "emergencyName": "ayush bhatt",
+    "emergencyRelation": "Friend",
+    "emergencyPhone": "+917310756069",
+    "employee": {
+      "position": "test",
+      "qualifications": "test",
+      "experience": "",
+      "availabilityToJoin": "",
+      "whyJoin": "test",
+      "additionalComments": ""
+    },
+    "payment": {
+      "amount": 100,
+      "currency": "INR",
+      "payee": "ANNT NANDAS FOUNDATION"
+    },
+    "declaration": {
+      "accepted": true,
+      "place": "test",
+      "date": "2026-09-01"
+    },
+    "files": {
+      "photograph": "uploads/photographs/employee/ANF-EMP-260901-CKIV_test-sub_photograph.jpg",
+      "signature": "uploads/signatures/employee/ANF-EMP-260901-CKIV_test-sub_signature.jpg",
+      "aadhaar": null,
+      "paymentProof": "uploads/payments/employee/ANF-EMP-260901-CKIV_test-sub_payment.jpg"
     }
   }
 ]

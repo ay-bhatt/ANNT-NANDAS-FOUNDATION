@@ -39,7 +39,94 @@ export const REGISTRATION_TYPE_META: Record<
     description: "Register for upcoming workshops, outreach camps, and community events.",
     accent: "from-cyan-500 to-blue-700",
   },
+  "talent-hunt": {
+    label: "Runner Talent Hunt Registration",
+    shortLabel: "Talent Hunt",
+    code: "THN",
+    description: "Runner Talent Hunt Program — search for future Olympic long-distance athletes, ages 11½ to 14½ years.",
+    accent: "from-amber-500 to-orange-600",
+  },
 };
+
+export const TALENT_HUNT_MIN_AGE = 11.5;
+export const TALENT_HUNT_MAX_AGE = 14.5;
+export const TALENT_HUNT_AGE_LABEL = "11½ to 14½ years";
+
+export const TALENT_HUNT_PROGRAM = {
+  hindiName: "रनर टैलेंट हंट प्रोग्राम",
+  englishName: "Runner Talent Hunt Program",
+  mottoHindi: "हमारा प्रयास, हुनर की तलाश",
+  mottoEnglish: "Our effort, in search of talent",
+  taglineHindi: "भविष्य के ओलंपिक खिलाड़ियों की तलाश",
+  taglineEnglish: "Search for future Olympic athletes",
+  goalHindi: "Olympic Long Distance Run के लिए खिलाड़ी तैयार करें",
+  goalEnglish: "Prepare athletes for Olympic long-distance running",
+  posterAge: "12–14 years",
+  sloganHindi: "आज की मेहनत, कल आपका ओलंपिक मेडल!",
+  sloganEnglish: "Today’s hard work, tomorrow your Olympic medal!",
+  organizer: "ANNT NANDAS FOUNDATION",
+  organizerHindi: "अनंत नन्दा फाउण्डेशन",
+  benefits: [
+    {
+      title: "Free running shoes",
+      titleHindi: "फ्री रनिंग शू",
+      body: "Every selected athlete receives free running shoes from the foundation.",
+    },
+    {
+      title: "Nutrition support",
+      titleHindi: "न्यूट्रिशन",
+      body: "Selected athletes receive nutrition guidance and nutrition support.",
+    },
+  ],
+  steps: [
+    {
+      title: "Limited seats",
+      titleHindi: "लिमिटेड सीटें",
+      body: "Seats are limited. Apply early — this opportunity is limited.",
+    },
+    {
+      title: "Practice at home",
+      titleHindi: "प्रैक्टिस घर पर",
+      body: "Train at home under the supervision of parents.",
+    },
+    {
+      title: "Foundation test",
+      titleHindi: "फाउंडेशन लेगा टेस्ट",
+      body: "The foundation will conduct a test and select fit athletes.",
+    },
+    {
+      title: "Advanced training",
+      titleHindi: "एडवांस ट्रेनिंग",
+      body: "Selected athletes receive high-level advanced training.",
+    },
+  ],
+};
+
+export const TALENT_CATEGORIES = [
+  "Running / Long Distance",
+  "Olympic Long Distance Run",
+  "Trail Running",
+  "Athletics",
+  "Sports",
+  "Other",
+];
+
+export const PARENT_RELATIONS = ["Mother", "Father", "Guardian"];
+
+export const SCHOOL_CLASS_OPTIONS = [
+  "Class 5",
+  "Class 6",
+  "Class 7",
+  "Class 8",
+  "Class 9",
+  "Class 10",
+  "Class 11",
+  "Other",
+];
+
+export const REGISTRATION_FEE_AMOUNT = 100;
+export const REGISTRATION_FEE_PAYEE = "ANNT NANDAS FOUNDATION";
+export const REGISTRATION_FEE_PAYEE_NOTE = "Ananta / Anantananda Foundation";
 
 export const SPORT_OPTIONS: {
   id: SportKind;
@@ -239,6 +326,7 @@ export const WIZARD_STEPS: { id: WizardStep; label: string }[] = [
   { id: "personal", label: "Personal" },
   { id: "details", label: "Details" },
   { id: "documents", label: "Documents" },
+  { id: "payment", label: "Fee" },
   { id: "declaration", label: "Declaration" },
 ];
 

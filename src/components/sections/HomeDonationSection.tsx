@@ -1,5 +1,8 @@
+"use client";
+
 import type { DonationInfo } from "@/lib/types";
 import DonationWidget from "@/components/donation/DonationWidget";
+import { useI18n } from "@/components/i18n/LanguageProvider";
 
 export default function HomeDonationSection({
   donation,
@@ -8,6 +11,7 @@ export default function HomeDonationSection({
   donation: DonationInfo;
   amounts: number[];
 }) {
+  const { t } = useI18n();
   return (
     <section className="section-padding px-3 sm:px-5" aria-labelledby="home-donation-title">
       <div className="container-premium">
@@ -15,12 +19,12 @@ export default function HomeDonationSection({
           <div className="pointer-events-none absolute right-0 top-0 h-48 w-48 rounded-full bg-emerald-400/15 blur-3xl" aria-hidden="true" />
           <div className="relative grid gap-8 p-6 sm:p-9 lg:grid-cols-[0.95fr_1.05fr] lg:p-12">
             <div className="max-w-xl">
-              <span className="section-label-dark">Give With Purpose</span>
+              <span className="section-label-dark">{t("Give With Purpose")}</span>
               <h2 id="home-donation-title" className="text-balance text-3xl font-bold leading-tight tracking-[-0.035em] sm:text-4xl lg:text-5xl">
-                Your support becomes opportunity.
+                {t("Your support becomes opportunity.")}
               </h2>
               <p className="mt-4 text-sm leading-7 text-blue-100 sm:text-base sm:leading-8">
-                {donation.description}
+                {t(donation.description)}
               </p>
             </div>
             <DonationWidget upiId={donation.upiId} payeeName={donation.payeeName} amounts={amounts} variant="dark" />

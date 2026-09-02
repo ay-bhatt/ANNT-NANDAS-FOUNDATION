@@ -1,7 +1,9 @@
 "use client";
 
-import { useRef, useState, type HTMLAttributes, type ReactNode } from "react";
+import { useMemo, useRef, useState, type HTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import { dobRange } from "@/lib/registration/validation";
+import { useI18n } from "@/components/i18n/LanguageProvider";
 
 interface FieldBaseProps {
   id: string;
@@ -47,23 +49,24 @@ function FieldShell({
   className,
   children,
 }: FieldBaseProps & { children: ReactNode }) {
+  const { t } = useI18n();
   return (
     <div className={cn("min-w-0", className)}>
       <label htmlFor={id} className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-slate-800">
-        <span>{label}</span>
+        <span>{t(label)}</span>
         {required ? (
           <span className="text-rose-500" aria-hidden="true">
             *
           </span>
         ) : (
-          <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">Optional</span>
+          <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">{t("Optional")}</span>
         )}
       </label>
       {children}
-      {hint && !error ? <p className="mt-1.5 text-xs leading-5 text-slate-500">{hint}</p> : null}
+      {hint && !error ? <p className="mt-1.5 text-xs leading-5 text-slate-500">{t(hint)}</p> : null}
       {error ? (
         <p id={`${id}-error`} className="mt-1.5 text-xs font-medium text-rose-600" role="alert">
-          {error}
+          {t(error)}
         </p>
       ) : null}
     </div>
@@ -156,6 +159,7 @@ export function SelectField({
   options,
   placeholder = "Select",
 }: SelectFieldProps) {
+  const { t } = useI18n();
   return (
     <FieldShell id={id} label={label} required={required} error={error} hint={hint} className={className}>
       <select
@@ -168,10 +172,10 @@ export function SelectField({
         onChange={(event) => onChange(event.target.value)}
         className={cn(controlClass, error ? "border-rose-300 ring-2 ring-rose-100" : "border-slate-200")}
       >
-        <option value="">{placeholder}</option>
+        <option value="">{t(placeholder)}</option>
         {options.map((option) => (
           <option key={option} value={option}>
-            {option}
+            {t(option)}
           </option>
         ))}
       </select>
@@ -196,6 +200,7 @@ export function ChipSelect({
   onChange: (next: string[]) => void;
   multiple?: boolean;
 }) {
+  const { t } = useI18n();
   const toggle = (option: string) => {
     if (multiple) {
       onChange(value.includes(option) ? value.filter((item) => item !== option) : [...value, option]);
@@ -207,8 +212,8 @@ export function ChipSelect({
   return (
     <div>
       <p className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-slate-800">
-        <span>{label}</span>
-        {required ? <span className="text-rose-500">*</span> : <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">Optional</span>}
+        <span>{t(label)}</span>
+        {required ? <span className="text-rose-500">*</span> : <span className="text-[11px] font-medium uppercase tracking-wider text-slate-400">{t("Optional")}</span>}
       </p>
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {
@@ -226,12 +231,12 @@ export function ChipSelect({
                   : "border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:text-blue-800",
               )}
             >
-              {option}
+              {t(option)}
             </button>
           );
         })}
       </div>
-      {error ? <p className="mt-1.5 text-xs font-medium text-rose-600">{error}</p> : null}
+      {error ? <p className="mt-1.5 text-xs font-medium text-rose-600">{t(error)}</p> : null}
     </div>
   );
 }
@@ -308,11 +313,46 @@ const DOB_MONTH_LABELS = [
   "December",
 ];
 
-function dobYears(): string[] {
-  const now = new Date().getFullYear();
+function daysInMonth(year: number, month: number): number {
+  return new Date(year, month, 0).getDate();
+}
+
+function dobYearsInRange(earliest: Date, latest: Date): string[] {
   const years: string[] = [];
-  for (let year = now - 8; year >= now - 90; year -= 1) years.push(String(year));
+  for (let year = latest.getFullYear(); year >= earliest.getFullYear(); year -= 1) {
+    years.push(String(year));
+  }
   return years;
+}
+
+function dobMonthsInRange(year: string, earliest: Date, latest: Date): string[] {
+  if (!year) return DOB_MONTHS;
+  const numericYear = Number(year);
+  const start = numericYear === earliest.getFullYear() ? earliest.getMonth() + 1 : 1;
+  const end = numericYear === latest.getFullYear() ? latest.getMonth() + 1 : 12;
+  return DOB_MONTHS.filter((month) => {
+    const value = Number(month);
+    return value >= start && value <= end;
+  });
+}
+
+function dobDaysInRange(year: string, month: string, earliest: Date, latest: Date): string[] {
+  if (!year || !month) return DOB_DAYS;
+  const numericYear = Number(year);
+  const numericMonth = Number(month);
+  const maxInMonth = daysInMonth(numericYear, numericMonth);
+  let minDay = 1;
+  let maxDay = maxInMonth;
+  if (numericYear === earliest.getFullYear() && numericMonth === earliest.getMonth() + 1) {
+    minDay = earliest.getDate();
+  }
+  if (numericYear === latest.getFullYear() && numericMonth === latest.getMonth() + 1) {
+    maxDay = Math.min(maxDay, latest.getDate());
+  }
+  return DOB_DAYS.filter((day) => {
+    const value = Number(day);
+    return value >= minDay && value <= maxDay;
+  });
 }
 
 export function DateOfBirthField({
@@ -324,16 +364,25 @@ export function DateOfBirthField({
   className,
   value,
   onChange,
-}: FieldBaseProps & { value: string; onChange: (value: string) => void }) {
+  minAge = 8,
+  maxAge = 90,
+}: FieldBaseProps & { value: string; onChange: (value: string) => void; minAge?: number; maxAge?: number }) {
   const initial = dobParts(value);
   const [day, setDay] = useState(initial.day);
   const [month, setMonth] = useState(initial.month);
   const [year, setYear] = useState(initial.year);
   const partsRef = useRef({ day: initial.day, month: initial.month, year: initial.year });
-  const years = dobYears();
+  const { earliest, latest } = useMemo(() => dobRange(minAge, maxAge), [minAge, maxAge]);
+  const years = dobYearsInRange(earliest, latest);
+  const months = dobMonthsInRange(year, earliest, latest);
+  const days = dobDaysInRange(year, month, earliest, latest);
 
   const emit = (patch: { day?: string; month?: string; year?: string }) => {
     const next = { ...partsRef.current, ...patch };
+    const allowedMonths = dobMonthsInRange(next.year, earliest, latest);
+    if (next.month && !allowedMonths.includes(next.month)) next.month = "";
+    const allowedDays = dobDaysInRange(next.year, next.month, earliest, latest);
+    if (next.day && !allowedDays.includes(next.day)) next.day = "";
     partsRef.current = next;
     setDay(next.day);
     setMonth(next.month);
@@ -359,7 +408,7 @@ export function DateOfBirthField({
             className={selectClass}
           >
             <option value="">DD</option>
-            {DOB_DAYS.map((option) => (
+            {days.map((option) => (
               <option key={option} value={option}>
                 {option}
               </option>
@@ -379,9 +428,9 @@ export function DateOfBirthField({
             className={selectClass}
           >
             <option value="">MM</option>
-            {DOB_MONTHS.map((option, index) => (
+            {months.map((option) => (
               <option key={option} value={option}>
-                {option} · {DOB_MONTH_LABELS[index]}
+                {option} · {DOB_MONTH_LABELS[Number(option) - 1]}
               </option>
             ))}
           </select>
@@ -423,12 +472,13 @@ export function SectionCard({
   description?: string;
   children: ReactNode;
 }) {
+  const { t } = useI18n();
   return (
     <section className="rounded-[28px] border border-slate-200/80 bg-white p-5 shadow-[0_14px_40px_rgba(15,23,42,0.06)] sm:p-7">
       <div className="mb-5">
-        {eyebrow ? <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-700">{eyebrow}</p> : null}
-        <h2 className="text-2xl font-bold tracking-[-0.03em] text-slate-950">{title}</h2>
-        {description ? <p className="mt-2 text-sm leading-7 text-slate-600">{description}</p> : null}
+        {eyebrow ? <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-700">{t(eyebrow)}</p> : null}
+        <h2 className="text-2xl font-bold tracking-[-0.03em] text-slate-950">{t(title)}</h2>
+        {description ? <p className="mt-2 text-sm leading-7 text-slate-600">{t(description)}</p> : null}
       </div>
       {children}
     </section>

@@ -1,17 +1,19 @@
-﻿import Link from "next/link";
+﻿"use client";
+
+import Link from "next/link";
 import Image from "next/image";
 import logoImg from "@/assets/logo.webp";
 import caumasLogo from "@/assets/caumas-logo.webp";
 import type { SiteConfig, NavItem, ImpactArea } from "@/lib/types";
+import { toTelHref } from "@/lib/utils";
+import { useI18n } from "@/components/i18n/LanguageProvider";
+import BrandMark from "@/components/site/BrandMark";
+import { ORG_NAME_EN, ORG_NAME_HI } from "@/lib/i18n";
 
 interface FooterProps {
   siteConfig: SiteConfig;
   navigationItems: NavItem[];
   impactAreas: ImpactArea[];
-}
-
-function toTelHref(phone: string) {
-  return `tel:${phone.replace(/[^\d+]/g, "")}`;
 }
 
 function mapsHref(address: string) {
@@ -23,6 +25,7 @@ function whatsappHref(phone: string) {
 }
 
 export default function Footer({ siteConfig }: FooterProps) {
+  const { t } = useI18n();
   const socials = [
     {
       label: "Instagram",
@@ -66,24 +69,17 @@ export default function Footer({ siteConfig }: FooterProps) {
               <div className="relative h-14 w-14 overflow-hidden rounded-2xl border border-white/15 bg-white shrink-0 transition duration-200 group-hover:scale-105 group-hover:shadow-[0_10px_24px_rgba(16,185,129,0.25)]">
                 <Image
                   src={logoImg}
-                  alt="ANNT NANDAS FOUNDATION logo"
+                  alt={`${ORG_NAME_EN} / ${ORG_NAME_HI}`}
                   fill
                   sizes="56px"
                   className="object-cover"
                 />
               </div>
-              <div>
-                <p className="text-base font-bold uppercase tracking-[0.08em] text-white">
-                  ANNT NANDAS
-                </p>
-                <p className="text-xs font-semibold uppercase tracking-[0.24em] text-emerald-400">
-                  Foundation
-                </p>
-              </div>
+              <BrandMark inverted />
             </Link>
 
             <p className="max-w-sm text-sm leading-relaxed text-slate-400">
-              {siteConfig.tagline}. We support children and communities through education, health, environment, sports, and opportunity.
+              {t(siteConfig.tagline)}. {t("We support children and communities through education, health, environment, sports, and opportunity.")}
             </p>
 
             <div className="flex items-center gap-3 pt-2">
@@ -105,9 +101,9 @@ export default function Footer({ siteConfig }: FooterProps) {
           </div>
 
           <div className="min-w-0 space-y-4">
-            <h4 className="mb-6 text-xs font-bold uppercase tracking-[0.22em] text-white">
-              Contact Us
-            </h4>
+            <p className="mb-6 text-xs font-bold uppercase tracking-[0.22em] text-white">
+              {t("Contact Us")}
+            </p>
             <a
               href={`mailto:${siteConfig.email}`}
               className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 transition duration-200 hover:-translate-y-0.5 hover:border-emerald-400/40 hover:bg-white/[0.07]"
@@ -120,29 +116,38 @@ export default function Footer({ siteConfig }: FooterProps) {
               <span className="truncate text-sm text-slate-200">{siteConfig.email}</span>
             </a>
 
-            <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 transition duration-200 hover:border-emerald-400/40 hover:bg-white/[0.07]">
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400">
+            <a
+              href={toTelHref(siteConfig.phone1)}
+              aria-label={`${t("Call")} ${siteConfig.phone1}`}
+              className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 transition duration-200 hover:-translate-y-0.5 hover:border-emerald-400/40 hover:bg-white/[0.07] touch-manipulation"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 transition group-hover:bg-emerald-500 group-hover:text-white">
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
               </span>
-              <span className="flex flex-col gap-0.5 text-sm text-slate-200">
-                <a href={toTelHref(siteConfig.phone1)} className="transition hover:text-white">
-                  {siteConfig.phone1}
-                </a>
-                {siteConfig.phone2 ? (
-                  <a href={toTelHref(siteConfig.phone2)} className="text-slate-400 transition hover:text-white">
-                    {siteConfig.phone2}
-                  </a>
-                ) : null}
-              </span>
-            </div>
+              <span className="text-sm text-slate-200">{siteConfig.phone1}</span>
+            </a>
+            {siteConfig.phone2 ? (
+              <a
+                href={toTelHref(siteConfig.phone2)}
+                aria-label={`${t("Call")} ${siteConfig.phone2}`}
+                className="group flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 transition duration-200 hover:-translate-y-0.5 hover:border-emerald-400/40 hover:bg-white/[0.07] touch-manipulation"
+              >
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-400 transition group-hover:bg-emerald-500 group-hover:text-white">
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                </span>
+                <span className="text-sm text-slate-200">{siteConfig.phone2}</span>
+              </a>
+            ) : null}
           </div>
 
           <div className="min-w-0 space-y-4 sm:col-span-2 lg:col-span-1">
-             <h4 className="mb-6 text-xs font-bold uppercase tracking-[0.22em] text-white">
-              Visit Us
-            </h4>
+            <p className="mb-6 text-xs font-bold uppercase tracking-[0.22em] text-white">
+              {t("Visit Us")}
+            </p>
             <a
               href={mapsHref(siteConfig.address)}
               target="_blank"
@@ -164,14 +169,14 @@ export default function Footer({ siteConfig }: FooterProps) {
         <div className="mt-8 w-full min-w-0 max-w-full space-y-5 border-t border-white/10 pt-6">
           <div className="flex min-w-0 flex-wrap items-center gap-3">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
-              Developed by
+              {t("Developed by")}
             </p>
             <a
               href="https://caumas.com/"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-10 max-w-[10rem] items-center justify-center rounded-lg bg-white px-2 py-1 ring-1 ring-white/10"
-              aria-label="Developed by Caumas"
+              aria-label={t("Developed by Caumas")}
             >
               <Image
                 src={caumasLogo}
@@ -187,16 +192,16 @@ export default function Footer({ siteConfig }: FooterProps) {
             aria-label="Legal"
             className="grid min-w-0 grid-cols-2 gap-x-3 gap-y-2 text-xs text-slate-400 sm:flex sm:flex-wrap sm:gap-x-5"
           >
-            <Link href="/privacy-policy" className="py-1 transition hover:text-white">Privacy Policy</Link>
-            <Link href="/terms" className="py-1 transition hover:text-white">Terms &amp; Conditions</Link>
-            <Link href="/cookie-policy" className="py-1 transition hover:text-white">Cookie Policy</Link>
-            <Link href="/accessibility" className="py-1 transition hover:text-white">Accessibility</Link>
-            <Link href="/refund-policy" className="py-1 transition hover:text-white">Refund Policy</Link>
-            <Link href="/contact" className="py-1 transition hover:text-white">Contact</Link>
+            <Link href="/privacy" className="py-1 transition hover:text-white">{t("Privacy Policy")}</Link>
+            <Link href="/terms" className="py-1 transition hover:text-white">{t("Terms & Conditions")}</Link>
+            <Link href="/cookie-policy" className="py-1 transition hover:text-white">{t("Cookie Policy")}</Link>
+            <Link href="/accessibility" className="py-1 transition hover:text-white">{t("Accessibility")}</Link>
+            <Link href="/refund-policy" className="py-1 transition hover:text-white">{t("Refund Policy")}</Link>
+            <Link href="/contact" className="py-1 transition hover:text-white">{t("Contact")}</Link>
           </nav>
 
           <p className="text-sm text-slate-500">
-            © {new Date().getFullYear()} {siteConfig.name}. All Rights Reserved.
+            © {new Date().getFullYear()} {siteConfig.name} · {ORG_NAME_HI}. {t("All Rights Reserved.")}
           </p>
         </div>
       </div>
