@@ -49,7 +49,7 @@ export default function MobileBottomNav({ navigationItems }: MobileBottomNavProp
   ];
 
   return (
-    <div className="lg:hidden">
+    <div className="xl:hidden">
       {moreOpen ? (
         <div className="fixed inset-0 z-40">
           <button
@@ -60,7 +60,7 @@ export default function MobileBottomNav({ navigationItems }: MobileBottomNavProp
           />
           <div
             id="mobile-more-menu"
-            className="absolute inset-x-0 bottom-[var(--site-bottom-nav-h)] max-h-[min(72vh,34rem)] overflow-y-auto rounded-t-3xl bg-white px-4 pb-4 pt-3 shadow-[0_-12px_40px_rgba(15,23,42,0.16)]"
+            className="absolute inset-x-0 bottom-[calc(var(--site-bottom-nav-h)+env(safe-area-inset-bottom))] max-h-[min(70svh,34rem)] overflow-y-auto rounded-t-3xl bg-white px-4 pb-4 pt-3 shadow-[0_-12px_40px_rgba(15,23,42,0.16)]"
           >
             <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-slate-200" aria-hidden="true" />
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">{t("More")}</p>
@@ -96,7 +96,7 @@ export default function MobileBottomNav({ navigationItems }: MobileBottomNavProp
         aria-label={t("Mobile primary navigation")}
         className="fixed inset-x-0 bottom-0 z-50 border-t border-slate-200 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_rgba(15,23,42,0.08)] backdrop-blur-md"
       >
-        <div className="grid h-[var(--site-bottom-nav-h)] grid-cols-5">
+        <div className="mx-auto grid h-[var(--site-bottom-nav-h)] max-w-[44rem] grid-cols-5">
           {tabs.map((tab) => {
             const active = pathname === tab.href;
             return (

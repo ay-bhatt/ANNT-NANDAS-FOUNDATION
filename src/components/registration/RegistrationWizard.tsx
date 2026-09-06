@@ -220,7 +220,7 @@ export default function RegistrationWizard({
   }
 
   return (
-    <div className={step === "type" ? "" : "pb-28 lg:pb-8"}>
+    <div className={step === "type" ? "" : "pb-40 xl:pb-8"}>
       <FormProgress current={step} />
 
       {selectedMeta && step !== "type" ? (
@@ -348,7 +348,7 @@ export default function RegistrationWizard({
 
       {step !== "type" ? (
         <>
-          <div className="mt-8 hidden gap-3 lg:flex">
+          <div className="mt-8 hidden gap-3 xl:flex">
             <button type="button" onClick={goBack} className="btn-outline-dark">
               {t("Back")}
             </button>
@@ -368,7 +368,7 @@ export default function RegistrationWizard({
             )}
           </div>
 
-          <div className="fixed inset-x-0 bottom-0 z-[60] border-t border-slate-200 bg-white px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] shadow-[0_-8px_24px_rgba(15,23,42,0.12)] lg:hidden">
+          <div className="fixed inset-x-0 z-[60] border-t border-slate-200 bg-white px-4 py-3 shadow-[0_-8px_24px_rgba(15,23,42,0.12)] bottom-[calc(var(--site-bottom-nav-h)+env(safe-area-inset-bottom))] xl:hidden">
             <div className="mx-auto flex max-w-[1240px] gap-3">
               <button type="button" onClick={goBack} className="btn-outline-dark flex-1">
                 {t("Back")}

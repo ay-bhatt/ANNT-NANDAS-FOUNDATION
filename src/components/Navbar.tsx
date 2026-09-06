@@ -59,25 +59,25 @@ export default function Navbar({ navigationItems, motto, mottoHi }: NavbarProps)
           {t("Skip to main content")}
         </a>
 
-        <div className="flex min-h-[var(--site-punchline-h)] items-center justify-center border-b border-white/10 bg-blue-950 px-3 py-1.5 text-center">
-          <div className="text-[11px] leading-snug text-emerald-100 sm:text-xs">
+        <div className="flex min-h-[var(--site-punchline-h)] items-center justify-center border-b border-white/10 bg-blue-950 px-3 py-1 text-center sm:py-1.5">
+          <div className="max-w-[min(100%,40rem)] text-[10px] leading-snug text-emerald-100 min-[390px]:text-[11px] sm:text-xs">
             <PunchLine english={motto} hindi={mottoHi} align="center" tone="dark" />
           </div>
         </div>
 
-        <div className="mx-auto w-full min-w-0 max-w-[1240px] px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full min-w-0 max-w-[1240px] px-3 sm:px-6 lg:px-8">
           <nav aria-label={t("Primary navigation")} className="flex h-[var(--site-nav-h)] min-w-0 items-center gap-2 sm:gap-4">
             <Link
               href="/"
-              className="flex min-w-0 shrink items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 sm:gap-3"
+              className="flex min-w-0 shrink items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 sm:gap-3"
             >
-              <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-2xl border border-slate-200 bg-white sm:h-[88px] sm:w-[88px]">
+              <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-white sm:h-14 sm:w-14 xl:h-[72px] xl:w-[72px]">
                 <Image
                   src={logoImg}
                   alt={`${ORG_NAME_EN} / ${ORG_NAME_HI}`}
                   fill
                   priority
-                  sizes="88px"
+                  sizes="72px"
                   className="object-contain p-0.5"
                 />
               </div>
@@ -86,7 +86,7 @@ export default function Navbar({ navigationItems, motto, mottoHi }: NavbarProps)
               </div>
             </Link>
 
-            <div className="ml-auto hidden min-w-0 items-center gap-3 lg:flex">
+            <div className="ml-auto hidden min-w-0 items-center gap-3 xl:flex">
               <div className="flex min-w-0 items-center overflow-x-auto rounded-full bg-slate-100/90 p-1 shadow-[0_10px_30px_rgba(15,23,42,0.06)] ring-1 ring-slate-200/80 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
                 {navigationItems.map((item) => {
                   const active = isActivePath(pathname, item.href);
@@ -126,13 +126,14 @@ export default function Navbar({ navigationItems, motto, mottoHi }: NavbarProps)
               </Link>
             </div>
 
-            <div className="ml-auto flex shrink-0 items-center gap-1.5 lg:hidden">
+            <div className="ml-auto flex shrink-0 items-center gap-1.5 xl:hidden">
               <LanguageToggle compact />
               <Link
                 href="/donate"
                 className="inline-flex min-h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-blue-950 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-900 sm:px-4"
               >
-                {t("Donate Now")}
+                <span className="sm:hidden">{t("Donate")}</span>
+                <span className="hidden sm:inline">{t("Donate Now")}</span>
               </Link>
             </div>
           </nav>

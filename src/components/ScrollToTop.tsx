@@ -35,7 +35,7 @@ export default function ScrollToTop() {
       {visible && (
         <motion.button
           onClick={scrollToTop}
-          className="fixed bottom-24 right-6 z-40 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-nature-500 text-white shadow-xl shadow-primary-500/30 max-lg:bottom-[calc(var(--site-bottom-nav-h)+1.25rem)]"
+          className="fixed right-4 z-40 flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-primary-500 to-nature-500 text-white shadow-xl shadow-primary-500/30 bottom-[calc(var(--site-bottom-nav-h)+1.15rem+env(safe-area-inset-bottom))] sm:right-6 sm:h-12 sm:w-12 xl:bottom-8"
           initial={{ scale: 0, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0, opacity: 0 }}

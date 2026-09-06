@@ -32,12 +32,14 @@ export function PunchLine({
   const color = tone === "dark" ? "text-emerald-200" : "text-emerald-700";
 
   return (
-    <p className={`${alignment} ${color}`}>
+    <p className={`${alignment} ${color} text-pretty leading-snug`}>
       <span className="font-semibold">{english}</span>
-      <span className="mx-2 opacity-50" aria-hidden="true">
+      <span className="mx-1.5 hidden opacity-50 min-[420px]:inline" aria-hidden="true">
         ·
       </span>
-      <span style={{ fontFamily: "var(--font-devanagari), sans-serif" }}>{hindi}</span>
+      <span className="mt-0.5 block min-[420px]:mt-0 min-[420px]:inline" style={{ fontFamily: "var(--font-devanagari), sans-serif" }}>
+        {hindi}
+      </span>
     </p>
   );
 }
@@ -45,10 +47,10 @@ export function PunchLine({
 export function PageHero({ eyebrow, title, description, image, actions }: { eyebrow: string; title: string; description: string; image: ImgSrc; actions?: { label: string; href: string; variant?: "primary" | "secondary" }[]; }) {
   const { t } = useI18n();
   return (
-    <section className="relative overflow-hidden bg-slate-950 px-3 pb-10 pt-12 text-white sm:px-5 sm:pb-12 sm:pt-16 lg:pt-20">
+    <section className="relative overflow-hidden bg-slate-950 px-3 pb-8 pt-8 text-white sm:px-5 sm:pb-12 sm:pt-16 lg:pt-20">
       <div className="container-premium">
-        <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.9fr]">
-          <div className="py-4 lg:py-8">
+        <div className="grid items-center gap-6 sm:gap-8 lg:grid-cols-[1fr_0.9fr]">
+          <div className="py-2 sm:py-4 lg:py-8">
             <span className="section-label-dark">{t(eyebrow)}</span>
             <h1 className="display-title-dark">{t(title)}</h1>
             <p className="mt-5 max-w-2xl text-base leading-8 text-slate-300 sm:text-lg">{t(description)}</p>
@@ -79,7 +81,7 @@ export function SectionHeading({ eyebrow, title, description, centered = false, 
   return (
     <div className={centered ? "mx-auto mb-8 max-w-3xl text-center" : "mb-6 max-w-3xl"}>
       <span className={dark ? "section-label-dark" : "section-label"}>{t(eyebrow)}</span>
-      <h2 className={`text-balance text-3xl font-bold leading-tight tracking-[-0.03em] sm:text-4xl lg:text-5xl ${dark ? "text-white" : "text-slate-950"}`}>{t(title)}</h2>
+      <h2 className={`text-balance text-[1.65rem] font-bold leading-tight tracking-[-0.03em] min-[390px]:text-3xl sm:text-4xl lg:text-5xl ${dark ? "text-white" : "text-slate-950"}`}>{t(title)}</h2>
       {description ? <p className={`mt-4 text-base leading-8 ${dark ? "text-slate-300" : "text-slate-600"}`}>{t(description)}</p> : null}
     </div>
   );

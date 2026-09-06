@@ -85,7 +85,7 @@ export default function HeroSection({
   if (!current) return null;
 
   return (
-    <section className="hero-section relative isolate min-h-[calc(100svh-var(--site-header-h))] overflow-hidden bg-blue-950 text-white">
+    <section className="hero-section relative isolate min-h-[calc(100svh-var(--site-header-h)-var(--site-bottom-nav-h))] overflow-hidden bg-blue-950 text-white xl:min-h-[calc(100svh-var(--site-header-h))]">
       <div className="absolute inset-0 -z-20">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
@@ -125,19 +125,19 @@ export default function HeroSection({
         {showContext ? (
           <motion.div
             key="hero-context"
-            className="container-premium flex min-h-[calc(100svh-var(--site-header-h))] items-end pb-8 pt-28 sm:items-center sm:py-20 lg:py-24"
+            className="container-premium flex min-h-[calc(100svh-var(--site-header-h)-var(--site-bottom-nav-h))] items-end pb-16 pt-16 min-[390px]:pb-20 sm:items-center sm:py-20 xl:min-h-[calc(100svh-var(--site-header-h))] lg:py-24"
             initial={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : -8 }}
             transition={{ duration: reduceMotion ? 0 : 0.4 }}
           >
-            <div className="w-full max-w-3xl pl-10 sm:pl-12 lg:pl-0">
+            <div className="w-full max-w-3xl pl-8 min-[390px]:pl-10 sm:pl-12 xl:pl-0">
               <motion.span className="section-label-dark" {...reveal(0.08)}>
                 {heroContent.eyebrow}
               </motion.span>
 
               <motion.h1
-                className="max-w-3xl text-balance text-[2.55rem] font-bold leading-[0.98] tracking-[-0.045em] text-white min-[390px]:text-5xl sm:text-6xl lg:text-7xl"
+                className="max-w-3xl text-balance text-[2rem] font-bold leading-[1.02] tracking-[-0.045em] text-white min-[390px]:text-[2.35rem] sm:text-5xl md:text-6xl xl:text-7xl"
                 {...reveal(0.16)}
               >
                 Small Steps Today,
@@ -186,7 +186,7 @@ export default function HeroSection({
             </div>
           </motion.div>
         ) : (
-          <div className="min-h-[calc(100svh-var(--site-header-h))]" aria-hidden="true" />
+          <div className="min-h-[calc(100svh-var(--site-header-h)-var(--site-bottom-nav-h))] xl:min-h-[calc(100svh-var(--site-header-h))]" aria-hidden="true" />
         )}
       </AnimatePresence>
 
@@ -195,13 +195,13 @@ export default function HeroSection({
         onClick={() => setManualVisible((currentValue) => !(currentValue ?? !autoHidden))}
         aria-pressed={showContext}
         aria-label={showContext ? "Hide hero text" : "Show hero text"}
-        className="absolute right-4 top-6 z-20 inline-flex items-center gap-2 rounded-full border border-white/20 bg-slate-950/55 px-3 py-2 text-xs font-semibold text-white backdrop-blur-md transition hover:bg-slate-950/75 sm:right-6"
+        className="absolute right-3 top-3 z-20 inline-flex items-center gap-2 rounded-full border border-white/20 bg-slate-950/55 px-3 py-2 text-xs font-semibold text-white backdrop-blur-md transition hover:bg-slate-950/75 sm:right-6 sm:top-6"
       >
         <span aria-hidden="true">{showContext ? "✕" : "☰"}</span>
         {showContext ? "Hide text" : "Show text"}
       </button>
 
-      <div className="absolute bottom-5 left-0 right-0 z-20 flex justify-center gap-1.5 px-4">
+      <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center gap-1.5 px-4 sm:bottom-5">
         {slideshowPhotos.map((photo, photoIndex) => (
           <button
             key={`${photo.label}-${photoIndex}`}

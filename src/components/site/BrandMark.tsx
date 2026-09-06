@@ -25,8 +25,8 @@ export default function BrandMark({
       </p>
       <p
         className={`truncate font-devanagari text-[11px] font-semibold leading-tight sm:text-sm ${
-          inverted ? "text-slate-300" : "text-slate-600"
-        }`}
+          compact ? "hidden sm:block" : ""
+        } ${inverted ? "text-slate-300" : "text-slate-600"}`}
       >
         {ORG_NAME_HI}
       </p>

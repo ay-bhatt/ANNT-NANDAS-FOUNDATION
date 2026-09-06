@@ -47,10 +47,10 @@ export default function PhotoSlideshow({ photos, fill = false, showThumbs = fals
   return (
     <div
       className={`relative overflow-hidden rounded-[24px] border border-white/70 bg-white shadow-[0_20px_60px_rgba(15,23,42,0.10)] ${
-        fill ? "flex h-full min-h-[22rem] flex-col" : ""
+        fill ? "flex h-full min-h-[16rem] flex-col sm:min-h-[22rem]" : ""
       }`}
     >
-      <div className={fill ? "relative min-h-[18rem] flex-1" : "relative aspect-[16/10] w-full"}>
+      <div className={fill ? "relative min-h-[14rem] flex-1 sm:min-h-[18rem]" : "relative aspect-[16/10] w-full"}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
             key={current.src + index}

@@ -22,7 +22,7 @@ function noticeTone(kind: SiteNotice["kind"]) {
 }
 
 const dockClass =
-  "pointer-events-none fixed z-[90] right-3 w-[min(17.25rem,calc(100%-1.5rem))] bottom-[calc(6.25rem+env(safe-area-inset-bottom,0px))] sm:right-6 sm:bottom-8 sm:w-[min(20.5rem,calc(100%-3rem))]";
+  "pointer-events-none fixed z-[90] right-3 w-[min(17.25rem,calc(100%-1.5rem))] bottom-[calc(var(--site-bottom-nav-h)+5.25rem+env(safe-area-inset-bottom,0px))] sm:right-6 sm:w-[min(20.5rem,calc(100%-3rem))] xl:bottom-8";
 
 export default function SiteNotices({ notices }: { notices: SiteNotice[] }) {
   const pathname = usePathname();

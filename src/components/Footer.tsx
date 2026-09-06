@@ -63,7 +63,7 @@ export default function Footer({ siteConfig }: FooterProps) {
       <div className="h-1 w-full bg-gradient-to-r from-emerald-500 via-sky-400 to-blue-600" />
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(16,185,129,0.10),transparent_42%),radial-gradient(ellipse_at_bottom_right,rgba(37,99,235,0.10),transparent_46%)]" />
 
-      <div className="container-premium relative w-full max-w-full py-10 pb-[max(1.25rem,env(safe-area-inset-bottom))] lg:py-14">
+      <div className="container-premium relative w-full max-w-full py-10 pb-8 xl:py-14">
         <div className="grid w-full min-w-0 gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
           <div className="min-w-0 space-y-5">
             <Link href="/" className="group inline-flex items-center gap-3">
