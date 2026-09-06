@@ -17,6 +17,31 @@ import { ORG_NAME_EN } from "@/lib/i18n";
 
 type ImgSrc = string | StaticImageData;
 
+export function PunchLine({
+  english,
+  hindi,
+  align = "left",
+  tone = "light",
+}: {
+  english: string;
+  hindi: string;
+  align?: "left" | "center";
+  tone?: "light" | "dark";
+}) {
+  const alignment = align === "center" ? "text-center" : "text-left";
+  const color = tone === "dark" ? "text-emerald-200" : "text-emerald-700";
+
+  return (
+    <p className={`${alignment} ${color}`}>
+      <span className="font-semibold">{english}</span>
+      <span className="mx-2 opacity-50" aria-hidden="true">
+        ·
+      </span>
+      <span style={{ fontFamily: "var(--font-devanagari), sans-serif" }}>{hindi}</span>
+    </p>
+  );
+}
+
 export function PageHero({ eyebrow, title, description, image, actions }: { eyebrow: string; title: string; description: string; image: ImgSrc; actions?: { label: string; href: string; variant?: "primary" | "secondary" }[]; }) {
   const { t } = useI18n();
   return (

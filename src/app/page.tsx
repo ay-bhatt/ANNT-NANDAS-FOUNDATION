@@ -13,6 +13,7 @@ import NewsGalleryPreviewSection from "@/components/sections/NewsGalleryPreviewS
 import HomeDonationSection from "@/components/sections/HomeDonationSection";
 import VolunteerOpportunitiesSection from "@/components/sections/VolunteerOpportunitiesSection";
 import HomeOverviewSection from "@/components/sections/HomeOverviewSection";
+import SidePeekRail from "@/components/SidePeekRail";
 
 export const metadata: Metadata = {
   title: "ANNT NANDAS FOUNDATION | Building Futures Without Limits",
@@ -40,17 +41,26 @@ export default async function Home() {
     newsItems,
     collageImages,
     homeVisualGrid,
-    homeGalleryPreview,
+    homeSlideshowPhotos,
+    heroSlideshowPhotos,
     pageVisuals,
     donationInfo,
     donationAmounts,
     volunteerOpportunities,
+    siteConfig,
   } = data;
 
   return (
     <>
       <JsonLd />
-      <HeroSection heroContent={heroContent} />
+      <SidePeekRail events={upcomingEvents} newsItems={newsItems} />
+      <HeroSection
+        heroContent={heroContent}
+        impactStats={impactStats}
+        motto={siteConfig.motto}
+        mottoHi={siteConfig.mottoHi}
+        slideshowPhotos={heroSlideshowPhotos}
+      />
       <HomeOverviewSection
         images={[
           { src: pageVisuals.overviewPrimary, label: "Foundation team in the high Himalaya" },
@@ -76,7 +86,10 @@ export default async function Home() {
         testimonials={testimonials}
       />
       <VolunteerOpportunitiesSection opportunities={volunteerOpportunities} />
-      <NewsGalleryPreviewSection newsItems={newsItems} homeVisualGrid={homeGalleryPreview} />
+      <NewsGalleryPreviewSection
+        newsItems={newsItems}
+        slideshowPhotos={homeSlideshowPhotos}
+      />
       <HomeDonationSection donation={donationInfo} amounts={donationAmounts} />
       <CTASection
         title="Help us build brighter futures in the Himalayas"

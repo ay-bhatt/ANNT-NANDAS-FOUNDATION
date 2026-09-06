@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ScrollToTop from "@/components/ScrollToTop";
+import AppShell from "@/components/AppShell";
 import RouteProgress from "@/components/site/RouteProgress";
 import SiteNotices from "@/components/site/SiteNotices";
 import { LanguageProvider } from "@/components/i18n/LanguageProvider";
@@ -98,16 +99,22 @@ export default async function RootLayout({
       </head>
       <body suppressHydrationWarning className="min-h-screen min-w-0 bg-slate-50 text-slate-950 antialiased">
         <LanguageProvider initialLocale={initialLocale}>
-          <Navbar navigationItems={data.navigationItems} />
-          <RouteProgress />
-          <main id="main-content" className="relative min-w-0 overflow-x-clip">{children}</main>
-          <Footer
-            siteConfig={data.siteConfig}
-            navigationItems={data.navigationItems}
-            impactAreas={data.impactAreas}
-          />
-          <SiteNotices notices={data.siteNotices} />
-          <ScrollToTop />
+          <AppShell>
+            <Navbar
+              navigationItems={data.navigationItems}
+              motto={data.siteConfig.motto}
+              mottoHi={data.siteConfig.mottoHi}
+            />
+            <RouteProgress />
+            <main id="main-content" className="relative min-w-0 overflow-x-clip">{children}</main>
+            <Footer
+              siteConfig={data.siteConfig}
+              navigationItems={data.navigationItems}
+              impactAreas={data.impactAreas}
+            />
+            <SiteNotices notices={data.siteNotices} />
+            <ScrollToTop />
+          </AppShell>
         </LanguageProvider>
       </body>
     </html>

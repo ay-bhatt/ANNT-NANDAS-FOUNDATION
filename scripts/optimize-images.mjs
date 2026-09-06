@@ -1,79 +1,113 @@
-import fs from "node:fs/promises";
-import path from "node:path";
+import fs from "fs";
+import path from "path";
 import sharp from "sharp";
 
-const ROOT = path.resolve("src/assets");
-const IMAGE_EXT = new Set([".jpg", ".jpeg", ".png", ".webp"]);
-const SKIP_NAMES = new Set(["qr.png", "qr.svg"]);
+const root = process.cwd();
 
-async function walk(dir, files = []) {
-  const entries = await fs.readdir(dir, { withFileTypes: true });
-  for (const entry of entries) {
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) await walk(full, files);
-    else if (IMAGE_EXT.has(path.extname(entry.name).toLowerCase())) files.push(full);
+const slideshowSources = [
+  "src/assets/hero/HERO (1).jpeg",
+  "src/assets/hero/HERO.jpeg",
+  "src/assets/hero/HERO (2).jpeg",
+  "src/assets/hero/HERO (3).jpeg",
+  "src/assets/hero/HERO (4).jpeg",
+  "src/assets/hero/gallery (3).jpeg",
+  "src/assets/gallery/gallery (1).jpeg",
+  "src/assets/events/event (1).jpeg",
+  "src/assets/education/gallery-032.jpg.jpeg",
+  "src/assets/environment/gallery-049.jpg.jpeg",
+];
+
+const generalSources = [
+  "src/assets/hero/HERO.jpeg",
+  "src/assets/hero/HERO (1).jpeg",
+  "src/assets/hero/HERO (2).jpeg",
+  "src/assets/hero/HERO (3).jpeg",
+  "src/assets/hero/HERO (4).jpeg",
+  "src/assets/Kalam singh bisht/event-011.jpg.jpeg",
+  "src/assets/Kalam singh bisht/collage (4).jpeg",
+  "src/assets/Kalam singh bisht/collage (5).jpeg",
+  "src/assets/education/gallery-032.jpg.jpeg",
+  "src/assets/education/gallery-066.jpg.jpeg",
+  "src/assets/education/gallery-067.jpg.jpeg",
+  "src/assets/women empowerment/gallery-029.jpg.jpeg",
+  "src/assets/women empowerment/gallery-031.jpg.jpeg",
+  "src/assets/women empowerment/image.jpeg",
+  "src/assets/healthcare/event (4).jpeg",
+  "src/assets/environment/gallery-049.jpg.jpeg",
+  "src/assets/events/event (1).jpeg",
+  "src/assets/events/event (4).jpeg",
+  "src/assets/events/event (10).jpeg",
+  "src/assets/events/event (14).jpeg",
+  "src/assets/events/event (16).jpeg",
+  "src/assets/events/event-010.jpg.jpeg",
+  "src/assets/news/news.jpeg",
+  "src/assets/news/news (1).jpeg",
+  "src/assets/news/news (2).jpeg",
+  "src/assets/news/news (3).jpeg",
+  "src/assets/news/news (4).jpeg",
+  "src/assets/news/news (5).jpeg",
+  "src/assets/news/news (6).jpeg",
+  "src/assets/gallery/gallery (1).jpeg",
+  "src/assets/gallery/gallery (2).jpeg",
+  "src/assets/gallery/gallery (3).jpeg",
+  "src/assets/gallery/gallery (4).jpeg",
+  "src/assets/gallery/gallery-015.jpg.jpeg",
+  "src/assets/gallery/gallery-020.jpg.jpeg",
+  "src/assets/gallery/gallery-021.jpg.jpeg",
+  "src/assets/gallery/gallery-024.jpg.jpeg",
+  "src/assets/gallery/gallery-031.jpg.jpeg",
+  "src/assets/gallery/gallery-034.jpg.jpeg",
+  "src/assets/gallery/gallery-041.jpg.jpeg",
+  "src/assets/gallery/gallery-054.jpg.jpeg",
+  "src/assets/gallery/gallery-060.jpg.jpeg",
+  "src/assets/gallery/gallery-065.jpg.jpeg",
+  "src/assets/collage/collage (1).jpeg",
+  "src/assets/collage/collage (6).jpeg",
+  "src/assets/collage/collage (10).jpeg",
+  "src/assets/collage/gallery (1).jpeg",
+  "src/assets/collage/gallery (2).jpeg",
+  "src/assets/hero MOB/mob-hero (2).jpeg",
+  "src/assets/logo.jpeg",
+];
+
+async function convert(srcRel, destRel, options) {
+  const src = path.join(root, srcRel);
+  const dest = path.join(root, destRel);
+  if (!fs.existsSync(src)) {
+    throw new Error(`Missing source image: ${srcRel}`);
   }
-  return files;
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  await sharp(src)
+    .rotate()
+    .resize({
+      width: options.width,
+      height: options.height,
+      fit: options.fit || "inside",
+      withoutEnlargement: true,
+    })
+    .webp({ quality: options.quality, effort: 4 })
+    .toFile(dest);
+  const fromKb = Math.round(fs.statSync(src).size / 1024);
+  const toKb = Math.round(fs.statSync(dest).size / 1024);
+  console.log(`${srcRel} ${fromKb}KB -> ${destRel} ${toKb}KB`);
 }
 
-function maxWidthFor(file) {
-  const rel = file.toLowerCase();
-  if (rel.includes(`${path.sep}logo`) || path.basename(rel).startsWith("logo")) return 640;
-  if (rel.includes(`${path.sep}hero`) || rel.includes("mob-hero")) return 1920;
-  return 1600;
-}
-
-async function optimize(file) {
-  const name = path.basename(file).toLowerCase();
-  if (SKIP_NAMES.has(name) || name.startsWith("qr")) return { file, skipped: true, reason: "qr" };
-
-  const input = await fs.readFile(file);
-  const original = input.length;
-  if (original < 180_000) return { file, skipped: true, reason: "small" };
-
-  const image = sharp(input, { failOn: "none" }).rotate();
-  const meta = await image.metadata();
-  const width = maxWidthFor(file);
-  const ext = path.extname(file).toLowerCase();
-  const isPng = ext === ".png";
-
-  let pipeline = image.resize({
-    width,
-    withoutEnlargement: true,
-    fit: "inside",
+const slideshowDir = "src/assets/hero/slideshow";
+for (let i = 0; i < slideshowSources.length; i += 1) {
+  const name = `slide-${String(i + 1).padStart(2, "0")}.webp`;
+  await convert(slideshowSources[i], path.join(slideshowDir, name), {
+    width: 1920,
+    height: 1080,
+    fit: "cover",
+    quality: 74,
   });
-
-  if (isPng && meta.hasAlpha) {
-    pipeline = pipeline.png({ compressionLevel: 9, palette: true, quality: 80 });
-  } else {
-    pipeline = pipeline.jpeg({ quality: 72, mozjpeg: true, progressive: true, chromaSubsampling: "4:2:0" });
-  }
-
-  const output = await pipeline.toBuffer();
-  if (output.length >= original * 0.92) {
-    return { file, skipped: true, reason: "no-gain", original, next: output.length };
-  }
-
-  const target = isPng && !meta.hasAlpha ? file.replace(/\.png$/i, ".jpeg") : file;
-  await fs.writeFile(target, output);
-  if (target !== file) await fs.unlink(file);
-  return { file: target, original, next: output.length };
 }
 
-const files = await walk(ROOT);
-let saved = 0;
-let processed = 0;
-for (const file of files) {
-  try {
-    const result = await optimize(file);
-    if (result.skipped) continue;
-    processed += 1;
-    saved += result.original - result.next;
-    const from = Math.round(result.original / 1024);
-    const to = Math.round(result.next / 1024);
-    console.log(`${from}KB -> ${to}KB  ${path.relative(process.cwd(), result.file)}`);
-  } catch (error) {
-    console.error("FAIL", file, error instanceof Error ? error.message : error);
-  }
+for (const srcRel of generalSources) {
+  const destRel = srcRel.replace(/\.(jpe?g|png)$/i, ".webp");
+  const isLogo = srcRel.endsWith("logo.jpeg");
+  await convert(srcRel, destRel, {
+    width: isLogo ? 256 : 1600,
+    quality: isLogo ? 82 : 76,
+  });
 }
-console.log(`optimized ${processed} files, saved ${(saved / 1024 / 1024).toFixed(1)} MB`);

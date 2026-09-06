@@ -1,12 +1,19 @@
 "use client";
 
+/**
+ * Home events + testimonials section — Client Component.
+ * Events stack with the comment form on the left so the column fills.
+ * Testimonials stay on the right in a compact list.
+ */
+
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/site/SectionBlocks";
-import type { UpcomingEvent, Testimonial } from "@/lib/types";
-import { useI18n } from "@/components/i18n/LanguageProvider";
+import CommentForm from "@/components/CommentForm";
+import { StarRatingDisplay } from "@/components/StarRating";
+import type { UpcomingEvent, Testimonial, CommunityComment } from "@/lib/types";
 
 interface EventsTestimonialsSectionProps {
   upcomingEvents: UpcomingEvent[];
@@ -17,100 +24,132 @@ export default function EventsTestimonialsSection({
   upcomingEvents,
   testimonials,
 }: EventsTestimonialsSectionProps) {
-  const { t, localize } = useI18n();
-  const events = localize(upcomingEvents);
-  const stories = localize(testimonials);
-  const [story, setStory] = useState(0);
+  const [communityComments, setCommunityComments] = useState<CommunityComment[]>([]);
 
   useEffect(() => {
-    if (stories.length < 2) return;
-    const timer = window.setInterval(() => {
-      setStory((current) => (current + 1) % stories.length);
-    }, 6500);
-    return () => window.clearInterval(timer);
-  }, [stories.length]);
+    let cancelled = false;
 
-  const active = stories[story] ?? stories[0];
+    fetch("/api/comments")
+      .then((response) => response.json())
+      .then((result: { success?: boolean; comments?: CommunityComment[] }) => {
+        if (!cancelled && result.success && Array.isArray(result.comments)) {
+          setCommunityComments(result.comments);
+        }
+      })
+      .catch(() => undefined);
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
-    <section className="section-padding px-3 sm:px-5">
-      <div className="container-premium grid min-w-0 gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
-        <div className="min-w-0">
-          <SectionHeading eyebrow="Upcoming Events" title="Be part of our next initiatives" />
-          <div className="grid gap-4 sm:grid-cols-2">
-            {events.map((event, index) => (
+    <section id="home-events" className="section-padding anchor-offset px-3 sm:px-5">
+      <div className="container-premium grid gap-8 lg:grid-cols-2 lg:items-stretch">
+        <div className="flex flex-col">
+          <SectionHeading
+            eyebrow="Upcoming Events"
+            title="Be part of our next initiatives"
+          />
+          <div className="flex flex-1 flex-col gap-4">
+            {upcomingEvents.slice(0, 3).map((event, index) => (
               <motion.article
                 key={event.title}
-                initial={{ opacity: 0, y: 16 }}
+                className="surface-card overflow-hidden"
+                initial={{ opacity: 0, y: 24 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: index * 0.06 }}
-                className="surface-card min-w-0 overflow-hidden"
+                transition={{ duration: 0.5, delay: index * 0.08 }}
               >
-                <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
-                  <Image
-                    src={event.image}
-                    alt={event.title}
-                    fill
-                    sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 28vw"
-                    className="object-cover object-center"
-                  />
-                </div>
-                <div className="p-5">
-                  <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">{event.date}</p>
-                  <h3 className="mt-3 text-lg font-semibold text-slate-950">{event.title}</h3>
-                  <p className="mt-2 text-sm leading-7 text-slate-600">
-                    {event.location} · {event.time}
-                  </p>
-                  <Link
-                    href={event.href}
-                    className="mt-5 inline-flex rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
-                  >
-                    {t("Register for")} {event.title}
-                  </Link>
+                <div className="flex flex-col min-[480px]:flex-row">
+                  <div className="relative h-44 min-[480px]:h-auto min-[480px]:w-40 min-[480px]:shrink-0 lg:w-44">
+                    <Image
+                      src={event.image}
+                      alt={event.title}
+                      fill
+                      sizes="(max-width: 479px) 100vw, 176px"
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-1 flex-col justify-center p-4 sm:p-5">
+                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
+                      {event.date}
+                    </p>
+                    <h3 className="mt-2 text-lg font-semibold text-slate-950">{event.title}</h3>
+                    <p className="mt-2 text-sm leading-6 text-slate-600">
+                      {event.location} · {event.time}
+                    </p>
+                    <Link
+                      href={event.href}
+                      className="mt-4 inline-flex w-fit rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
+                    >
+                      Register now
+                    </Link>
+                  </div>
                 </div>
               </motion.article>
             ))}
+
+            <div className="surface-card mt-auto p-5 sm:p-6">
+              <h3 className="text-lg font-semibold text-slate-950">Leave a comment</h3>
+              <p className="mt-2 mb-5 text-sm leading-6 text-slate-600">
+                Share your experience and rate your interaction with the foundation.
+              </p>
+              <CommentForm
+                onSubmitted={(comment) => {
+                  setCommunityComments((current) => [comment, ...current]);
+                }}
+              />
+            </div>
           </div>
         </div>
 
-        <div className="min-w-0">
-          <SectionHeading eyebrow="Voices of Change" title="Stories of hope and transformation" />
-          {active ? (
-            <div className="surface-card min-h-[260px] p-6">
-              <AnimatePresence mode="wait">
-                <motion.article
-                  key={active.name}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.35 }}
-                >
-                  <p className="text-lg leading-8 text-slate-700">“{active.content}”</p>
-                  <div className="mt-5 flex items-center gap-4">
-                    <div className="relative h-14 w-14 overflow-hidden rounded-full">
-                      <Image src={active.image} alt={active.name} fill sizes="56px" className="object-cover" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-slate-950">{active.name}</p>
-                      <p className="text-sm text-slate-500">{active.role}</p>
-                    </div>
+        <div className="flex flex-col">
+          <SectionHeading
+            eyebrow="Voices of Change"
+            title="Stories of hope and transformation"
+          />
+          <div className="grid flex-1 content-start gap-4">
+            {testimonials.map((item, index) => (
+              <motion.div
+                key={item.name}
+                className="surface-card p-5"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.08 }}
+              >
+                <StarRatingDisplay value={item.rating} />
+                <p className="mt-3 text-base leading-7 text-slate-700">“{item.content}”</p>
+                <div className="mt-4 flex items-center gap-3">
+                  <div className="relative h-12 w-12 overflow-hidden rounded-full">
+                    <Image src={item.image} alt={item.name} fill sizes="48px" className="object-cover" />
                   </div>
-                </motion.article>
-              </AnimatePresence>
-              <div className="mt-6 flex gap-2">
-                {stories.map((item, index) => (
-                  <button
-                    key={item.name}
-                    type="button"
-                    aria-label={`Show story from ${item.name}`}
-                    onClick={() => setStory(index)}
-                    className={`h-2.5 rounded-full transition ${index === story ? "w-8 bg-emerald-600" : "w-2.5 bg-slate-200"}`}
-                  />
-                ))}
-              </div>
-            </div>
-          ) : null}
+                  <div>
+                    <p className="font-semibold text-slate-950">{item.name}</p>
+                    <p className="text-sm text-slate-500">{item.role}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+            {communityComments.map((item) => (
+              <motion.div
+                key={item.id}
+                className="surface-card p-5"
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5 }}
+              >
+                <StarRatingDisplay value={item.rating} />
+                <p className="mt-3 text-base leading-7 text-slate-700">“{item.content}”</p>
+                <div className="mt-4">
+                  <p className="font-semibold text-slate-950">{item.name}</p>
+                  <p className="text-sm text-slate-500">Community comment</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

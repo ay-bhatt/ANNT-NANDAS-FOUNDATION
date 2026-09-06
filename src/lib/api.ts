@@ -40,6 +40,7 @@ import type {
   DonationImpact,
   DonationInfo,
   GalleryItem,
+  SlideshowPhoto,
   FormOptions,
   ImageSrc,
 } from "./types";
@@ -176,6 +177,11 @@ export async function getDonationAmounts(): Promise<number[]> {
 export async function getGalleryItems(): Promise<GalleryItem[]> {
   const d = await getAllData();
   return d.galleryItems;
+}
+
+export async function getHomeSlideshowPhotos(): Promise<SlideshowPhoto[]> {
+  const d = await getAllData();
+  return d.homeSlideshowPhotos;
 }
 
 export async function getCollageImages(): Promise<ImageSrc[]> {

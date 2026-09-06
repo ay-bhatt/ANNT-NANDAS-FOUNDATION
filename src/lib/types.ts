@@ -34,6 +34,7 @@ export interface SiteConfig {
   shortName: string;
   tagline: string;
   motto: string;
+  mottoHi: string;
   description: string;
   email: string;
   phone1: string;
@@ -290,6 +291,19 @@ export interface GalleryItem {
   theme: string;
 }
 
+export interface SlideshowPhoto {
+  src: ImageSrc;
+  label: string;
+}
+
+export interface CommunityComment {
+  id: string;
+  name: string;
+  content: string;
+  rating: number;
+  createdAt: string;
+}
+
 // ─────────────────────────
 //  Form Options
 // ─────────────────────────
@@ -328,6 +342,8 @@ export interface AllData {
   volunteerOpportunities: VolunteerOpportunity[];
   galleryCategories: string[];
   galleryItems: GalleryItem[];
+  homeSlideshowPhotos: SlideshowPhoto[];
+  heroSlideshowPhotos: SlideshowPhoto[];
   collageImages: ImageSrc[];
   homeVisualGrid: ImageSrc[];
   homeGalleryPreview: ImageSrc[];

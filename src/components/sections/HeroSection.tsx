@@ -1,266 +1,222 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { getImageProps } from "next/image";
+/**
+ * Home Hero section — Client Component.
+ * 10-photo slideshow with the existing hero context overlay.
+ * Context stays visible for the first two slides, then hides.
+ * A corner button lets visitors show or hide the context again.
+ */
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import type { HeroContent, ImpactStat } from "@/lib/types";
-import { HOME_CONTENT_HIDE_MS, HOME_CONTENT_RESTORE_EVENT, ORG_NAME_EN } from "@/lib/i18n";
-import { useI18n } from "@/components/i18n/LanguageProvider";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import type { HeroContent, ImpactStat, SlideshowPhoto } from "@/lib/types";
+import { PunchLine } from "@/components/site/SectionBlocks";
 
-const SLIDE_INTERVAL_MS = 3800;
-
-const SLIDE_COPY = [
-  {
-    alt: "Community members and children gathered in a Himalayan village",
-    caption: "Community gathering · Mundoli, Chamoli",
-  },
-  {
-    alt: "Founder carrying the Indian flag after an ultra trail run",
-    caption: "Carrying the Tricolour · Hajar Ultra Trail Run",
-  },
-  {
-    alt: "Athletes and officials at the Niti Xtreme Ultra Run",
-    caption: "Niti Xtreme Ultra Run · athletes and officials",
-  },
-  {
-    alt: "Cyclists lining up at the National Mountain Bike Championships",
-    caption: "National Mountain Bike Championships",
-  },
-  {
-    alt: "Athletes and coach standing on a championship podium",
-    caption: "Championship podium · athletes and coach",
-  },
-  {
-    alt: "Founder celebrating at the Adi Kailash Parikrama Run",
-    caption: "Adi Kailash Parikrama Run · finish in the high Himalaya",
-  },
-];
+const SLIDE_INTERVAL_MS = 3000;
+const AUTO_HIDE_AFTER_SLIDES = 2;
 
 interface HeroSectionProps {
   heroContent: HeroContent;
-  highlights?: ImpactStat[];
+  impactStats: ImpactStat[];
+  motto: string;
+  mottoHi: string;
+  slideshowPhotos: SlideshowPhoto[];
 }
 
-export default function HeroSection({ heroContent, highlights = [] }: HeroSectionProps) {
-  const { t, localize } = useI18n();
-  const copy = localize(heroContent);
-  const slides = useMemo(() => {
-    const sources = [heroContent.image, heroContent.backgroundImage, ...heroContent.supportingVisuals].filter(
-      Boolean,
-    );
-    return sources.slice(0, 6).map((src, index) => ({
-      src,
-      alt: t(SLIDE_COPY[index]?.alt ?? "ANNT NANDAS FOUNDATION in the Himalayas"),
-      caption: t(SLIDE_COPY[index]?.caption ?? ORG_NAME_EN),
-    }));
-  }, [heroContent.backgroundImage, heroContent.image, heroContent.supportingVisuals, t]);
-
+export default function HeroSection({
+  heroContent,
+  impactStats,
+  motto,
+  mottoHi,
+  slideshowPhotos,
+}: HeroSectionProps) {
+  const reduceMotion = useReducedMotion();
   const [index, setIndex] = useState(0);
-  const [detailsVisible, setDetailsVisible] = useState(true);
-  const [paused, setPaused] = useState(false);
-  const [restartToken, setRestartToken] = useState(0);
-  const [hideCycle, setHideCycle] = useState(0);
+  const [autoHidden, setAutoHidden] = useState(false);
+  const [manualVisible, setManualVisible] = useState<boolean | null>(null);
+  const timerRef = useRef<number | null>(null);
+  const total = slideshowPhotos.length;
+  const showContext = manualVisible ?? !autoHidden;
+  const current = slideshowPhotos[index] ?? slideshowPhotos[0];
 
-  const count = slides.length;
-  const active = slides[index] ?? slides[0];
+  const clearTimer = useCallback(() => {
+    if (timerRef.current !== null) {
+      window.clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  const startTimer = useCallback(() => {
+    clearTimer();
+    if (total <= 1) return;
+    timerRef.current = window.setInterval(() => {
+      setIndex((currentIndex) => (currentIndex + 1) % total);
+    }, SLIDE_INTERVAL_MS);
+  }, [clearTimer, total]);
 
   const goTo = useCallback(
-    (next: number) => {
-      if (count === 0) return;
-      setIndex(((next % count) + count) % count);
-      setRestartToken((token) => token + 1);
+    (nextIndex: number) => {
+      if (total === 0) return;
+      setIndex(((nextIndex % total) + total) % total);
+      startTimer();
     },
-    [count],
+    [startTimer, total],
   );
 
   useEffect(() => {
-    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => setPaused(media.matches);
-    sync();
-    media.addEventListener("change", sync);
-    return () => media.removeEventListener("change", sync);
-  }, []);
+    startTimer();
+    return clearTimer;
+  }, [clearTimer, startTimer]);
 
   useEffect(() => {
-    if (paused || count < 2) return;
-    const timer = window.setInterval(() => {
-      setIndex((current) => (current + 1) % count);
-    }, SLIDE_INTERVAL_MS);
-    return () => window.clearInterval(timer);
-  }, [paused, count, restartToken]);
+    if (index >= AUTO_HIDE_AFTER_SLIDES) {
+      setAutoHidden(true);
+    }
+  }, [index]);
 
-  useEffect(() => {
-    const timer = window.setTimeout(() => setDetailsVisible(false), HOME_CONTENT_HIDE_MS);
-    return () => window.clearTimeout(timer);
-  }, [hideCycle]);
+  const reveal = (delay: number) => ({
+    initial: false as const,
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: reduceMotion ? 0 : 0.5, delay: reduceMotion ? 0 : delay },
+  });
 
-  useEffect(() => {
-    const restore = () => {
-      setDetailsVisible(true);
-      setHideCycle((cycle) => cycle + 1);
-    };
-    window.addEventListener(HOME_CONTENT_RESTORE_EVENT, restore);
-    return () => window.removeEventListener(HOME_CONTENT_RESTORE_EVENT, restore);
-  }, []);
+  if (!current) return null;
 
   return (
-    <section
-      className="hero-section relative isolate min-h-[calc(100svh-var(--nav-height))] overflow-hidden bg-blue-950 text-white select-none"
-      aria-roledescription="carousel"
-      aria-label={t("Foundation highlights")}
-    >
+    <section className="hero-section relative isolate min-h-[calc(100svh-var(--site-header-h))] overflow-hidden bg-blue-950 text-white">
       <div className="absolute inset-0 -z-20">
-        {slides.map((slide, slideIndex) => {
-          const { props } = getImageProps({
-            src: slide.src,
-            alt: slide.alt,
-            sizes: "100vw",
-            quality: 90,
-            width: 1920,
-            height: 1080,
-            priority: slideIndex === 0,
-          });
-
-          return (
-            <img
-              key={`${slide.src}-${slideIndex}`}
-              {...props}
-              alt={slide.alt}
-              data-critical-hero={slideIndex === 0 ? "true" : undefined}
-              fetchPriority={slideIndex === 0 ? "high" : "low"}
-              decoding={slideIndex === 0 ? "sync" : "async"}
-              loading="eager"
-              className={`absolute inset-0 h-full w-full object-cover object-[center_30%] sm:object-center transition-opacity duration-700 ease-in-out ${
-                slideIndex === index ? "opacity-100" : "opacity-0"
-              }`}
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.div
+            key={current.src + index}
+            className="absolute inset-0"
+            initial={{ opacity: reduceMotion ? 1 : 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: reduceMotion ? 1 : 0 }}
+            transition={{ duration: reduceMotion ? 0 : 0.6, ease: "easeInOut" }}
+          >
+            <Image
+              src={current.src}
+              alt={current.label}
+              fill
+              priority={index === 0}
+              fetchPriority={index === 0 ? "high" : "auto"}
+              sizes="100vw"
+              data-critical-hero={index === 0 ? "true" : undefined}
+              className="object-cover object-center"
             />
-          );
-        })}
-
+          </motion.div>
+        </AnimatePresence>
         <div
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            detailsVisible ? "opacity-100" : "opacity-0"
-          } bg-[linear-gradient(90deg,rgba(3,15,40,0.58)_0%,rgba(5,25,56,0.28)_50%,rgba(5,25,56,0.12)_82%)] max-sm:bg-[linear-gradient(180deg,rgba(3,15,40,0.15)_0%,rgba(3,15,40,0.32)_42%,rgba(3,15,40,0.78)_100%)]`}
+          className={`absolute inset-0 transition-opacity duration-500 ${
+            showContext
+              ? "bg-[linear-gradient(90deg,rgba(3,15,40,0.92)_0%,rgba(5,25,56,0.70)_45%,rgba(5,25,56,0.16)_78%),linear-gradient(0deg,rgba(3,15,40,0.78)_0%,transparent_48%)] max-sm:bg-[linear-gradient(180deg,rgba(3,15,40,0.32)_0%,rgba(3,15,40,0.78)_52%,rgba(3,15,40,0.96)_100%)]"
+              : "bg-[linear-gradient(180deg,rgba(3,15,40,0.28)_0%,rgba(3,15,40,0.12)_42%,rgba(3,15,40,0.45)_100%)]"
+          }`}
         />
       </div>
 
-      <div className="container-premium flex min-h-[calc(100svh-var(--nav-height))] items-end pb-24 pt-24 sm:items-center sm:py-20 lg:py-24">
-        <div
-          className={`w-full max-w-3xl transform transition-all duration-1000 ease-in-out ${
-            detailsVisible ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-6 pointer-events-none"
-          }`}
-        >
-          <span className="section-label-dark inline-block mb-3 px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-blue-500/20 text-blue-200 border border-blue-400/30 backdrop-blur-md">
-            {copy.eyebrow}
-          </span>
+      <p className="sr-only" aria-live="polite">
+        Slide {index + 1} of {total}: {current.label}
+      </p>
 
-          <h1 className="max-w-3xl text-balance text-[2.25rem] font-black leading-[1.08] tracking-tight text-white drop-shadow-[0_8px_24px_rgba(2,6,23,0.7)] min-[400px]:text-4xl sm:text-6xl lg:text-7xl">
-            {copy.heading.includes(",") ? (
-              <>
-                {copy.heading.slice(0, copy.heading.indexOf(",") + 1)}
-                <span className="mt-1.5 block bg-gradient-to-r from-emerald-300 via-teal-200 to-cyan-300 bg-clip-text text-transparent drop-shadow-sm">
-                  {copy.heading.slice(copy.heading.indexOf(",") + 1).trim()}
+      <AnimatePresence initial={false}>
+        {showContext ? (
+          <motion.div
+            key="hero-context"
+            className="container-premium flex min-h-[calc(100svh-var(--site-header-h))] items-end pb-8 pt-28 sm:items-center sm:py-20 lg:py-24"
+            initial={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : -8 }}
+            transition={{ duration: reduceMotion ? 0 : 0.4 }}
+          >
+            <div className="w-full max-w-3xl pl-10 sm:pl-12 lg:pl-0">
+              <motion.span className="section-label-dark" {...reveal(0.08)}>
+                {heroContent.eyebrow}
+              </motion.span>
+
+              <motion.h1
+                className="max-w-3xl text-balance text-[2.55rem] font-bold leading-[0.98] tracking-[-0.045em] text-white min-[390px]:text-5xl sm:text-6xl lg:text-7xl"
+                {...reveal(0.16)}
+              >
+                Small Steps Today,
+                <span className="mt-1 block bg-gradient-to-r from-lime-300 via-emerald-300 to-sky-300 bg-clip-text text-transparent">
+                  Limitless Impact Tomorrow.
                 </span>
-              </>
-            ) : (
-              copy.heading
-            )}
-          </h1>
+              </motion.h1>
 
-          <p className="mt-5 max-w-2xl text-sm leading-relaxed text-slate-100 drop-shadow-[0_4px_12px_rgba(2,6,23,0.8)] sm:mt-6 sm:text-lg sm:leading-8 sm:text-blue-50">
-            {copy.subheading}
-          </p>
+              <motion.div className="mt-4" {...reveal(0.2)}>
+                <PunchLine english={motto} hindi={mottoHi} tone="dark" />
+              </motion.div>
 
-          <div className="mt-8 flex flex-wrap items-center gap-3 sm:mt-10">
-            <Link href={copy.ctaPrimary.href} className="btn-primary group inline-flex items-center gap-2">
-              {copy.ctaPrimary.label}
-              <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">
-                →
-              </span>
-            </Link>
+              <motion.p
+                className="mt-5 max-w-2xl text-sm leading-7 text-blue-50/90 sm:mt-6 sm:text-lg sm:leading-8"
+                {...reveal(0.24)}
+              >
+                {heroContent.subheading}
+              </motion.p>
 
-            <Link
-              href="/donate"
-              className="btn-premium inline-flex items-center gap-2 rounded-full border border-emerald-400/40 bg-emerald-500 px-6 py-3 text-sm font-bold text-slate-950 shadow-lg shadow-emerald-500/20 transition-all hover:-translate-y-0.5 hover:bg-emerald-400"
-            >
-              {t("Donate Now")} <span aria-hidden="true">→</span>
-            </Link>
+              <motion.div className="mt-7 flex flex-wrap gap-3 sm:mt-9" {...reveal(0.32)}>
+                <Link href={heroContent.ctaPrimary.href} className="btn-primary group">
+                  {heroContent.ctaPrimary.label}{" "}
+                  <span aria-hidden="true" className="transition-transform group-hover:translate-x-1">
+                    →
+                  </span>
+                </Link>
+                <Link href={heroContent.ctaSecondary.href} className="btn-secondary">
+                  <span aria-hidden="true">▶</span> {heroContent.ctaSecondary.label}
+                </Link>
+              </motion.div>
 
-            <Link href={copy.ctaSecondary.href} className="btn-secondary inline-flex items-center gap-2">
-              <span aria-hidden="true">▶</span> {copy.ctaSecondary.label}
-            </Link>
-          </div>
-
-          {highlights.length > 0 ? (
-            <div className="mt-10 flex flex-wrap gap-2.5">
-              {highlights.map((item) => (
-                <div
-                  key={item.label}
-                  className="rounded-full border border-white/20 bg-slate-950/45 px-4 py-2 backdrop-blur-md"
-                >
-                  <p className="text-sm font-bold text-white">{item.value}</p>
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-emerald-200">{t(item.label)}</p>
-                </div>
-              ))}
+              <motion.div
+                className="mt-8 grid grid-cols-3 gap-2 sm:mt-12 sm:max-w-2xl sm:gap-3"
+                {...reveal(0.4)}
+              >
+                {impactStats.slice(0, 3).map((stat) => (
+                  <div
+                    key={stat.label}
+                    className="rounded-2xl border border-white/15 bg-white/10 px-2 py-3 text-center shadow-lg backdrop-blur-md sm:rounded-[22px] sm:p-4"
+                  >
+                    <p className="text-lg font-bold text-white sm:text-2xl">{stat.value}</p>
+                    <p className="mt-1 text-[10px] leading-4 text-blue-100 sm:text-xs">{stat.label}</p>
+                  </div>
+                ))}
+              </motion.div>
             </div>
-          ) : null}
-        </div>
-      </div>
-
-      {count > 1 && (
-        <div className="absolute inset-x-0 bottom-5 z-30 flex flex-col items-center gap-3 px-4 sm:bottom-6">
-          {active ? (
-            <p className="max-w-[90vw] truncate rounded-full border border-white/15 bg-slate-950/45 px-3 py-1 text-[11px] font-medium text-white/90 backdrop-blur-md sm:text-xs">
-              {active.caption}
-            </p>
-          ) : null}
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => goTo(index - 1)}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-slate-900/55 text-white/85 backdrop-blur-md transition hover:bg-slate-900/85 hover:text-white"
-              aria-label={t("Previous slide")}
-            >
-              ‹
-            </button>
-            <div className="flex items-center gap-1.5" role="tablist" aria-label={t("Hero slides")}>
-              {slides.map((slide, slideIndex) => {
-                const selected = slideIndex === index;
-                return (
-                  <button
-                    key={`${slide.src}-dot`}
-                    type="button"
-                    role="tab"
-                    aria-selected={selected}
-                    aria-label={`Show slide ${slideIndex + 1} of ${count}`}
-                    onClick={() => goTo(slideIndex)}
-                    className={`h-2.5 rounded-full transition-all ${
-                      selected ? "w-8 bg-emerald-400" : "w-2.5 bg-white/45 hover:bg-white/80"
-                    }`}
-                  />
-                );
-              })}
-            </div>
-            <button
-              type="button"
-              onClick={() => goTo(index + 1)}
-              className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-slate-900/55 text-white/85 backdrop-blur-md transition hover:bg-slate-900/85 hover:text-white"
-              aria-label={t("Next slide")}
-            >
-              ›
-            </button>
-          </div>
-        </div>
-      )}
+          </motion.div>
+        ) : (
+          <div className="min-h-[calc(100svh-var(--site-header-h))]" aria-hidden="true" />
+        )}
+      </AnimatePresence>
 
       <button
-        onClick={() => setDetailsVisible((value) => !value)}
-        className="absolute bottom-6 right-6 z-30 hidden items-center gap-2 rounded-full border border-white/20 bg-slate-900/60 px-4 py-2 text-xs font-medium text-white/80 backdrop-blur-md transition-all hover:bg-slate-900/90 hover:text-white sm:inline-flex"
-        aria-label={detailsVisible ? t("Hide hero details") : t("Show hero details")}
+        type="button"
+        onClick={() => setManualVisible((currentValue) => !(currentValue ?? !autoHidden))}
+        aria-pressed={showContext}
+        aria-label={showContext ? "Hide hero text" : "Show hero text"}
+        className="absolute right-4 top-6 z-20 inline-flex items-center gap-2 rounded-full border border-white/20 bg-slate-950/55 px-3 py-2 text-xs font-semibold text-white backdrop-blur-md transition hover:bg-slate-950/75 sm:right-6"
       >
-        <span className={`h-2 w-2 rounded-full transition-colors ${detailsVisible ? "bg-emerald-400 animate-pulse" : "bg-white/40"}`} />
-        {detailsVisible ? t("Clear View") : t("Show Details")}
+        <span aria-hidden="true">{showContext ? "✕" : "☰"}</span>
+        {showContext ? "Hide text" : "Show text"}
       </button>
+
+      <div className="absolute bottom-5 left-0 right-0 z-20 flex justify-center gap-1.5 px-4">
+        {slideshowPhotos.map((photo, photoIndex) => (
+          <button
+            key={`${photo.label}-${photoIndex}`}
+            type="button"
+            aria-label={`Show slide ${photoIndex + 1}: ${photo.label}`}
+            aria-current={photoIndex === index ? true : undefined}
+            onClick={() => goTo(photoIndex)}
+            className={`h-2 rounded-full transition-all ${
+              photoIndex === index ? "w-6 bg-white" : "w-2 bg-white/45 hover:bg-white/70"
+            }`}
+          />
+        ))}
+      </div>
+
+      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white/10 to-transparent" />
     </section>
   );
 }

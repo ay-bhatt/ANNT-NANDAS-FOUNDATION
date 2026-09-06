@@ -63,6 +63,16 @@ import collageThree from "@/assets/collage/collage (10).webp";
 import collageFour from "@/assets/collage/gallery (1).webp";
 import collageFive from "@/assets/collage/gallery (2).webp";
 import donationQr from "@/assets/qr.png";
+import heroSlide01 from "@/assets/hero/slideshow/slide-01.webp";
+import heroSlide02 from "@/assets/hero/slideshow/slide-02.webp";
+import heroSlide03 from "@/assets/hero/slideshow/slide-03.webp";
+import heroSlide04 from "@/assets/hero/slideshow/slide-04.webp";
+import heroSlide05 from "@/assets/hero/slideshow/slide-05.webp";
+import heroSlide06 from "@/assets/hero/slideshow/slide-06.webp";
+import heroSlide07 from "@/assets/hero/slideshow/slide-07.webp";
+import heroSlide08 from "@/assets/hero/slideshow/slide-08.webp";
+import heroSlide09 from "@/assets/hero/slideshow/slide-09.webp";
+import heroSlide10 from "@/assets/hero/slideshow/slide-10.webp";
 
 const PHOTO = {
   trek: "/gallery/photos/community/dscn2385.webp",
@@ -83,7 +93,8 @@ export const siteConfig = {
   hindiName: "अनंत नन्दा फाउण्डेशन",
   shortName: "ANF",
   tagline: "From the Heart of the Himalayas, Building Futures Without Limits",
-  motto: "Our Effort, In Search of Hidden Talent.",
+  motto: "Our Efforts, Discover Talents",
+  mottoHi: "हमारा प्रयास, हुनर की तलाश",
   description: "Empowering communities through education, health, sports, opportunity, and sustainable rural development.",
   email: "info@anntnandasfoundation.com",
   phone1: "+91 9639263202",
@@ -774,6 +785,27 @@ export const galleryItems = [
   { label: "Ultra camp in the Himalayas", type: "photo", imageSrc: eventUltraCamp, theme: "Sports" },
   { label: "Harela Festival plantation drive", type: "photo", imageSrc: eventHarela, theme: "Events" },
   ...generatedGalleryItems,
+];
+
+export const homeSlideshowPhotos = galleryItems
+  .filter((item) => item.type === "photo" && item.imageSrc)
+  .slice(0, 15)
+  .map((item) => ({
+    src: item.imageSrc as typeof galleryPhotoCycling,
+    label: item.label,
+  }));
+
+export const heroSlideshowPhotos = [
+  { src: heroSlide01, label: "Community gathering in the Himalayas" },
+  { src: heroSlide02, label: "Village sports and outdoor training" },
+  { src: heroSlide03, label: "Children and families at a foundation event" },
+  { src: heroSlide04, label: "Education and classroom moments" },
+  { src: heroSlide05, label: "Health and community outreach" },
+  { src: heroSlide06, label: "Women and local leadership" },
+  { src: heroSlide07, label: "Youth programmes in Mundoli" },
+  { src: heroSlide08, label: "Celebration and cultural gathering" },
+  { src: heroSlide09, label: "Endurance and mountain sport" },
+  { src: heroSlide10, label: "Everyday work with Himalayan communities" },
 ];
 
 export const collageImages = [collageFour, collageFive, collageOne];

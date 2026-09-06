@@ -1,7 +1,26 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { negotiate } from "@/lib/agent/negotiate";
+import { MOU_COOKIE_NAME, verifyMouSessionToken } from "@/lib/mou-session";
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
+
+  if (pathname === "/mou/login") {
+    const token = request.cookies.get(MOU_COOKIE_NAME)?.value;
+    if (await verifyMouSessionToken(token)) {
+      return NextResponse.redirect(new URL("/mou", request.url));
+    }
+    return NextResponse.next();
+  }
+
+  if (pathname === "/mou" || pathname.startsWith("/mou/")) {
+    const token = request.cookies.get(MOU_COOKIE_NAME)?.value;
+    if (!(await verifyMouSessionToken(token))) {
+      return NextResponse.redirect(new URL("/mou/login", request.url));
+    }
+    return NextResponse.next();
+  }
+
   if (request.method !== "GET" && request.method !== "HEAD") {
     return NextResponse.next();
   }

@@ -8,6 +8,7 @@ import type { SiteConfig, NavItem, ImpactArea } from "@/lib/types";
 import { toTelHref } from "@/lib/utils";
 import { useI18n } from "@/components/i18n/LanguageProvider";
 import BrandMark from "@/components/site/BrandMark";
+import { PunchLine } from "@/components/site/SectionBlocks";
 import { ORG_NAME_EN, ORG_NAME_HI } from "@/lib/i18n";
 
 interface FooterProps {
@@ -77,6 +78,8 @@ export default function Footer({ siteConfig }: FooterProps) {
               </div>
               <BrandMark inverted />
             </Link>
+
+            <PunchLine english={siteConfig.motto} hindi={siteConfig.mottoHi} tone="dark" />
 
             <p className="max-w-sm text-sm leading-relaxed text-slate-400">
               {t(siteConfig.tagline)}. {t("We support children and communities through education, health, environment, sports, and opportunity.")}

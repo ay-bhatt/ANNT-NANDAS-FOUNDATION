@@ -158,6 +158,14 @@ export async function GET() {
       })),
       galleryCategories: D.galleryCategories,
       galleryItems: serializeGalleryItems(),
+      homeSlideshowPhotos: D.homeSlideshowPhotos.map((photo) => ({
+        src: img(photo.src),
+        label: photo.label,
+      })),
+      heroSlideshowPhotos: D.heroSlideshowPhotos.map((photo) => ({
+        src: img(photo.src),
+        label: photo.label,
+      })),
       collageImages: D.collageImages.map(img),
       homeVisualGrid: D.homeVisualGrid.map(img),
       homeGalleryPreview: D.homeGalleryPreview.map(img),

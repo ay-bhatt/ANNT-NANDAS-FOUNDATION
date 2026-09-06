@@ -11,8 +11,6 @@ out/
 .DS_Store
 Thumbs.db
 *.tsbuildinfo
-website.zip
-data/uploads/
-data/registrations.json
-anntnandasfoundation/data/registrations/**/*.json
-anntnandasfoundation/data/uploads/
+
+.comments/
+.contact_fallback/

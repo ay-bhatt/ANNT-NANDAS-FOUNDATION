@@ -3,7 +3,17 @@
 @tailwind utilities;
 
 :root {
+  --site-punchline-h: 2.75rem;
+  --site-nav-h: 96px;
   --nav-height: 96px;
+  --site-header-h: calc(var(--site-punchline-h) + var(--site-nav-h));
+  --site-bottom-nav-h: 4rem;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --site-punchline-h: 2.25rem;
+  }
 }
 
 @layer base {
@@ -28,6 +38,12 @@
     -moz-osx-font-smoothing: grayscale;
     background: linear-gradient(180deg, #f8fafc 0%, #ffffff 32%, #f8fafc 100%);
     color: #0f172a;
+  }
+
+  @media (max-width: 1023px) {
+    body {
+      padding-bottom: calc(var(--site-bottom-nav-h) + env(safe-area-inset-bottom));
+    }
   }
 
   :focus-visible {

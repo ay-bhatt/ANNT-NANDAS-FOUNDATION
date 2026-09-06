@@ -1,19 +1,22 @@
-"use client";
+﻿"use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion } from "framer-motion";
 import logoImg from "@/assets/logo.webp";
 import type { NavItem } from "@/lib/types";
 import LanguageToggle from "@/components/i18n/LanguageToggle";
 import { useI18n } from "@/components/i18n/LanguageProvider";
 import BrandMark from "@/components/site/BrandMark";
+import { PunchLine } from "@/components/site/SectionBlocks";
+import MobileBottomNav from "@/components/MobileBottomNav";
 import { ORG_NAME_EN, ORG_NAME_HI } from "@/lib/i18n";
 
 interface NavbarProps {
   navigationItems: NavItem[];
+  motto: string;
+  mottoHi: string;
 }
 
 function isActivePath(pathname: string, href: string) {
@@ -30,12 +33,10 @@ function isActivePath(pathname: string, href: string) {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export default function Navbar({ navigationItems }: NavbarProps) {
+export default function Navbar({ navigationItems, motto, mottoHi }: NavbarProps) {
   const pathname = usePathname();
   const { t } = useI18n();
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -44,33 +45,10 @@ export default function Navbar({ navigationItems }: NavbarProps) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = mobileOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [mobileOpen]);
-
-  useEffect(() => {
-    setMobileOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    if (!mobileOpen) return;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setMobileOpen(false);
-        menuButtonRef.current?.focus();
-      }
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [mobileOpen]);
-
   return (
     <>
       <header
-        className={`sticky top-0 z-[70] w-full min-w-0 border-b bg-white px-4 transition-shadow duration-200 sm:px-6 lg:px-8 ${
+        className={`sticky top-0 z-[70] w-full min-w-0 border-b bg-white transition-shadow duration-200 ${
           scrolled ? "border-slate-200/90 shadow-md" : "border-slate-200"
         }`}
       >
@@ -81,8 +59,14 @@ export default function Navbar({ navigationItems }: NavbarProps) {
           {t("Skip to main content")}
         </a>
 
-        <div className="mx-auto w-full min-w-0 max-w-[1240px]">
-          <nav aria-label={t("Primary navigation")} className="flex h-[var(--nav-height)] min-w-0 items-center gap-2 sm:gap-4">
+        <div className="flex min-h-[var(--site-punchline-h)] items-center justify-center border-b border-white/10 bg-blue-950 px-3 py-1.5 text-center">
+          <div className="text-[11px] leading-snug text-emerald-100 sm:text-xs">
+            <PunchLine english={motto} hindi={mottoHi} align="center" tone="dark" />
+          </div>
+        </div>
+
+        <div className="mx-auto w-full min-w-0 max-w-[1240px] px-4 sm:px-6 lg:px-8">
+          <nav aria-label={t("Primary navigation")} className="flex h-[var(--site-nav-h)] min-w-0 items-center gap-2 sm:gap-4">
             <Link
               href="/"
               className="flex min-w-0 shrink items-center gap-2.5 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 sm:gap-3"
@@ -134,103 +118,27 @@ export default function Navbar({ navigationItems }: NavbarProps) {
               >
                 {t("Join Us")}
               </Link>
+              <Link
+                href="/donate"
+                className="whitespace-nowrap rounded-full bg-blue-950 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-900 xl:text-sm"
+              >
+                {t("Donate Now")}
+              </Link>
             </div>
 
             <div className="ml-auto flex shrink-0 items-center gap-1.5 lg:hidden">
               <LanguageToggle compact />
-              <button
-                ref={menuButtonRef}
-                type="button"
-                aria-label={mobileOpen ? t("Close navigation menu") : t("Open navigation menu")}
-                aria-expanded={mobileOpen}
-                aria-controls="mobile-navigation"
-                onClick={() => setMobileOpen((value) => !value)}
-                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-800 transition hover:bg-slate-50 active:scale-95"
-              >
-                <div className="relative flex h-4 w-5 flex-col justify-between">
-                  <span
-                    className={`h-0.5 w-full origin-center rounded-full bg-slate-900 transition-all duration-300 ${
-                      mobileOpen ? "translate-y-[7px] rotate-45" : ""
-                    }`}
-                  />
-                  <span
-                    className={`h-0.5 w-full rounded-full bg-slate-900 transition-all duration-200 ${
-                      mobileOpen ? "opacity-0" : ""
-                    }`}
-                  />
-                  <span
-                    className={`h-0.5 w-full origin-center rounded-full bg-slate-900 transition-all duration-300 ${
-                      mobileOpen ? "-translate-y-[7px] -rotate-45" : ""
-                    }`}
-                  />
-                </div>
-              </button>
               <Link
-                href="/register"
-                aria-current={isActivePath(pathname, "/register") ? "page" : undefined}
-                className="inline-flex min-h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-emerald-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-emerald-700 sm:px-4"
+                href="/donate"
+                className="inline-flex min-h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-blue-950 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-900 sm:px-4"
               >
-                {t("Join Us")}
+                {t("Donate Now")}
               </Link>
             </div>
           </nav>
         </div>
       </header>
-
-      <AnimatePresence>
-        {mobileOpen ? (
-          <motion.div
-            key="mobile-navigation"
-            id="mobile-navigation"
-            initial={{ opacity: 0, y: -28 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ type: "spring", stiffness: 420, damping: 32, mass: 0.8 }}
-            className="fixed inset-0 z-[65] bg-white lg:hidden"
-          >
-            <div className="h-[var(--nav-height)] shrink-0 bg-white" aria-hidden="true" />
-            <nav
-              aria-label={t("Mobile navigation")}
-              className="h-[calc(100svh-var(--nav-height))] overflow-y-auto bg-white px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-3"
-            >
-              <div className="space-y-1.5">
-                {navigationItems.map((item) => {
-                  const active = isActivePath(pathname, item.href);
-                  return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      aria-current={active ? "page" : undefined}
-                      className={`flex items-center justify-between rounded-xl px-4 py-3.5 text-base font-semibold transition ${
-                        active ? "bg-blue-950 text-white" : "text-slate-800 hover:bg-slate-100 active:bg-slate-100"
-                      }`}
-                    >
-                      <span>{t(item.label)}</span>
-                      <span aria-hidden="true" className="text-lg">
-                        →
-                      </span>
-                    </Link>
-                  );
-                })}
-                <Link
-                  href="/register"
-                  aria-current={isActivePath(pathname, "/register") ? "page" : undefined}
-                  className={`mt-3 flex items-center justify-between rounded-xl border px-4 py-3.5 text-base font-semibold transition ${
-                    isActivePath(pathname, "/register")
-                      ? "border-emerald-600 bg-emerald-600 text-white"
-                      : "border-slate-200 bg-white text-slate-800 hover:border-emerald-300 hover:bg-emerald-50"
-                  }`}
-                >
-                  <span>{t("Join Us")}</span>
-                  <span aria-hidden="true" className="text-lg">
-                    →
-                  </span>
-                </Link>
-              </div>
-            </nav>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+      <MobileBottomNav navigationItems={navigationItems} />
     </>
   );
 }
