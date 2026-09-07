@@ -5,6 +5,7 @@ import { compressImageFile } from "@/lib/registration/image";
 import { validateImage } from "@/lib/registration/validation";
 import type { UploadedImage } from "@/lib/registration/types";
 import { cn } from "@/lib/utils";
+import DigitalSignaturePad from "./DigitalSignaturePad";
 
 interface ImageUploadProps {
   id: string;
@@ -147,6 +148,140 @@ export default function ImageUpload({
   );
 }
 
-export function SignatureUpload(props: Omit<ImageUploadProps, "variant">) {
-  return <ImageUpload {...props} variant="signature" />;
+export function SignatureUpload({
+  id,
+  label,
+  hint,
+  value,
+  onChange,
+  error,
+}: Omit<ImageUploadProps, "variant">) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+  const [localError, setLocalError] = useState("");
+  const [padOpen, setPadOpen] = useState(false);
+
+  const handleFile = async (file: File | undefined) => {
+    if (!file) return;
+    const validation = validateImage(file);
+    if (validation) {
+      setLocalError(validation);
+      return;
+    }
+    setBusy(true);
+    setLocalError("");
+    try {
+      const compressed = await compressImageFile(file, {
+        maxWidth: 720,
+        maxHeight: 280,
+        quality: 0.7,
+      });
+      onChange(compressed);
+    } catch (caught) {
+      setLocalError(caught instanceof Error ? caught.message : "Unable to process this image.");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const message = error || localError;
+
+  return (
+    <div>
+      <p className="mb-2 flex items-center gap-1.5 text-sm font-semibold text-slate-800">
+        <span>{label}</span>
+        <span className="text-rose-500">*</span>
+      </p>
+      <div
+        className={cn(
+          "overflow-hidden rounded-[24px] border border-dashed bg-slate-50/80",
+          message ? "border-rose-300" : "border-slate-300",
+        )}
+      >
+        {value ? (
+          <div className="p-4">
+            <div className="relative max-w-md overflow-hidden rounded-2xl border border-slate-200 bg-white aspect-[3/1]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={value.dataUrl} alt={`${label} preview`} className="h-full w-full object-contain" />
+            </div>
+            <p className="mt-3 text-xs leading-5 text-slate-500">
+              This signature will be saved with your application and included in the registrar email.
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <button
+                type="button"
+                onClick={() => inputRef.current?.click()}
+                className="btn-outline-dark !min-h-11 !px-4"
+              >
+                Replace upload
+              </button>
+              <button type="button" onClick={() => setPadOpen(true)} className="btn-outline-dark !min-h-11 !px-4">
+                Sign digitally
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  onChange(null);
+                  setLocalError("");
+                  if (inputRef.current) inputRef.current.value = "";
+                }}
+                className="btn-premium !min-h-11 border border-rose-200 bg-rose-50 px-4 text-sm font-semibold text-rose-700"
+              >
+                Remove
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="px-4 py-5 sm:px-5">
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm">
+              ✍️
+            </div>
+            <p className="text-center text-sm font-semibold text-slate-900">
+              {busy ? "Preparing preview…" : "Choose a signature method"}
+            </p>
+            <p className="mx-auto mt-1.5 max-w-sm text-center text-xs leading-5 text-slate-500">{hint}</p>
+            <div className="mt-4 grid gap-2 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => inputRef.current?.click()}
+                disabled={busy}
+                className="btn-outline-dark !min-h-12 w-full !px-4"
+              >
+                Upload signature
+              </button>
+              <button
+                type="button"
+                onClick={() => setPadOpen(true)}
+                disabled={busy}
+                className="btn-primary !min-h-12 w-full !px-4"
+              >
+                Digital signature
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+      <input
+        ref={inputRef}
+        id={id}
+        name={id}
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/heic,image/heif,image/*"
+        className="sr-only"
+        onChange={(event) => {
+          void handleFile(event.target.files?.[0]);
+        }}
+      />
+      {message ? <p className="mt-1.5 text-xs font-medium text-rose-600">{message}</p> : null}
+      <DigitalSignaturePad
+        open={padOpen}
+        onClose={() => setPadOpen(false)}
+        onSave={(image) => {
+          setLocalError("");
+          if (inputRef.current) inputRef.current.value = "";
+          onChange(image);
+        }}
+      />
+    </div>
+  );
 }

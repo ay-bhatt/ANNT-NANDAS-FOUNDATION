@@ -36,8 +36,8 @@ export default function DocumentsForm({
       title={talentHunt ? "Photograph, Aadhaar & parent signature" : "Photograph & signature"}
       description={
         talentHunt
-          ? "Upload the child’s photograph and Aadhaar card, and the parent or consultant signature on a white page. Only the Aadhaar number is printed on the form — the Aadhaar photo is stored privately."
-          : "Upload a clear recent photograph and your signature. Both are included in the printable registration record sent to the foundation."
+          ? "Upload the child’s photograph and Aadhaar card, then add the parent or consultant signature by uploading a photo or signing digitally. Only the Aadhaar number is printed on the form — the Aadhaar photo is stored privately."
+          : "Upload a clear recent photograph and add your signature. You can upload a photo of your signature or sign digitally on this page. Both are included in the printable registration record sent to the foundation."
       }
     >
       <div className="grid gap-6 lg:grid-cols-2">
@@ -76,13 +76,15 @@ export default function DocumentsForm({
             />
           </div>
         ) : null}
+      </div>
+      <div className="mt-6">
         <SignatureUpload
           id="signature"
           label={talentHunt ? "Parent / consultant signature" : "Signature"}
           hint={
             talentHunt
-              ? "Sign on a white page, then upload a clear photo or scan of that signature."
-              : "Upload a photo or scan of your signature on a plain background."
+              ? "Upload a photo of the signature on a white page, or tap Digital signature to draw it here."
+              : "Upload a photo or scan of your signature, or tap Digital signature to draw it with your finger or mouse."
           }
           value={signature}
           error={errors.signature}

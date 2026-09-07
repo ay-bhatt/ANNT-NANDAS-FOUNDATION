@@ -335,8 +335,8 @@ export function validateDocuments(
   }
   if (!signature || signature.size < MIN_IMAGE_BYTES || !signature.dataUrl.startsWith("data:image/")) {
     errors.signature = options?.signatureLabel
-      ? `Please upload the ${options.signatureLabel.toLowerCase()}.`
-      : "Please upload your signature.";
+      ? `Please provide the ${options.signatureLabel.toLowerCase()}. You can upload a photo or sign digitally.`
+      : "Please provide your signature. You can upload a photo or sign digitally.";
   }
   if (options?.requireAadhaar) {
     if (!options.aadhaar || options.aadhaar.size < MIN_IMAGE_BYTES || !options.aadhaar.dataUrl.startsWith("data:image/")) {

@@ -148,3 +148,21 @@ export async function compressImageFile(file: File, options: CompressOptions): P
     source.close();
   }
 }
+
+export const SIGNATURE_COMPRESS_OPTIONS: CompressOptions = {
+  maxWidth: 720,
+  maxHeight: 280,
+  quality: 0.82,
+};
+
+export async function uploadedImageFromCanvas(
+  canvas: HTMLCanvasElement,
+  fileName = "digital-signature.png",
+): Promise<UploadedImage> {
+  const blob = await canvasToBlob(canvas, "image/png", 1);
+  if (blob.size < MIN_IMAGE_BYTES) {
+    throw new Error("Please draw a clearer signature before saving.");
+  }
+  const file = new File([blob], fileName, { type: "image/png" });
+  return compressImageFile(file, SIGNATURE_COMPRESS_OPTIONS);
+}

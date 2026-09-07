@@ -109,9 +109,9 @@ export default function DeclarationSection({
         <p className="text-sm font-semibold text-slate-800">Applicant signature</p>
         {signature ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={signature.dataUrl} alt="Uploaded signature" className="mt-3 h-20 w-auto max-w-full object-contain" />
+          <img src={signature.dataUrl} alt="Applicant signature" className="mt-3 h-20 w-auto max-w-full object-contain" />
         ) : (
-          <p className="mt-2 text-sm text-rose-600">Please go back to Documents and upload your signature.</p>
+          <p className="mt-2 text-sm text-rose-600">Please go back to Documents and add your signature.</p>
         )}
       </div>
     </SectionCard>
