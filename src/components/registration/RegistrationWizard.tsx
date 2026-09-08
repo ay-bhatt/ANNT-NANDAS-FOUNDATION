@@ -196,6 +196,9 @@ export default function RegistrationWizard({
         message?: string;
         registrationId?: string;
         submittedAt?: string;
+        emailSent?: boolean;
+        applicantEmailSent?: boolean;
+        pdfAttached?: boolean;
       };
       try {
         data = JSON.parse(text) as typeof data;
@@ -211,6 +214,9 @@ export default function RegistrationWizard({
         registrationId: data.registrationId,
         type: payload.type,
         submittedAt: data.submittedAt || new Date().toISOString(),
+        emailSent: data.emailSent,
+        applicantEmailSent: data.applicantEmailSent,
+        pdfAttached: data.pdfAttached,
       });
     } catch (error) {
       setSubmitError(error instanceof Error ? error.message : "Unable to submit registration. Please try again.");
@@ -226,6 +232,9 @@ export default function RegistrationWizard({
         registrationId={result.registrationId}
         submittedAt={result.submittedAt}
         state={state}
+        emailSent={result.emailSent}
+        applicantEmailSent={result.applicantEmailSent}
+        pdfAttached={result.pdfAttached}
       />
     );
   }

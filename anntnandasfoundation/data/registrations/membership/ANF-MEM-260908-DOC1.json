@@ -1,0 +1,64 @@
+{
+  "id": "ANF-MEM-260908-DOC1",
+  "type": "membership",
+  "submittedAt": "2026-09-08T17:58:32.641Z",
+  "personal": {
+    "fullName": "Jatin Petwal",
+    "fatherName": "adf",
+    "motherName": "adfa",
+    "dob": "2012-09-15",
+    "age": "13",
+    "gender": "Male",
+    "nationality": "Indian",
+    "address": "asd",
+    "postOffice": "adf",
+    "tehsil": "adf",
+    "district": "adf",
+    "state": "Uttarakhand",
+    "country": "India",
+    "pinCode": "249001",
+    "phone": "+917248710204",
+    "email": "jatinpetwal41@gmail.com",
+    "whatsapp": "3422121212",
+    "bloodGroup": "A-",
+    "education": "Intermediate / 12th",
+    "specialEducation": "adf",
+    "occupation": "Farmer",
+    "emergencyName": "adf",
+    "emergencyRelation": "Daughter",
+    "emergencyPhone": "+916398476703"
+  },
+  "membership": {
+    "membershipType": "Individual",
+    "areasOfInterest": [
+      "Education"
+    ],
+    "contribution": "Time and volunteering",
+    "howHeard": "dfad",
+    "additionalComments": "adfad",
+    "feeAmount": 500,
+    "validityYears": 1,
+    "validityLabel": "1 Year",
+    "startDate": "2026-09-08T17:58:32.641Z",
+    "expiryDate": "2027-09-08T17:58:32.641Z",
+    "status": "active"
+  },
+  "declaration": {
+    "accepted": true,
+    "place": "dehradun",
+    "date": "2026-09-08"
+  },
+  "payment": {
+    "amount": 500,
+    "currency": "INR",
+    "payee": "ANNT NANDAS FOUNDATION",
+    "required": true,
+    "status": "paid"
+  },
+  "files": {
+    "photograph": "uploads/photographs/membership/ANF-MEM-260908-DOC1_Jatin-Petwal_photograph.jpg",
+    "signature": "uploads/signatures/membership/ANF-MEM-260908-DOC1_Jatin-Petwal_signature.jpg",
+    "aadhaar": null,
+    "paymentProof": "uploads/payments/membership/ANF-MEM-260908-DOC1_Jatin-Petwal_payment.jpg"
+  }
+}

@@ -54,11 +54,17 @@ export default function RegistrationSuccess({
   registrationId,
   submittedAt,
   state,
+  emailSent,
+  applicantEmailSent,
+  pdfAttached,
 }: {
   type: RegistrationType;
   registrationId: string;
   submittedAt: string;
   state: RegistrationFormState;
+  emailSent?: boolean;
+  applicantEmailSent?: boolean;
+  pdfAttached?: boolean;
 }) {
   const meta = REGISTRATION_TYPE_META[type];
   const feeAmount = registrationFeeFor(type);
@@ -79,6 +85,13 @@ export default function RegistrationSuccess({
       <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-slate-600 sm:text-base">
         Thank you. Your {meta.shortLabel.toLowerCase()} application has been received. The foundation will review it and
         contact you if needed. Please keep your reference number for future correspondence.
+      </p>
+      <p className="mx-auto mt-3 max-w-xl text-sm leading-7 text-slate-600">
+        {applicantEmailSent
+          ? `A ${pdfAttached === false ? "copy" : "PDF copy"} of this form has been sent to ${state.personal.email}.`
+          : emailSent
+            ? "The foundation has received this registration by email, including the form PDF."
+            : "If you need a copy immediately, use Download / Print Application below."}
       </p>
 
       <div className="mx-auto mt-7 grid max-w-lg gap-3 sm:grid-cols-2">

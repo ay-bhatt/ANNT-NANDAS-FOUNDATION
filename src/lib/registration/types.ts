@@ -159,6 +159,9 @@ export interface RegistrationSuccessResult {
   registrationId: string;
   type: RegistrationType;
   submittedAt: string;
+  emailSent?: boolean;
+  applicantEmailSent?: boolean;
+  pdfAttached?: boolean;
 }
 
 export type FieldErrors = Record<string, string>;

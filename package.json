@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint src next.config.ts",
-    "test": "tsx --test src/lib/agent/agent.test.ts src/lib/registration/image-bytes.test.ts src/lib/registration/validation.test.ts",
+    "test": "tsx --test src/lib/agent/agent.test.ts src/lib/mail.test.ts src/lib/registration/image-bytes.test.ts src/lib/registration/validation.test.ts",
     "reorganize-uploads": "node scripts/reorganize-uploads.mjs"
   },
   "dependencies": {

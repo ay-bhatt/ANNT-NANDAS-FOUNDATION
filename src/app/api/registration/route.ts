@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
 import { REGISTRATION_TYPE_META, registrationRequiresPayment } from "@/lib/registration/constants";
 import { createEmptyForm } from "@/lib/registration/form-state";
-import { buildPrintableHtml } from "@/lib/registration/printable";
+import { sendRegistrationEmails } from "@/lib/registration/notify";
 import { saveRegistrationRecord } from "@/lib/registration/store";
 import type {
   PersonalInformation,
@@ -14,7 +13,7 @@ import type {
   UploadedImage,
 } from "@/lib/registration/types";
 import { inferImageMime, isPlausibleImageBuffer, parseImageDataUrl } from "@/lib/registration/image-bytes";
-import { typeLabel, validateStep } from "@/lib/registration/validation";
+import { validateStep } from "@/lib/registration/validation";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -365,112 +364,25 @@ export async function POST(request: Request) {
       console.error("REGISTRATION STORE WARNING:", storeError);
     }
 
-    const smtpReady = Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
-    if (smtpReady) {
-      try {
-        const photoParsed = state.photograph ? parseImageDataUrl(state.photograph.dataUrl) : null;
-        const signatureParsed = state.signature ? parseImageDataUrl(state.signature.dataUrl) : null;
-        const aadhaarParsed = state.aadhaar ? parseImageDataUrl(state.aadhaar.dataUrl) : null;
-        const paymentParsed = state.paymentProof ? parseImageDataUrl(state.paymentProof.dataUrl) : null;
-        const photoCid = "photograph@registration";
-        const signatureCid = "signature@registration";
-
-        const emailHtml = buildPrintableHtml({
-          state,
-          registrationId,
-          submittedAt,
-          photoSrc: photoParsed ? `cid:${photoCid}` : undefined,
-          signatureSrc: signatureParsed ? `cid:${signatureCid}` : undefined,
-          mode: "email",
-        });
-
-        const transporter = nodemailer.createTransport({
-          host: process.env.SMTP_HOST,
-          port: Number(process.env.SMTP_PORT || 465),
-          secure: process.env.SMTP_SECURE === "true",
-          auth: {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS,
-          },
-        });
-
-        let pdfBuffer: Buffer | null = null;
-        try {
-          const { buildRegistrationPdf } = await import("@/lib/registration/pdf");
-          pdfBuffer = await buildRegistrationPdf({ state, registrationId, submittedAt });
-        } catch (pdfError) {
-          console.error("REGISTRATION PDF WARNING:", pdfError);
-        }
-
-        const attachments = [
-          photoParsed
-            ? {
-                filename: `${registrationId}-photograph.${photoParsed.ext}`,
-                content: photoParsed.buffer,
-                contentType: photoParsed.mime,
-                cid: photoCid,
-              }
-            : null,
-          signatureParsed
-            ? {
-                filename: `${registrationId}-signature.${signatureParsed.ext}`,
-                content: signatureParsed.buffer,
-                contentType: signatureParsed.mime,
-                cid: signatureCid,
-              }
-            : null,
-          aadhaarParsed
-            ? {
-                filename: `${registrationId}-aadhaar.${aadhaarParsed.ext}`,
-                content: aadhaarParsed.buffer,
-                contentType: aadhaarParsed.mime,
-              }
-            : null,
-          paymentParsed
-            ? {
-                filename: `${registrationId}-payment.${paymentParsed.ext}`,
-                content: paymentParsed.buffer,
-                contentType: paymentParsed.mime,
-              }
-            : null,
-          pdfBuffer
-            ? {
-                filename: `${registrationId}.pdf`,
-                content: pdfBuffer,
-                contentType: "application/pdf",
-              }
-            : {
-                filename: `${registrationId}.html`,
-                content: buildPrintableHtml({
-                  state,
-                  registrationId,
-                  submittedAt,
-                  photoSrc: state.photograph?.dataUrl,
-                  signatureSrc: state.signature?.dataUrl,
-                  mode: "document",
-                }),
-                contentType: "text/html",
-              },
-        ].filter(Boolean);
-
-        await transporter.sendMail({
-          from: `"ANNT NANDAS FOUNDATION" <${process.env.SMTP_USER}>`,
-          to: process.env.ADMIN_EMAIL || process.env.SMTP_USER,
-          replyTo: state.personal.email,
-          subject: `New ${typeLabel(state.type)} Registration · ${registrationId} · ANNT NANDAS FOUNDATION`,
-          html: emailHtml,
-          attachments: attachments as nodemailer.SendMailOptions["attachments"],
-        });
-      } catch (emailError) {
-        console.error("REGISTRATION EMAIL WARNING:", emailError);
-      }
+    const emailResult = await sendRegistrationEmails({
+      state,
+      registrationId,
+      submittedAt,
+    });
+    if (emailResult.error) {
+      console.error("REGISTRATION EMAIL WARNING:", emailResult.error);
     }
 
     return NextResponse.json({
       success: true,
-      message: "Registration submitted successfully.",
+      message: emailResult.sentToOffice
+        ? "Registration submitted successfully. A copy has been emailed."
+        : "Registration submitted successfully.",
       registrationId,
       submittedAt,
+      emailSent: emailResult.sentToOffice,
+      applicantEmailSent: emailResult.sentToApplicant,
+      pdfAttached: emailResult.pdfAttached,
     });
   } catch (error) {
     console.error("REGISTRATION ERROR:", error);

@@ -19,6 +19,22 @@ async function toPng(buffer: Buffer): Promise<Buffer> {
   return sharp(buffer, { failOn: "none" }).rotate().png().toBuffer();
 }
 
+async function embedPhoto(doc: PDFDocument, buffer: Buffer) {
+  try {
+    return await doc.embedJpg(buffer);
+  } catch {
+    try {
+      return await doc.embedPng(buffer);
+    } catch {
+      try {
+        return await doc.embedPng(await toPng(buffer));
+      } catch {
+        return null;
+      }
+    }
+  }
+}
+
 async function loadLogoPng(): Promise<Buffer | null> {
   const candidates = [
     path.join(process.cwd(), "src", "assets", "logo.webp"),
@@ -276,7 +292,7 @@ export async function buildRegistrationPdf(options: {
   try {
     if (state.photograph?.dataUrl) {
       const raw = parseDataUrl(state.photograph.dataUrl);
-      if (raw) photoImage = await doc.embedPng(await toPng(raw));
+      if (raw) photoImage = await embedPhoto(doc, raw);
     }
   } catch {
     photoImage = null;
@@ -284,7 +300,7 @@ export async function buildRegistrationPdf(options: {
   try {
     if (state.signature?.dataUrl) {
       const raw = parseDataUrl(state.signature.dataUrl);
-      if (raw) signImage = await doc.embedPng(await toPng(raw));
+      if (raw) signImage = await embedPhoto(doc, raw);
     }
   } catch {
     signImage = null;

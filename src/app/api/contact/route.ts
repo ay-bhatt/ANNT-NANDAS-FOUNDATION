@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import nodemailer from "nodemailer";
+import { isSmtpConfigured, mailFromAddress, officeEmailAddresses, sendMail } from "@/lib/mail";
 
 export async function POST(request: Request) {
   try {
@@ -17,19 +17,16 @@ export async function POST(request: Request) {
       );
     }
 
-    const transporter = nodemailer.createTransport({
-      host: process.env.SMTP_HOST,
-      port: Number(process.env.SMTP_PORT || 465),
-      secure: process.env.SMTP_SECURE === "true",
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+    if (!isSmtpConfigured()) {
+      return NextResponse.json(
+        { success: false, message: "Email is not configured on the server. Please try again later." },
+        { status: 500 },
+      );
+    }
 
-    await transporter.sendMail({
-      from: `"ANNT NANDAS FOUNDATION Website" <${process.env.SMTP_USER}>`,
-      to: process.env.ADMIN_EMAIL,
+    await sendMail({
+      from: mailFromAddress(),
+      to: officeEmailAddresses(),
       replyTo: email,
       subject: `Contact Form: ${subject}`,
       html: `
