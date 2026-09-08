@@ -15,7 +15,7 @@ export const REGISTRATION_TYPE_META: Record<
     label: "Membership Registration",
     shortLabel: "Membership",
     code: "MEM",
-    description: "Become a foundation member and stay connected with programmes, events, and community action.",
+    description: "Become a foundation member for ₹500, valid for 1 year from the activation date.",
     accent: "from-blue-600 to-indigo-700",
   },
   sports: {
@@ -124,9 +124,33 @@ export const SCHOOL_CLASS_OPTIONS = [
   "Other",
 ];
 
+export const MEMBERSHIP_FEE_AMOUNT = 500;
+export const MEMBERSHIP_VALIDITY_YEARS = 1;
+export const MEMBERSHIP_VALIDITY_LABEL = "1 Year";
+export const SPORTS_FEE_AMOUNT = 100;
+export const VOLUNTEER_FEE_AMOUNT = 0;
+/** Default paid fee for employee, event, and talent-hunt registrations. Prefer registrationFeeFor(type). */
 export const REGISTRATION_FEE_AMOUNT = 100;
 export const REGISTRATION_FEE_PAYEE = "ANNT NANDAS FOUNDATION";
 export const REGISTRATION_FEE_PAYEE_NOTE = "Ananta / Anantananda Foundation";
+
+export const REGISTRATION_FEE_BY_TYPE: Record<RegistrationType, number> = {
+  volunteer: VOLUNTEER_FEE_AMOUNT,
+  membership: MEMBERSHIP_FEE_AMOUNT,
+  sports: SPORTS_FEE_AMOUNT,
+  employee: REGISTRATION_FEE_AMOUNT,
+  event: REGISTRATION_FEE_AMOUNT,
+  "talent-hunt": REGISTRATION_FEE_AMOUNT,
+};
+
+export function registrationFeeFor(type: RegistrationType | ""): number {
+  if (!type) return 0;
+  return REGISTRATION_FEE_BY_TYPE[type];
+}
+
+export function registrationRequiresPayment(type: RegistrationType | ""): boolean {
+  return registrationFeeFor(type) > 0;
+}
 
 export const SPORT_OPTIONS: {
   id: SportKind;
@@ -329,6 +353,13 @@ export const WIZARD_STEPS: { id: WizardStep; label: string }[] = [
   { id: "payment", label: "Fee" },
   { id: "declaration", label: "Declaration" },
 ];
+
+export function wizardStepDefsFor(type: RegistrationType | "") {
+  return WIZARD_STEPS.filter((step) => {
+    if (step.id === "payment") return registrationRequiresPayment(type);
+    return true;
+  });
+}
 
 export const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
 export const MAX_IMAGE_BYTES = 5 * 1024 * 1024;

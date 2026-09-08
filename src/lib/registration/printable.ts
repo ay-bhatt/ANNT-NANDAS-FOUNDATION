@@ -1,5 +1,6 @@
-import { REGISTRATION_FEE_AMOUNT, REGISTRATION_FEE_PAYEE, REGISTRATION_TYPE_META, SPORT_OPTIONS } from "./constants";
+import { REGISTRATION_FEE_PAYEE, REGISTRATION_TYPE_META, SPORT_OPTIONS, registrationFeeFor, registrationRequiresPayment } from "./constants";
 import { DECLARATION_CLAUSES, DECLARATION_TITLE } from "./declaration";
+import { formatMembershipDate, membershipPeriodFrom, membershipStatusAt, membershipStatusLabel } from "./membership";
 import type { PersonalInformation, RegistrationFormState, RegistrationType } from "./types";
 import { formatAadhaarNumber, formatDob, typeLabel } from "./validation";
 
@@ -119,7 +120,7 @@ function sportLabel(state: RegistrationFormState): string {
   return found?.label || state.sports.sport || "Not provided";
 }
 
-function categorySpecificRows(state: RegistrationFormState): string {
+function categorySpecificRows(state: RegistrationFormState, submittedAt?: string): string {
   if (state.type === "volunteer") {
     const v = state.volunteer;
     return section(
@@ -142,10 +143,16 @@ function categorySpecificRows(state: RegistrationFormState): string {
 
   if (state.type === "membership") {
     const m = state.membership;
+    const period = membershipPeriodFrom(submittedAt || new Date().toISOString());
     return section(
       "Membership Information",
       rowsFromPairs([
         ["Membership Type", display(m.membershipType)],
+        ["Membership Fee", `₹${period.feeAmount}`],
+        ["Validity", period.validityLabel],
+        ["Membership Start Date", formatMembershipDate(period.startDate)],
+        ["Membership Expiry Date", formatMembershipDate(period.expiryDate)],
+        ["Membership Status", membershipStatusLabel(membershipStatusAt(period.expiryDate))],
         filled(m.howHeard) ? ["How They Heard About Us", display(m.howHeard)] : null,
         { label: "Areas of Interest", value: display(m.areasOfInterest.join(", ")), span: true },
         { label: "Contribution", value: display(m.contribution), span: true },
@@ -242,11 +249,20 @@ export function buildPrintableHtml(options: {
     ? `<img src="${signatureSrc}" alt="Applicant signature" style="width:140px;height:40px;object-fit:contain;border:1px solid #cbd5e1;border-radius:4px;background:#ffffff;padding:2px;" />`
     : `<div style="width:140px;height:40px;border:1px dashed #94a3b8;border-radius:4px;background:#f8fafc;color:#64748b;font-size:9px;text-align:center;line-height:40px;">No signature</div>`;
 
-  const feeRows = rowsFromPairs([
-    ["Amount", `₹${REGISTRATION_FEE_AMOUNT}`],
-    ["Payee", display(REGISTRATION_FEE_PAYEE)],
-    ["Status", "Paid · payment screenshot on file (not printed)"],
-  ]);
+  const feeAmount = registrationFeeFor(type);
+  const paid = registrationRequiresPayment(type);
+  const membershipPeriod = type === "membership" ? membershipPeriodFrom(options.submittedAt || new Date().toISOString()) : null;
+  const feeRows = paid
+    ? rowsFromPairs([
+        type === "membership" ? ["Membership Fee", `₹${feeAmount}`] : ["Amount", `₹${feeAmount}`],
+        type === "membership" ? ["Validity", membershipPeriod?.validityLabel || "1 Year"] : null,
+        ["Payee", display(REGISTRATION_FEE_PAYEE)],
+        ["Status", "Paid · payment screenshot on file (not printed)"],
+      ])
+    : rowsFromPairs([
+        ["Amount", "Free"],
+        ["Status", "No payment required"],
+      ]);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -301,7 +317,7 @@ export function buildPrintableHtml(options: {
             <td style="padding:6px 10px 4px;">
               <h2 style="margin:0 0 4px;font-size:14px;line-height:1.15;color:#0f172a;">${display(personal.fullName)}</h2>
               ${section("Personal Information", personalRows(personal))}
-              ${categorySpecificRows(state)}
+              ${categorySpecificRows(state, options.submittedAt)}
               ${section("Registration fee & identity", feeRows)}
               <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 4px;border:1px solid #e2e8f0;border-radius:6px;overflow:hidden;background:#ffffff;">
                 <tr>

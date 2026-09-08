@@ -1,7 +1,8 @@
 import fs from "fs/promises";
 import path from "path";
-import { REGISTRATION_FEE_AMOUNT, REGISTRATION_FEE_PAYEE } from "./constants";
+import { REGISTRATION_FEE_PAYEE, registrationFeeFor, registrationRequiresPayment } from "./constants";
 import { parseImageDataUrl } from "./image-bytes";
+import { attachMembershipValidity, withLiveMembershipStatus } from "./membership";
 import type { RegistrationFormState, RegistrationType, SportKind, UploadedImage } from "./types";
 
 export const DATA_ROOT = path.join(process.cwd(), "anntnandasfoundation", "data");
@@ -137,15 +138,18 @@ export async function saveRegistrationRecord(options: {
     image: state.signature,
     invalidCode: "INVALID_SIGNATURE",
   });
-  const paymentProofPath = await saveKindFile({
-    kind: "payment",
-    id,
-    fullName,
-    typeFolder: folder,
-    image: state.paymentProof,
-    invalidCode: "INVALID_PAYMENT_PROOF",
-  });
+  const paymentProofPath = registrationRequiresPayment(type)
+    ? await saveKindFile({
+        kind: "payment",
+        id,
+        fullName,
+        typeFolder: folder,
+        image: state.paymentProof,
+        invalidCode: "INVALID_PAYMENT_PROOF",
+      })
+    : "";
 
+  const feeAmount = registrationFeeFor(type);
   const record = {
     id,
     type,
@@ -153,16 +157,18 @@ export async function saveRegistrationRecord(options: {
     submittedAt,
     personal: state.personal,
     volunteer: type === "volunteer" ? state.volunteer : undefined,
-    membership: type === "membership" ? state.membership : undefined,
+    membership: type === "membership" ? attachMembershipValidity(state.membership, submittedAt) : undefined,
     sports: type === "sports" ? state.sports : undefined,
     employee: type === "employee" ? state.employee : undefined,
     event: type === "event" ? state.event : undefined,
     talentHunt: type === "talent-hunt" ? state.talentHunt : undefined,
     declaration: state.declaration,
     payment: {
-      amount: REGISTRATION_FEE_AMOUNT,
+      amount: feeAmount,
       currency: "INR",
-      payee: REGISTRATION_FEE_PAYEE,
+      payee: registrationRequiresPayment(type) ? REGISTRATION_FEE_PAYEE : "",
+      required: registrationRequiresPayment(type),
+      status: registrationRequiresPayment(type) ? "paid" : "not_required",
     },
     files: {
       photograph: photographPath || null,
@@ -206,7 +212,9 @@ export async function listRegistrationRecords(): Promise<Record<string, unknown>
     }
   }
 
-  return [...byId.values()].sort((a, b) => String(b.submittedAt || "").localeCompare(String(a.submittedAt || "")));
+  return [...byId.values()]
+    .map((record) => withLiveMembershipStatus(record))
+    .sort((a, b) => String(b.submittedAt || "").localeCompare(String(a.submittedAt || "")));
 }
 
 export async function resolveUploadFile(relativePath: string): Promise<{ absolutePath: string; mime: string } | null> {

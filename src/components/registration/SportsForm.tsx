@@ -1,6 +1,7 @@
 "use client";
 
-import { EXPERIENCE_LEVELS, SPORT_OPTIONS, TSHIRT_SIZES, sportCategories } from "@/lib/registration/constants";
+import { EXPERIENCE_LEVELS, SPORT_OPTIONS, SPORTS_FEE_AMOUNT, TSHIRT_SIZES, sportCategories } from "@/lib/registration/constants";
+import { formatRupees } from "@/lib/donation";
 import type { FieldErrors, SportKind, SportsDetails } from "@/lib/registration/types";
 import { SectionCard, SelectField, TextAreaField, TextField } from "./FormField";
 
@@ -23,6 +24,9 @@ export default function SportsForm({
       title="Sports registration"
       description="Register for running, cycling, or other sports activities supported by ANNT NANDAS FOUNDATION."
     >
+      <div className="mb-5 rounded-[22px] border border-orange-200 bg-orange-50 px-4 py-3 text-sm font-semibold text-slate-900">
+        Sports Registration fee: {formatRupees(SPORTS_FEE_AMOUNT)}
+      </div>
       <div className="grid gap-5 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <p className="mb-2 text-sm font-semibold text-slate-800">

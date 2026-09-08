@@ -20,8 +20,8 @@ export default function VolunteerForm({
   return (
     <div className="space-y-5">
       <div className="rounded-[24px] border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm leading-7 text-emerald-950">
-        Please tell us what you can contribute. The foundation will match your skills to an activity and share the
-        assigned location and schedule.
+        Volunteer registration is free. No fee is charged and no payment step is required. Please tell us what you can
+        contribute. The foundation will match your skills to an activity and share the assigned location and schedule.
       </div>
 
       <SectionCard

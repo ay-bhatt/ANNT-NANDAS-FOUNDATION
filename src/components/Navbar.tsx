@@ -35,7 +35,7 @@ function isActivePath(pathname: string, href: string) {
 
 export default function Navbar({ navigationItems, motto, mottoHi }: NavbarProps) {
   const pathname = usePathname();
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -65,29 +65,29 @@ export default function Navbar({ navigationItems, motto, mottoHi }: NavbarProps)
           </div>
         </div>
 
-        <div className="mx-auto w-full min-w-0 max-w-[1240px] px-3 sm:px-6 lg:px-8">
-          <nav aria-label={t("Primary navigation")} className="flex h-[var(--site-nav-h)] min-w-0 items-center gap-2 sm:gap-4">
+        <div className="mx-auto w-full min-w-0 max-w-[1920px] px-3 sm:px-4 xl:px-5 2xl:px-8">
+          <nav aria-label={t("Primary navigation")} className="flex h-[var(--site-nav-h)] min-w-0 items-center gap-2 sm:gap-3 xl:gap-4">
             <Link
               href="/"
-              className="flex min-w-0 shrink items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 sm:gap-3"
+              className="flex shrink-0 items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 sm:gap-2.5"
             >
-              <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-white sm:h-14 sm:w-14 xl:h-[72px] xl:w-[72px]">
+              <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-white sm:h-11 sm:w-11 xl:h-11 xl:w-11 2xl:h-12 2xl:w-12">
                 <Image
                   src={logoImg}
                   alt={`${ORG_NAME_EN} / ${ORG_NAME_HI}`}
                   fill
                   priority
-                  sizes="72px"
+                  sizes="48px"
                   className="object-contain p-0.5"
                 />
               </div>
-              <div className="hidden min-w-0 min-[430px]:block">
-                <BrandMark compact />
+              <div className="hidden min-[430px]:block">
+                <BrandMark compact inline />
               </div>
             </Link>
 
-            <div className="ml-auto hidden min-w-0 items-center gap-3 xl:flex">
-              <div className="flex min-w-0 items-center overflow-x-auto rounded-full bg-slate-100/90 p-1 shadow-[0_10px_30px_rgba(15,23,42,0.06)] ring-1 ring-slate-200/80 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div className="ml-auto hidden min-w-0 flex-1 items-center justify-end gap-2 xl:flex 2xl:gap-3">
+              <div className="flex min-w-0 flex-nowrap items-center justify-end gap-0.5 2xl:gap-1">
                 {navigationItems.map((item) => {
                   const active = isActivePath(pathname, item.href);
                   return (
@@ -95,10 +95,12 @@ export default function Navbar({ navigationItems, motto, mottoHi }: NavbarProps)
                       key={item.href}
                       href={item.href}
                       aria-current={active ? "page" : undefined}
-                      className={`whitespace-nowrap rounded-full px-3 py-2 text-[11px] font-semibold transition-all duration-200 xl:px-3.5 xl:text-xs 2xl:px-4 2xl:text-sm ${
+                      className={`shrink-0 whitespace-nowrap rounded-full px-2 py-1.5 font-semibold transition-all duration-200 2xl:px-3 ${
+                        locale === "hi" ? "text-[10px] 2xl:text-[11px]" : "text-[11px] 2xl:text-xs"
+                      } ${
                         active
                           ? "bg-blue-600 text-white shadow-[0_8px_18px_rgba(37,99,235,0.28)]"
-                          : "text-slate-500 hover:bg-white/80 hover:text-slate-800"
+                          : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
                       }`}
                     >
                       {t(item.label)}
@@ -106,11 +108,11 @@ export default function Navbar({ navigationItems, motto, mottoHi }: NavbarProps)
                   );
                 })}
               </div>
-              <LanguageToggle />
+              <LanguageToggle compact />
               <Link
                 href="/register"
                 aria-current={isActivePath(pathname, "/register") ? "page" : undefined}
-                className={`whitespace-nowrap rounded-full border px-4 py-2 text-xs font-semibold transition xl:text-sm ${
+                className={`shrink-0 whitespace-nowrap rounded-full border px-3 py-1.5 text-xs font-semibold transition 2xl:px-4 2xl:text-sm ${
                   isActivePath(pathname, "/register")
                     ? "border-emerald-600 bg-emerald-600 text-white"
                     : "border-slate-200 bg-white text-slate-800 hover:border-emerald-300 hover:text-emerald-800"
@@ -120,7 +122,7 @@ export default function Navbar({ navigationItems, motto, mottoHi }: NavbarProps)
               </Link>
               <Link
                 href="/donate"
-                className="whitespace-nowrap rounded-full bg-blue-950 px-4 py-2 text-xs font-semibold text-white transition hover:bg-blue-900 xl:text-sm"
+                className="shrink-0 whitespace-nowrap rounded-full bg-blue-950 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-blue-900 2xl:px-4 2xl:text-sm"
               >
                 {t("Donate Now")}
               </Link>

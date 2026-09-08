@@ -1,7 +1,8 @@
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_IMAGE_BYTES,
-  REGISTRATION_FEE_AMOUNT,
+  registrationFeeFor,
+  registrationRequiresPayment,
   TALENT_HUNT_AGE_LABEL,
   TALENT_HUNT_MAX_AGE,
   TALENT_HUNT_MIN_AGE,
@@ -350,10 +351,16 @@ export function validateDocuments(
   return errors;
 }
 
-export function validatePayment(proof: UploadedImage | null): FieldErrors {
+export function validatePayment(
+  proof: UploadedImage | null,
+  options: { amount?: number; required?: boolean } = {},
+): FieldErrors {
+  const required = options.required ?? true;
+  const amount = options.amount ?? 0;
+  if (!required || amount <= 0) return {};
   const errors: FieldErrors = {};
   if (!proof || proof.size < MIN_IMAGE_BYTES || !proof.dataUrl.startsWith("data:image/")) {
-    errors.paymentProof = `Please upload a screenshot of the ₹${REGISTRATION_FEE_AMOUNT} payment.`;
+    errors.paymentProof = `Please upload a screenshot of the ₹${amount} payment.`;
   }
   return errors;
 }
@@ -388,7 +395,12 @@ export function validateStep(
       signatureLabel: state.type === "talent-hunt" ? "parent / consultant signature" : undefined,
     });
   }
-  if (step === "payment") return validatePayment(state.paymentProof);
+  if (step === "payment") {
+    return validatePayment(state.paymentProof, {
+      amount: registrationFeeFor(state.type),
+      required: registrationRequiresPayment(state.type),
+    });
+  }
   if (step === "declaration") return validateDeclaration(state.declaration);
   if (!state.type) return { type: "Select a registration type." };
   if (state.type === "volunteer") return validateVolunteer(state.volunteer);

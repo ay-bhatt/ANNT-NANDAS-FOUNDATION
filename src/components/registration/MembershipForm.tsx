@@ -1,6 +1,13 @@
 "use client";
 
-import { CONTRIBUTION_OPTIONS, INTEREST_AREAS, MEMBERSHIP_TYPES } from "@/lib/registration/constants";
+import {
+  CONTRIBUTION_OPTIONS,
+  INTEREST_AREAS,
+  MEMBERSHIP_FEE_AMOUNT,
+  MEMBERSHIP_TYPES,
+  MEMBERSHIP_VALIDITY_LABEL,
+} from "@/lib/registration/constants";
+import { formatRupees } from "@/lib/donation";
 import type { FieldErrors, MembershipDetails } from "@/lib/registration/types";
 import { ChipSelect, SectionCard, SelectField, TextAreaField, TextField } from "./FormField";
 
@@ -23,6 +30,14 @@ export default function MembershipForm({
       title="Membership information"
       description="Membership helps the foundation keep you informed about programmes, events, and ways to contribute."
     >
+      <div className="mb-5 rounded-[22px] border border-emerald-200 bg-emerald-50 px-4 py-4 sm:px-5">
+        <p className="text-sm font-bold text-slate-950">Membership Fee: {formatRupees(MEMBERSHIP_FEE_AMOUNT)}</p>
+        <p className="mt-1 text-sm font-semibold text-emerald-800">Validity: {MEMBERSHIP_VALIDITY_LABEL}</p>
+        <p className="mt-2 text-sm leading-6 text-slate-600">
+          This is a yearly membership. After successful payment it stays active for 1 year from the activation date, then
+          expires unless a new ₹{MEMBERSHIP_FEE_AMOUNT} payment is made.
+        </p>
+      </div>
       <div className="grid gap-5 sm:grid-cols-2">
         <SelectField
           id="membershipType"

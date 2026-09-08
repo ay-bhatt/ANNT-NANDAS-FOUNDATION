@@ -11,6 +11,15 @@ type RegistrationRecord = {
   email?: string;
   personal?: { fullName?: string; phone?: string; email?: string };
   talentHunt?: { aadhaarNumber?: string; classGrade?: string; schoolName?: string };
+  payment?: { amount?: number; required?: boolean; status?: string };
+  membership?: {
+    membershipType?: string;
+    feeAmount?: number;
+    validityLabel?: string;
+    startDate?: string;
+    expiryDate?: string;
+    status?: string;
+  };
   files?: {
     photograph?: string | null;
     signature?: string | null;
@@ -18,6 +27,13 @@ type RegistrationRecord = {
     paymentProof?: string | null;
   };
 };
+
+function formatAdminDate(iso?: string) {
+  if (!iso) return "";
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return iso;
+  return date.toLocaleDateString("en-IN", { day: "2-digit", month: "long", year: "numeric" });
+}
 
 function fileUrl(relativePath?: string | null) {
   if (!relativePath) return "";
@@ -152,6 +168,25 @@ export default function AdminRegistrations() {
                         <p className="mt-1 text-sm text-slate-600">
                           {record.phone || record.personal?.phone || ""} {record.email || record.personal?.email || ""}
                         </p>
+                        {record.type === "membership" && record.membership ? (
+                          <p className="mt-2 text-sm leading-6 text-slate-700">
+                            Membership Fee: ₹{record.membership.feeAmount ?? record.payment?.amount ?? 500}
+                            {" · "}
+                            Validity: {record.membership.validityLabel || "1 Year"}
+                            {" · "}
+                            Status: {record.membership.status === "expired" ? "Expired" : "Active"}
+                            <br />
+                            Start: {formatAdminDate(record.membership.startDate)}
+                            {" · "}
+                            Expiry: {formatAdminDate(record.membership.expiryDate)}
+                          </p>
+                        ) : record.payment ? (
+                          <p className="mt-2 text-sm text-slate-700">
+                            {record.payment.required === false || record.payment.amount === 0
+                              ? "Fee: Free"
+                              : `Fee: ₹${record.payment.amount}`}
+                          </p>
+                        ) : null}
                       </div>
                       <span className="text-sm font-semibold text-blue-700">{open ? "Hide files" : "View files"}</span>
                     </button>

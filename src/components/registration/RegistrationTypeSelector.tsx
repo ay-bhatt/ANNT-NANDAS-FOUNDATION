@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { REGISTRATION_TYPE_META } from "@/lib/registration/constants";
+import { REGISTRATION_TYPE_META, registrationFeeFor, registrationRequiresPayment } from "@/lib/registration/constants";
+import { formatRupees } from "@/lib/donation";
 import type { RegistrationType } from "@/lib/registration/types";
 import { useI18n } from "@/components/i18n/LanguageProvider";
 
@@ -53,6 +54,13 @@ export default function RegistrationTypeSelector({
               </span>
               <h3 className="text-xl font-bold tracking-[-0.03em] text-slate-950">{t(meta.label)}</h3>
               <p className="mt-2 text-sm leading-6 text-slate-600">{t(meta.description)}</p>
+              <p className="mt-3 text-sm font-semibold text-slate-800">
+                {type === "volunteer"
+                  ? t("Free registration")
+                  : type === "membership"
+                    ? `${t("Membership Fee")}: ${formatRupees(registrationFeeFor(type))} · ${t("Validity")}: 1 Year`
+                    : `${t("Registration fee")}: ${formatRupees(registrationFeeFor(type))}`}
+              </p>
               <p className="mt-5 text-sm font-semibold text-emerald-700">
                 {t("Begin")} {t(meta.shortLabel)} <span aria-hidden="true">→</span>
               </p>
@@ -77,6 +85,11 @@ export default function RegistrationTypeSelector({
                   {ICONS[type]} {t(meta.label)}
                 </p>
                 <p className="mt-1 text-sm leading-6 text-slate-600">{t(meta.description)}</p>
+                {registrationRequiresPayment(type) ? (
+                  <p className="mt-2 text-sm font-semibold text-slate-700">
+                    {t("Registration fee")}: {formatRupees(registrationFeeFor(type))}
+                  </p>
+                ) : null}
               </button>
             );
           })}

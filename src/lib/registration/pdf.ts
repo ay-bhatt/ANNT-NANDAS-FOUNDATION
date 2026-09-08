@@ -1,8 +1,9 @@
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage } from "pdf-lib";
 import fs from "fs/promises";
 import path from "path";
-import { REGISTRATION_FEE_AMOUNT, REGISTRATION_FEE_PAYEE, REGISTRATION_TYPE_META, SPORT_OPTIONS } from "./constants";
+import { REGISTRATION_FEE_PAYEE, REGISTRATION_TYPE_META, SPORT_OPTIONS, registrationFeeFor, registrationRequiresPayment } from "./constants";
 import type { RegistrationFormState, RegistrationType } from "./types";
+import { formatMembershipDate, membershipPeriodFrom, membershipStatusAt, membershipStatusLabel } from "./membership";
 import { formatAadhaarNumber, formatDob, typeLabel } from "./validation";
 
 const PAGE = { width: 595.28, height: 841.89 };
@@ -355,8 +356,12 @@ export async function buildRegistrationPdf(options: {
     if (v.additionalComments.trim()) writer.row("Additional Comments", v.additionalComments);
   } else if (type === "membership") {
     const m = state.membership;
+    const period = membershipPeriodFrom(submittedAt);
     writer.heading("Membership Information");
     writer.pairRow("Membership Type", m.membershipType, "How They Heard About Us", m.howHeard);
+    writer.pairRow("Membership Fee", `Rs ${period.feeAmount}`, "Validity", period.validityLabel);
+    writer.pairRow("Membership Start Date", formatMembershipDate(period.startDate), "Membership Expiry Date", formatMembershipDate(period.expiryDate));
+    writer.row("Membership Status", membershipStatusLabel(membershipStatusAt(period.expiryDate)));
     writer.row("Areas of Interest", m.areasOfInterest.join(", "));
     writer.row("Contribution", m.contribution);
     if (m.additionalComments.trim()) writer.row("Additional Comments", m.additionalComments);
@@ -394,9 +399,17 @@ export async function buildRegistrationPdf(options: {
     if (ev.additionalComments.trim()) writer.row("Additional Comments", ev.additionalComments);
   }
 
+  const feeAmount = registrationFeeFor(type);
   writer.heading("Registration fee");
-  writer.pairRow("Amount", `Rs ${REGISTRATION_FEE_AMOUNT}`, "Payee", REGISTRATION_FEE_PAYEE);
-  writer.row("Status", "Paid. Payment screenshot is on file and is not printed on this page.");
+  if (registrationRequiresPayment(type)) {
+    writer.pairRow(type === "membership" ? "Membership Fee" : "Amount", `Rs ${feeAmount}`, "Payee", REGISTRATION_FEE_PAYEE);
+    if (type === "membership") {
+      writer.row("Validity", membershipPeriodFrom(submittedAt).validityLabel);
+    }
+    writer.row("Status", "Paid. Payment screenshot is on file and is not printed on this page.");
+  } else {
+    writer.pairRow("Amount", "Free", "Status", "No payment required");
+  }
 
   writer.heading("Declaration");
   writer.row("Declaration accepted", state.declaration.accepted ? "Yes" : "No");

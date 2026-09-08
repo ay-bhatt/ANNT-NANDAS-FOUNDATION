@@ -2,11 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import QRCode from "qrcode";
-import {
-  REGISTRATION_FEE_AMOUNT,
-  REGISTRATION_FEE_PAYEE,
-  REGISTRATION_FEE_PAYEE_NOTE,
-} from "@/lib/registration/constants";
+import { REGISTRATION_FEE_PAYEE, REGISTRATION_FEE_PAYEE_NOTE } from "@/lib/registration/constants";
 import { formatRupees, googlePayUri, upiPaymentUri, UPI_ID } from "@/lib/donation";
 import type { UploadedImage } from "@/lib/registration/types";
 import ImageUpload from "./ImageUpload";
@@ -14,10 +10,16 @@ import ImageUpload from "./ImageUpload";
 export default function PaymentFeeForm({
   value,
   error,
+  amount,
+  title = "Registration fee",
+  validityNote,
   onChange,
 }: {
   value: UploadedImage | null;
   error?: string;
+  amount: number;
+  title?: string;
+  validityNote?: string;
   onChange: (value: UploadedImage | null) => void;
 }) {
   const [qr, setQr] = useState("");
@@ -25,8 +27,8 @@ export default function PaymentFeeForm({
   const [status, setStatus] = useState("");
 
   const uri = useMemo(
-    () => upiPaymentUri(REGISTRATION_FEE_AMOUNT, REGISTRATION_FEE_PAYEE, UPI_ID),
-    [],
+    () => upiPaymentUri(amount, REGISTRATION_FEE_PAYEE, UPI_ID),
+    [amount],
   );
   const canOpenUpiApp = useMemo(() => {
     if (typeof navigator === "undefined") return false;
@@ -65,7 +67,7 @@ export default function PaymentFeeForm({
     if (!canOpenUpiApp) return;
     try {
       if (isAndroid) {
-        window.location.assign(googlePayUri(REGISTRATION_FEE_AMOUNT, REGISTRATION_FEE_PAYEE, UPI_ID));
+        window.location.assign(googlePayUri(amount, REGISTRATION_FEE_PAYEE, UPI_ID));
         return;
       }
       window.location.assign(uri);
@@ -77,11 +79,14 @@ export default function PaymentFeeForm({
   return (
     <aside className="overflow-hidden rounded-[28px] border border-emerald-200/80 bg-white shadow-[0_14px_40px_rgba(15,23,42,0.06)]">
       <div className="bg-gradient-to-r from-emerald-500 to-blue-600 px-5 py-5 sm:px-7">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-50">Registration fee</p>
-        <h2 className="mt-1 text-2xl font-bold tracking-[-0.03em] text-white">Pay {formatRupees(REGISTRATION_FEE_AMOUNT)}</h2>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-emerald-50">{title}</p>
+        <h2 className="mt-1 text-2xl font-bold tracking-[-0.03em] text-white">Pay {formatRupees(amount)}</h2>
+        {validityNote ? (
+          <p className="mt-2 text-sm font-semibold text-white">{validityNote}</p>
+        ) : null}
         <p className="mt-2 max-w-2xl text-sm leading-6 text-emerald-50">
           This fee is paid separately to {REGISTRATION_FEE_PAYEE} ({REGISTRATION_FEE_PAYEE_NOTE}). Scan the QR, pay{" "}
-          {formatRupees(REGISTRATION_FEE_AMOUNT)}, then upload the payment screenshot. The screenshot is saved and emailed
+          {formatRupees(amount)}, then upload the payment screenshot. The screenshot is saved and emailed
           with your application — it is not printed on the form.
         </p>
       </div>
@@ -91,13 +96,13 @@ export default function PaymentFeeForm({
           <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white p-2">
             {qr ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={qr} alt={`UPI QR code for ${formatRupees(REGISTRATION_FEE_AMOUNT)}`} className="h-full w-full" />
+              <img src={qr} alt={`UPI QR code for ${formatRupees(amount)}`} className="h-full w-full" />
             ) : (
               <div className="flex aspect-square items-center justify-center text-xs text-slate-500">Preparing QR</div>
             )}
           </div>
           <p className="mt-3 text-center text-xs font-semibold uppercase tracking-[0.16em] text-emerald-700">
-            {formatRupees(REGISTRATION_FEE_AMOUNT)} · UPI
+            {formatRupees(amount)} · UPI
           </p>
         </div>
 
@@ -107,11 +112,11 @@ export default function PaymentFeeForm({
           <p className="text-sm text-slate-600">{REGISTRATION_FEE_PAYEE_NOTE}</p>
           <p className="mt-3 break-all text-sm font-semibold text-slate-950">{UPI_ID}</p>
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            Amount is fixed at {formatRupees(REGISTRATION_FEE_AMOUNT)}. Confirm the payee name before paying.
+            Amount is fixed at {formatRupees(amount)}. Confirm the payee name before paying.
           </p>
           <div className="mt-4 flex flex-wrap gap-2">
             <button type="button" onClick={payNow} className="btn-primary !min-h-11 !px-4 text-sm">
-              Pay {formatRupees(REGISTRATION_FEE_AMOUNT)}
+              Pay {formatRupees(amount)}
             </button>
             <button type="button" onClick={() => void copyUpi()} className="btn-outline-dark !min-h-11 !px-4 text-sm">
               {copied ? "UPI ID copied" : "Copy UPI ID"}
@@ -123,7 +128,7 @@ export default function PaymentFeeForm({
             <ImageUpload
               id="paymentProof"
               label="Payment screenshot"
-              hint="Upload a clear screenshot of the ₹100 payment. JPG, PNG or WEBP. Max 5 MB."
+              hint={`Upload a clear screenshot of the ${formatRupees(amount)} payment. JPG, PNG or WEBP. Max 5 MB.`}
               value={value}
               error={error}
               variant="document"

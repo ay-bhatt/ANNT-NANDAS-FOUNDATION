@@ -800,6 +800,12 @@ export const HI: Record<string, string> = {
   Membership: "सदस्यता",
   "Become a foundation member and stay connected with programmes, events, and community action.":
     "फाउण्डेशन सदस्य बनें और कार्यक्रमों, आयोजनों तथा सामुदायिक कार्रवाई से जुड़े रहें।",
+  "Become a foundation member for ₹500, valid for 1 year from the activation date.":
+    "₹500 में फाउण्डेशन सदस्य बनें, सक्रियण तिथि से 1 वर्ष तक मान्य।",
+  "Free registration": "निःशुल्क पंजीकरण",
+  "Membership Fee": "सदस्यता शुल्क",
+  Validity: "वैधता",
+  "Registration fee": "पंजीकरण शुल्क",
   "Sports Registration": "खेल पंजीकरण",
   "Register for running, cycling, and other sports activities supported by the foundation.":
     "फाउण्डेशन द्वारा समर्थित दौड़, साइकिलिंग और अन्य खेल गतिविधियों के लिए पंजीकरण करें।",

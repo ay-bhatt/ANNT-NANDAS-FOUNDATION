@@ -1,15 +1,19 @@
 "use client";
 
-import { WIZARD_STEPS } from "@/lib/registration/constants";
-import type { WizardStep } from "@/lib/registration/types";
+import { wizardStepDefsFor } from "@/lib/registration/constants";
+import type { RegistrationType, WizardStep } from "@/lib/registration/types";
 import { cn } from "@/lib/utils";
 import { useI18n } from "@/components/i18n/LanguageProvider";
 
-const FLOW_STEPS = WIZARD_STEPS.filter((step) => step.id !== "type");
-
-export default function FormProgress({ current }: { current: WizardStep }) {
+export default function FormProgress({
+  current,
+  type,
+}: {
+  current: WizardStep;
+  type: RegistrationType | "";
+}) {
   const { t } = useI18n();
-  const visible = current === "type" ? [] : FLOW_STEPS;
+  const visible = current === "type" ? [] : wizardStepDefsFor(type).filter((step) => step.id !== "type");
   const currentIndex = visible.findIndex((step) => step.id === current);
 
   if (current === "type") return null;

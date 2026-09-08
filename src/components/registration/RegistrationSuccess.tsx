@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { REGISTRATION_TYPE_META } from "@/lib/registration/constants";
+import { MEMBERSHIP_VALIDITY_LABEL, REGISTRATION_TYPE_META, registrationFeeFor, registrationRequiresPayment } from "@/lib/registration/constants";
+import { formatRupees } from "@/lib/donation";
+import { formatMembershipDate, membershipPeriodFrom, membershipStatusAt, membershipStatusLabel } from "@/lib/registration/membership";
 import { buildPrintableHtml } from "@/lib/registration/printable";
 import type { RegistrationFormState, RegistrationType } from "@/lib/registration/types";
 
@@ -59,6 +61,9 @@ export default function RegistrationSuccess({
   state: RegistrationFormState;
 }) {
   const meta = REGISTRATION_TYPE_META[type];
+  const feeAmount = registrationFeeFor(type);
+  const paid = registrationRequiresPayment(type);
+  const membership = type === "membership" ? membershipPeriodFrom(submittedAt) : null;
 
   return (
     <motion.section
@@ -84,6 +89,32 @@ export default function RegistrationSuccess({
         <div className="rounded-[22px] border border-slate-200 bg-slate-50 px-4 py-4">
           <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Registration type</p>
           <p className="mt-1 text-lg font-bold text-slate-950">{meta.shortLabel}</p>
+        </div>
+        <div className="rounded-[22px] border border-slate-200 bg-slate-50 px-4 py-4 sm:col-span-2">
+          {type === "membership" && membership ? (
+            <>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Membership Fee</p>
+              <p className="mt-1 text-lg font-bold text-slate-950">{formatRupees(membership.feeAmount)}</p>
+              <p className="mt-2 text-sm font-semibold text-emerald-800">Validity: {MEMBERSHIP_VALIDITY_LABEL}</p>
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Membership Start Date: {formatMembershipDate(membership.startDate)}
+                <br />
+                Membership Expiry Date: {formatMembershipDate(membership.expiryDate)}
+                <br />
+                Status: {membershipStatusLabel(membershipStatusAt(membership.expiryDate))}
+              </p>
+            </>
+          ) : paid ? (
+            <>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Registration fee</p>
+              <p className="mt-1 text-lg font-bold text-slate-950">{formatRupees(feeAmount)}</p>
+            </>
+          ) : (
+            <>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Registration fee</p>
+              <p className="mt-1 text-lg font-bold text-emerald-800">Free</p>
+            </>
+          )}
         </div>
       </div>
 

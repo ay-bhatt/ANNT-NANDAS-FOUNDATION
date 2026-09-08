@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
-import { REGISTRATION_TYPE_META } from "@/lib/registration/constants";
+import { REGISTRATION_TYPE_META, registrationRequiresPayment } from "@/lib/registration/constants";
 import { createEmptyForm } from "@/lib/registration/form-state";
 import { buildPrintableHtml } from "@/lib/registration/printable";
 import { saveRegistrationRecord } from "@/lib/registration/store";
@@ -318,6 +318,10 @@ export async function POST(request: Request) {
         { success: false, message: "Please choose a valid registration type." },
         { status: 400 },
       );
+    }
+
+    if (!registrationRequiresPayment(state.type)) {
+      state.paymentProof = null;
     }
 
     const errors = collectErrors(state);

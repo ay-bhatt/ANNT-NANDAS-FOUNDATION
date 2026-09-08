@@ -3,10 +3,14 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  MEMBERSHIP_VALIDITY_LABEL,
   REGISTRATION_TYPE_META,
   TALENT_HUNT_AGE_LABEL,
   TALENT_HUNT_MAX_AGE,
   TALENT_HUNT_MIN_AGE,
+  registrationFeeFor,
+  registrationRequiresPayment,
+  wizardStepDefsFor,
 } from "@/lib/registration/constants";
 import { createEmptyForm, toPayload } from "@/lib/registration/form-state";
 import { ageFromDob, validateStep } from "@/lib/registration/validation";
@@ -33,14 +37,18 @@ import TalentHuntForm from "./TalentHuntForm";
 import VolunteerForm from "./VolunteerForm";
 import { useI18n } from "@/components/i18n/LanguageProvider";
 
-const FLOW: WizardStep[] = ["type", "personal", "details", "documents", "payment", "declaration"];
-
-function nextStep(step: WizardStep): WizardStep {
-  return FLOW[Math.min(FLOW.indexOf(step) + 1, FLOW.length - 1)];
+function flowFor(type: RegistrationType | ""): WizardStep[] {
+  return wizardStepDefsFor(type).map((step) => step.id);
 }
 
-function prevStep(step: WizardStep): WizardStep {
-  return FLOW[Math.max(FLOW.indexOf(step) - 1, 0)];
+function nextStep(step: WizardStep, type: RegistrationType | ""): WizardStep {
+  const flow = flowFor(type);
+  return flow[Math.min(flow.indexOf(step) + 1, flow.length - 1)];
+}
+
+function prevStep(step: WizardStep, type: RegistrationType | ""): WizardStep {
+  const flow = flowFor(type);
+  return flow[Math.max(flow.indexOf(step) - 1, 0)];
 }
 
 function dataUrlToFile(image: { dataUrl: string; name?: string; mime?: string }, fallbackName: string): File {
@@ -102,13 +110,13 @@ export default function RegistrationWizard({
         volunteer: { ...current.volunteer, volunteerName: current.personal.fullName },
       }));
     }
-    setStep(nextStep(step));
+    setStep(nextStep(step, state.type));
   };
 
   const goBack = () => {
     setErrors({});
     setSubmitError("");
-    setStep(prevStep(step));
+    setStep(prevStep(step, state.type));
   };
 
   const handlePersonalChange = (personal: RegistrationFormState["personal"]) => {
@@ -133,14 +141,17 @@ export default function RegistrationWizard({
       update({ declaration });
     }
 
-    const paymentErrors = validateStep("payment", nextState);
+    const requiresPayment = registrationRequiresPayment(nextState.type);
+    const paymentErrors = requiresPayment ? validateStep("payment", nextState) : {};
     const declarationErrors = validateStep("declaration", nextState);
     const submitErrors = { ...paymentErrors, ...declarationErrors };
     if (Object.keys(submitErrors).length > 0) {
       setErrors(submitErrors);
       if (Object.keys(paymentErrors).length > 0) {
         setStep("payment");
-        setSubmitError("Please complete the ₹100 registration fee before submitting.");
+        setSubmitError(
+          `Please complete the ₹${registrationFeeFor(nextState.type)} registration fee before submitting.`,
+        );
       }
       return;
     }
@@ -171,7 +182,7 @@ export default function RegistrationWizard({
       if (payload.aadhaar?.dataUrl) {
         body.append("aadhaar", dataUrlToFile(payload.aadhaar, "aadhaar.jpg"));
       }
-      if (payload.paymentProof?.dataUrl) {
+      if (registrationRequiresPayment(payload.type) && payload.paymentProof?.dataUrl) {
         body.append("paymentProof", dataUrlToFile(payload.paymentProof, "payment.jpg"));
       }
 
@@ -221,7 +232,7 @@ export default function RegistrationWizard({
 
   return (
     <div className={step === "type" ? "" : "pb-40 xl:pb-8"}>
-      <FormProgress current={step} />
+      <FormProgress current={step} type={state.type} />
 
       {selectedMeta && step !== "type" ? (
         <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-[22px] border border-slate-200 bg-white px-4 py-3">
@@ -316,10 +327,13 @@ export default function RegistrationWizard({
             />
           ) : null}
 
-          {step === "payment" ? (
+          {step === "payment" && registrationRequiresPayment(state.type) ? (
             <PaymentFeeForm
               value={state.paymentProof}
               error={errors.paymentProof}
+              amount={registrationFeeFor(state.type)}
+              title={state.type === "membership" ? "Membership Fee" : "Registration fee"}
+              validityNote={state.type === "membership" ? `Validity: ${MEMBERSHIP_VALIDITY_LABEL}` : undefined}
               onChange={(paymentProof) => update({ paymentProof })}
             />
           ) : null}

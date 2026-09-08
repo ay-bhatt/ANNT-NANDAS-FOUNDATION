@@ -1,12 +1,26 @@
-import { ORG_FOUNDATION_EN, ORG_NAME_HI, ORG_SHORT_EN } from "@/lib/i18n";
+import { ORG_FOUNDATION_EN, ORG_NAME_EN, ORG_NAME_HI, ORG_SHORT_EN } from "@/lib/i18n";
 
 export default function BrandMark({
   inverted = false,
   compact = false,
+  inline = false,
 }: {
   inverted?: boolean;
   compact?: boolean;
+  inline?: boolean;
 }) {
+  if (inline) {
+    return (
+      <p
+        className={`whitespace-nowrap font-extrabold uppercase tracking-[0.04em] ${
+          compact ? "text-[12px] sm:text-[13px] xl:text-sm 2xl:text-[15px]" : "text-base sm:text-lg"
+        } ${inverted ? "text-white" : "text-slate-900"}`}
+      >
+        {ORG_NAME_EN}
+      </p>
+    );
+  }
+
   return (
     <div className="min-w-0">
       <p
