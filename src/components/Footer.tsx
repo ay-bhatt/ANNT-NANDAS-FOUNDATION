@@ -8,7 +8,6 @@ import type { SiteConfig, NavItem, ImpactArea } from "@/lib/types";
 import { toTelHref } from "@/lib/utils";
 import { useI18n } from "@/components/i18n/LanguageProvider";
 import BrandMark from "@/components/site/BrandMark";
-import { PunchLine } from "@/components/site/SectionBlocks";
 import { ORG_NAME_EN, ORG_NAME_HI } from "@/lib/i18n";
 
 interface FooterProps {
@@ -59,11 +58,23 @@ export default function Footer({ siteConfig }: FooterProps) {
   ];
 
   return (
-    <footer className="relative mt-8 w-full max-w-full overflow-hidden bg-slate-950 text-slate-200">
-      <div className="h-1 w-full bg-gradient-to-r from-emerald-500 via-sky-400 to-blue-600" />
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(16,185,129,0.10),transparent_42%),radial-gradient(ellipse_at_bottom_right,rgba(37,99,235,0.10),transparent_46%)]" />
+    <footer className="relative mt-8 w-full max-w-full overflow-hidden bg-[linear-gradient(135deg,#064e3b_0%,#0f766e_28%,#1d4ed8_72%,#1e3a8a_100%)] text-slate-100">
+      <div className="h-1.5 w-full bg-gradient-to-r from-emerald-400 via-sky-300 to-blue-400" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(16,185,129,0.22),transparent_42%),radial-gradient(ellipse_at_bottom_right,rgba(59,130,246,0.22),transparent_46%)]" />
 
-      <div className="container-premium relative w-full max-w-full py-10 pb-8 xl:py-14">
+      <div className="container-premium relative w-full max-w-full py-14 pb-10 sm:py-16 xl:py-20">
+        <div className="mb-10 text-center sm:mb-12">
+          <p className="text-2xl font-semibold tracking-[-0.03em] text-white sm:text-3xl md:text-4xl">
+            Our Efforts, Discover Talents
+          </p>
+          <p
+            className="mt-3 text-xl font-semibold leading-snug text-emerald-100 sm:mt-4 sm:text-2xl md:text-3xl"
+            style={{ fontFamily: "var(--font-devanagari), sans-serif" }}
+          >
+            हमारा प्रयास, हुनर की तलाश
+          </p>
+        </div>
+
         <div className="grid w-full min-w-0 gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">
           <div className="min-w-0 space-y-5">
             <Link href="/" className="group inline-flex items-center gap-3">
@@ -79,9 +90,7 @@ export default function Footer({ siteConfig }: FooterProps) {
               <BrandMark inverted />
             </Link>
 
-            <PunchLine english={siteConfig.motto} hindi={siteConfig.mottoHi} tone="dark" />
-
-            <p className="max-w-sm text-sm leading-relaxed text-slate-400">
+            <p className="max-w-sm text-sm leading-relaxed text-blue-50/85">
               {t(siteConfig.tagline)}. {t("We support children and communities through education, health, environment, sports, and opportunity.")}
             </p>
 
@@ -169,7 +178,7 @@ export default function Footer({ siteConfig }: FooterProps) {
 
         </div>
 
-        <div className="mt-8 w-full min-w-0 max-w-full space-y-5 border-t border-white/10 pt-6">
+        <div className="mt-12 w-full min-w-0 max-w-full space-y-5 border-t border-white/15 pt-8">
           <div className="flex min-w-0 flex-wrap items-center gap-3">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-slate-500">
               {t("Developed by")}

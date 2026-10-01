@@ -107,7 +107,7 @@ export default function DonationWidget({
 
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
         <button type="button" onClick={donate} className="btn-primary min-h-12 flex-1 sm:flex-none">
-          {t("Donate Now")} {formatRupees(amount)} <span aria-hidden="true">→</span>
+          DONATION {formatRupees(amount)} <span aria-hidden="true">→</span>
         </button>
         {canOpenUpiApp ? (
           <p className={`text-xs leading-5 ${dark ? "text-blue-100" : "text-slate-500"}`}>

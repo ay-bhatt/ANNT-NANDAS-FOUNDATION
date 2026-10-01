@@ -11,13 +11,22 @@ export default function BrandMark({
 }) {
   if (inline) {
     return (
-      <p
-        className={`whitespace-nowrap font-extrabold uppercase tracking-[0.04em] ${
-          compact ? "text-[12px] sm:text-[13px] xl:text-sm 2xl:text-[15px]" : "text-base sm:text-lg"
-        } ${inverted ? "text-white" : "text-slate-900"}`}
-      >
-        {ORG_NAME_EN}
-      </p>
+      <div className="min-w-0 leading-tight">
+        <p
+          className={`font-extrabold uppercase tracking-[0.04em] ${
+            compact ? "text-[9px] sm:text-[11px] xl:text-xs 2xl:text-[13px]" : "text-base sm:text-lg"
+          } ${inverted ? "text-white" : "text-slate-900"}`}
+        >
+          {ORG_NAME_EN}
+        </p>
+        <p
+          className={`mt-0.5 break-words font-devanagari font-semibold ${
+            compact ? "text-[9px] sm:text-[11px]" : "text-xs sm:text-sm"
+          } ${inverted ? "text-slate-300" : "text-slate-600"}`}
+        >
+          {ORG_NAME_HI}
+        </p>
+      </div>
     );
   }
 
@@ -39,8 +48,8 @@ export default function BrandMark({
       </p>
       <p
         className={`truncate font-devanagari text-[11px] font-semibold leading-tight sm:text-sm ${
-          compact ? "hidden sm:block" : ""
-        } ${inverted ? "text-slate-300" : "text-slate-600"}`}
+          inverted ? "text-slate-300" : "text-slate-600"
+        }`}
       >
         {ORG_NAME_HI}
       </p>

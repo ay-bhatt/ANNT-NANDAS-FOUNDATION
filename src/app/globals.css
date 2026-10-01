@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  --site-punchline-h: 2.5rem;
+  --site-punchline-h: 2.25rem;
   --site-nav-h: 64px;
   --nav-height: 64px;
   --site-header-h: calc(var(--site-punchline-h) + var(--site-nav-h));

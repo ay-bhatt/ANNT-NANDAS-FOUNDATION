@@ -81,7 +81,7 @@ export default function Navbar({ navigationItems, motto, mottoHi }: NavbarProps)
                   className="object-contain p-0.5"
                 />
               </div>
-              <div className="hidden min-[430px]:block">
+              <div className="min-w-0 max-w-[calc(100vw-13rem)] sm:max-w-[min(45vw,14rem)]">
                 <BrandMark compact inline />
               </div>
             </Link>
@@ -124,7 +124,7 @@ export default function Navbar({ navigationItems, motto, mottoHi }: NavbarProps)
                 href="/donate"
                 className="shrink-0 whitespace-nowrap rounded-full bg-blue-950 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-blue-900 2xl:px-4 2xl:text-sm"
               >
-                {t("Donate Now")}
+                DONATION
               </Link>
             </div>
 
@@ -134,8 +134,7 @@ export default function Navbar({ navigationItems, motto, mottoHi }: NavbarProps)
                 href="/donate"
                 className="inline-flex min-h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-blue-950 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-900 sm:px-4"
               >
-                <span className="sm:hidden">{t("Donate")}</span>
-                <span className="hidden sm:inline">{t("Donate Now")}</span>
+                DONATION
               </Link>
             </div>
           </nav>

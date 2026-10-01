@@ -2,7 +2,7 @@
 
 /**
  * Home Hero section — Client Component.
- * 10-photo slideshow with the existing hero context overlay.
+ * Photo slideshow with the existing hero context overlay.
  * Context stays visible for the first two slides, then hides.
  * A corner button lets visitors show or hide the context again.
  */
@@ -13,9 +13,12 @@ import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type { HeroContent, ImpactStat, SlideshowPhoto } from "@/lib/types";
 import { PunchLine } from "@/components/site/SectionBlocks";
+import logoImg from "@/assets/logo.webp";
+import { ORG_NAME_EN, ORG_NAME_HI } from "@/lib/i18n";
 
-const SLIDE_INTERVAL_MS = 3000;
+const SLIDE_INTERVAL_MS = 5000;
 const AUTO_HIDE_AFTER_SLIDES = 2;
+const HERO_HEADLINE_HI = "हमारा प्रयास, हुनर की तलाश";
 
 interface HeroSectionProps {
   heroContent: HeroContent;
@@ -94,7 +97,7 @@ export default function HeroSection({
             initial={{ opacity: reduceMotion ? 1 : 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: reduceMotion ? 1 : 0 }}
-            transition={{ duration: reduceMotion ? 0 : 0.6, ease: "easeInOut" }}
+            transition={{ duration: reduceMotion ? 0 : 0.7, ease: "easeInOut" }}
           >
             <Image
               src={current.src}
@@ -112,7 +115,7 @@ export default function HeroSection({
           className={`absolute inset-0 transition-opacity duration-500 ${
             showContext
               ? "bg-[linear-gradient(90deg,rgba(3,15,40,0.92)_0%,rgba(5,25,56,0.70)_45%,rgba(5,25,56,0.16)_78%),linear-gradient(0deg,rgba(3,15,40,0.78)_0%,transparent_48%)] max-sm:bg-[linear-gradient(180deg,rgba(3,15,40,0.32)_0%,rgba(3,15,40,0.78)_52%,rgba(3,15,40,0.96)_100%)]"
-              : "bg-[linear-gradient(180deg,rgba(3,15,40,0.28)_0%,rgba(3,15,40,0.12)_42%,rgba(3,15,40,0.45)_100%)]"
+              : "bg-[linear-gradient(180deg,rgba(3,15,40,0.22)_0%,rgba(3,15,40,0.08)_38%,rgba(3,15,40,0.55)_100%)]"
           }`}
         />
       </div>
@@ -121,11 +124,31 @@ export default function HeroSection({
         Slide {index + 1} of {total}: {current.label}
       </p>
 
+      <div
+        className={`pointer-events-none absolute inset-0 z-10 flex flex-col ${
+          showContext ? "items-center sm:items-end sm:pr-[7%] lg:pr-[10%]" : "items-center"
+        }`}
+      >
+        <div className="flex min-h-0 flex-1 items-center justify-center px-4 pt-14 sm:pt-10">
+          <div className="rounded-[1.75rem] bg-white/88 p-2.5 shadow-[0_18px_50px_rgba(2,8,23,0.28)] ring-1 ring-white/70 backdrop-blur-md sm:rounded-[2rem] sm:p-3.5">
+            <Image
+              src={logoImg}
+              alt={`${ORG_NAME_EN} / ${ORG_NAME_HI}`}
+              width={320}
+              height={320}
+              priority
+              sizes="(max-width: 639px) 7.5rem, (max-width: 1023px) 10rem, 13rem"
+              className="h-[7.25rem] w-[7.25rem] object-contain sm:h-40 sm:w-40 lg:h-52 lg:w-52"
+            />
+          </div>
+        </div>
+      </div>
+
       <AnimatePresence initial={false}>
         {showContext ? (
           <motion.div
             key="hero-context"
-            className="container-premium flex min-h-[calc(100svh-var(--site-header-h)-var(--site-bottom-nav-h))] items-end pb-16 pt-16 min-[390px]:pb-20 sm:items-center sm:py-20 xl:min-h-[calc(100svh-var(--site-header-h))] lg:py-24"
+            className="container-premium relative z-[15] flex min-h-[calc(100svh-var(--site-header-h)-var(--site-bottom-nav-h))] items-end pb-28 pt-16 min-[390px]:pb-32 sm:items-center sm:pb-28 sm:pt-20 xl:min-h-[calc(100svh-var(--site-header-h))] lg:py-24 lg:pb-32"
             initial={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : 12 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: reduceMotion ? 1 : 0, y: reduceMotion ? 0 : -8 }}
@@ -190,6 +213,29 @@ export default function HeroSection({
         )}
       </AnimatePresence>
 
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-slate-950/80 via-slate-950/25 to-transparent pt-24">
+        <p
+          className="px-5 pb-3 text-center text-[1.15rem] font-semibold leading-snug tracking-wide text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] min-[390px]:text-xl sm:pb-4 sm:text-2xl md:text-3xl lg:text-[2rem]"
+          style={{ fontFamily: "var(--font-devanagari), sans-serif" }}
+        >
+          {HERO_HEADLINE_HI}
+        </p>
+        <div className="pointer-events-auto flex flex-wrap justify-center gap-1.5 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-5">
+          {slideshowPhotos.map((photo, photoIndex) => (
+            <button
+              key={`${photo.label}-${photoIndex}`}
+              type="button"
+              aria-label={`Show slide ${photoIndex + 1}: ${photo.label}`}
+              aria-current={photoIndex === index ? true : undefined}
+              onClick={() => goTo(photoIndex)}
+              className={`h-2 rounded-full transition-all ${
+                photoIndex === index ? "w-6 bg-white" : "w-2 bg-white/45 hover:bg-white/70"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+
       <button
         type="button"
         onClick={() => setManualVisible((currentValue) => !(currentValue ?? !autoHidden))}
@@ -200,23 +246,6 @@ export default function HeroSection({
         <span aria-hidden="true">{showContext ? "✕" : "☰"}</span>
         {showContext ? "Hide text" : "Show text"}
       </button>
-
-      <div className="absolute bottom-4 left-0 right-0 z-20 flex justify-center gap-1.5 px-4 sm:bottom-5">
-        {slideshowPhotos.map((photo, photoIndex) => (
-          <button
-            key={`${photo.label}-${photoIndex}`}
-            type="button"
-            aria-label={`Show slide ${photoIndex + 1}: ${photo.label}`}
-            aria-current={photoIndex === index ? true : undefined}
-            onClick={() => goTo(photoIndex)}
-            className={`h-2 rounded-full transition-all ${
-              photoIndex === index ? "w-6 bg-white" : "w-2 bg-white/45 hover:bg-white/70"
-            }`}
-          />
-        ))}
-      </div>
-
-      <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-white/10 to-transparent" />
     </section>
   );
 }

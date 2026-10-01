@@ -5,7 +5,7 @@ import Image from "next/image";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type { SlideshowPhoto } from "@/lib/types";
 
-const SLIDE_INTERVAL_MS = 3000;
+const SLIDE_INTERVAL_MS = 5000;
 
 interface PhotoSlideshowProps {
   photos: SlideshowPhoto[];

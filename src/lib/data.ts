@@ -483,6 +483,32 @@ export const upcomingEvents = [
     href: "/talent-hunt-registration",
   },
   {
+    title: "Agniveer Aspirant Physical & Written Prep Camp",
+    date: "25 Oct 2026",
+    day: "25",
+    month: "Oct",
+    location: "Mundoli Ground, Chamoli",
+    time: "05:30 AM – 11:30 AM",
+    description:
+      "अग्निवीर भर्ती तैयारी शिविर — Guided by Ex-Serviceman Naik Kalam Singh Bisht. Focused physical endurance training (1600m run, beam, ditch, zig-zag balance), medical guidance, and written exam preparation for defence aspirants.",
+    type: "Defence Prep",
+    image: founderImage,
+    href: "/agniveer-registration",
+  },
+  {
+    title: "Foundation Registration Trainees Enrollment",
+    date: "01 Nov 2026",
+    day: "01",
+    month: "Nov",
+    location: "Mundoli, Chamoli",
+    time: "09:00 AM – 04:00 PM",
+    description:
+      "Regular batch enrollment for Registration Trainees across athletics, cycling, skill development, computer literacy, and youth leadership programmes.",
+    type: "Training",
+    image: galleryPhotoCycling,
+    href: "/trainee-registration",
+  },
+  {
     title: "Volunteer Drive · Mundoli Village",
     date: "15 Jun 2026",
     day: "15",
@@ -668,6 +694,26 @@ export const siteNotices = [
     href: "/talent-hunt-registration",
   },
   {
+    id: "agniveer-aspirant",
+    kind: "event" as const,
+    eyebrow: "Defence Coaching",
+    title: "Agniveer Aspirant Registration",
+    summary: "Physical fitness, endurance training, and written exam mentorship for Indian Army & Defence aspirants.",
+    meta: "Mundoli · Ages 17½–21",
+    cta: "Register as Agniveer Aspirant",
+    href: "/agniveer-registration",
+  },
+  {
+    id: "registration-trainees",
+    kind: "event" as const,
+    eyebrow: "Training Batch",
+    title: "Registration Trainees Enrollment",
+    summary: "Join regular foundation batches for sports coaching, cycling, running, digital skills, and youth mentorship.",
+    meta: "Chamoli · Open Enrollment",
+    cta: "Register as Trainee",
+    href: "/trainee-registration",
+  },
+  {
     id: "ultra-trail-run",
     kind: "event" as const,
     eyebrow: "Upcoming event",
@@ -806,6 +852,14 @@ export const heroSlideshowPhotos = [
   { src: heroSlide08, label: "Celebration and cultural gathering" },
   { src: heroSlide09, label: "Endurance and mountain sport" },
   { src: heroSlide10, label: "Everyday work with Himalayan communities" },
+  { src: heroImage, label: "Foundation work across Himalayan villages" },
+  { src: heroAltImage, label: "Community celebration with the team" },
+  { src: heroVisualOne, label: "Outdoor programmes in the high hills" },
+  { src: heroVisualTwo, label: "Youth and sport in Mundoli" },
+  { src: heroVisualThree, label: "Families gathering for a foundation day" },
+  { src: heroVisualFour, label: "Landscape and livelihood in Chamoli" },
+  { src: eventUltraCamp, label: "Ultra training camp in the Himalayas" },
+  { src: eventHarela, label: "Harela Festival plantation drive" },
 ];
 
 export const collageImages = [collageFour, collageFive, collageOne];
@@ -845,6 +899,8 @@ export const newsHeroImage = newsHero;
 export const genderOptions = ["Male", "Female", "Other", "Prefer not to say"];
 export const occupationOptions = [
   "Student",
+  "Agniveer Aspirant",
+  "Registration Trainee",
   "Teacher",
   "Government Employee",
   "Private Employee",
@@ -855,3 +911,121 @@ export const occupationOptions = [
   "Unemployed",
   "Other",
 ];
+
+export const agniveerTradeOptions = [
+  "Agniveer General Duty (GD)",
+  "Agniveer Technical",
+  "Agniveer Clerk / Store Keeper Technical",
+  "Agniveer Tradesman (10th Pass)",
+  "Agniveer Tradesman (8th Pass)",
+  "Agniveer Women Military Police",
+  "Indian Navy / Air Force Agniveer",
+  "Paramilitary / SSC GD",
+];
+
+export const qualificationOptions = [
+  "Class 8th Pass",
+  "Class 10th (High School)",
+  "Class 12th (Intermediate)",
+  "ITI / Diploma",
+  "Undergraduate / Pursuing Graduation",
+  "Graduate",
+  "Other",
+];
+
+export const traineeProgramOptions = [
+  "Long-Distance Running & Athletics",
+  "Mountain & Road Cycling",
+  "Agniveer & Defence Physical Prep",
+  "Computer Literacy & Digital Skills",
+  "Spoken English & Communication",
+  "Competitive Exam Preparation",
+  "Self-Defence & Yoga",
+  "Vocational & Livelihood Training",
+];
+
+export const traineeBatchOptions = [
+  "Morning Batch (05:30 AM – 08:00 AM)",
+  "Day Batch (10:00 AM – 01:00 PM)",
+  "Evening Batch (04:00 PM – 06:30 PM)",
+  "Weekend / Camp Batch",
+];
+
+export const agniveerFormConfig = {
+  id: "agniveer-aspirant",
+  slug: "/agniveer-registration",
+  title: "Agniveer Aspirant Registration Form",
+  hindiTitle: "अग्निवीर अभ्यर्थी पंजीकरण फॉर्म",
+  eyebrow: "Defence & Physical Training Wing",
+  description:
+    "Register for physical endurance training (1600m run, pull-ups, ditch, zig-zag balance), basic medical check guidance, and Common Entrance Exam (CEE) preparation mentored by Ex-Serviceman Naik Kalam Singh Bisht.",
+  heroImage: founderImage,
+  eligibility: {
+    ageRange: "17½ to 21 Years",
+    education: "8th / 10th / 12th Pass (as per trade)",
+    focus: "1600m Timed Run, Physical Fitness Test (PFT), and Written Exam (CEE)",
+  },
+  tradeOptions: agniveerTradeOptions,
+  qualificationOptions,
+  fields: [
+    { name: "fullName", label: "Full Name (पूरा नाम)", type: "text", required: true },
+    { name: "fatherName", label: "Father's / Guardian's Name (पिता का नाम)", type: "text", required: true },
+    { name: "dob", label: "Date of Birth (जन्म तिथि)", type: "date", required: true },
+    { name: "gender", label: "Gender (लिंग)", type: "select", options: genderOptions, required: true },
+    { name: "phone", label: "Mobile / WhatsApp Number (मोबाइल नंबर)", type: "tel", required: true },
+    { name: "email", label: "Email Address (ईमेल)", type: "email", required: false },
+    { name: "village", label: "Village / Town (गाँव / शहर)", type: "text", required: true },
+    { name: "district", label: "District (जिला)", type: "text", required: true },
+    { name: "state", label: "State (राज्य)", type: "text", required: true },
+    { name: "qualification", label: "Highest Qualification (शैक्षिक योग्यता)", type: "select", options: qualificationOptions, required: true },
+    { name: "tradeCategory", label: "Target Agniveer Category (अग्निवीर श्रेणी)", type: "select", options: agniveerTradeOptions, required: true },
+    { name: "heightCm", label: "Height in cm (लंबाई सेमी में)", type: "number", required: true },
+    { name: "weightKg", label: "Weight in kg (वजन किग्रा में)", type: "number", required: true },
+    { name: "chestCm", label: "Chest in cm - Unexpanded/Expanded (सीना सेमी में)", type: "text", required: false },
+    { name: "runTime1600m", label: "Current 1600m Run Time (1600 मीटर का वर्तमान समय, यदि पता हो)", type: "text", required: false },
+    { name: "previousAttempt", label: "Any Previous Army/Defence Rally Attempt? (क्या पहले भर्ती देखी है?)", type: "select", options: ["No (First Attempt)", "Yes - Physical Cleared", "Yes - Written Cleared", "Yes - Participated"], required: true },
+    { name: "medicalConditions", label: "Medical Condition / Injury if any (कोई मेडिकल समस्या या चोट)", type: "textarea", required: false },
+  ],
+};
+
+export const traineeFormConfig = {
+  id: "registration-trainees",
+  slug: "/trainee-registration",
+  title: "Registration Trainees Form",
+  hindiTitle: "प्रशिक्षु (ट्रेनी) पंजीकरण फॉर्म",
+  eyebrow: "Foundation Training & Mentorship",
+  description:
+    "Enroll as a registered trainee with ANNT NANDAS FOUNDATION for regular coaching in sports, athletics, cycling, digital literacy, spoken English, and youth leadership.",
+  heroImage: galleryPhotoCycling,
+  eligibility: {
+    ageRange: "8 to 25 Years",
+    education: "Open to School & College Students / Rural Youth",
+    focus: "Sports Coaching, Skill Development, Education & Mentorship",
+  },
+  programOptions: traineeProgramOptions,
+  batchOptions: traineeBatchOptions,
+  qualificationOptions,
+  fields: [
+    { name: "fullName", label: "Trainee Full Name (प्रशिक्षु का पूरा नाम)", type: "text", required: true },
+    { name: "guardianName", label: "Parent / Guardian Name (माता-पिता / अभिभावक का नाम)", type: "text", required: true },
+    { name: "dob", label: "Date of Birth (जन्म तिथि)", type: "date", required: true },
+    { name: "age", label: "Age in Years (उम्र)", type: "number", required: true },
+    { name: "gender", label: "Gender (लिंग)", type: "select", options: genderOptions, required: true },
+    { name: "phone", label: "Contact / Guardian Mobile Number (संपर्क नंबर)", type: "tel", required: true },
+    { name: "email", label: "Email Address (ईमेल)", type: "email", required: false },
+    { name: "schoolOrCollege", label: "Current School / College / Institution (स्कूल या कॉलेज का नाम)", type: "text", required: true },
+    { name: "currentClass", label: "Class / Qualification (कक्षा / योग्यता)", type: "text", required: true },
+    { name: "village", label: "Village / Address (गाँव / पता)", type: "text", required: true },
+    { name: "district", label: "District (जिला)", type: "text", required: true },
+    { name: "programStream", label: "Training Programme Applying For (प्रशिक्षण कार्यक्रम चुनें)", type: "select", options: traineeProgramOptions, required: true },
+    { name: "preferredBatch", label: "Preferred Batch Timing (बैच का समय)", type: "select", options: traineeBatchOptions, required: true },
+    { name: "bloodGroup", label: "Blood Group (ब्लड ग्रुप)", type: "select", options: ["A+", "A-", "B+", "B-", "O+", "O-", "AB+", "AB-", "Not Known"], required: false },
+    { name: "priorExperience", label: "Prior Sports / Skill Achievements (पूर्व खेल या कौशल उपलब्धि)", type: "textarea", required: false },
+    { name: "medicalNotes", label: "Any Health / Medical Notes (कोई स्वास्थ्य संबंधी जानकारी)", type: "textarea", required: false },
+  ],
+};
+
+export const registrationForms = {
+  agniveer: agniveerFormConfig,
+  trainee: traineeFormConfig,
+};

@@ -10,12 +10,14 @@ export default function RegistrationExperience({
   initialSport = "",
   heading,
   description,
+  initialEventInterest,
   showHeader = true,
 }: {
   initialType?: RegistrationType | "";
   initialSport?: SportKind | "";
   heading?: string;
   description?: string;
+  initialEventInterest?: string;
   showHeader?: boolean;
 }) {
   const meta = initialType ? REGISTRATION_TYPE_META[initialType] : null;
@@ -45,7 +47,11 @@ export default function RegistrationExperience({
             <p className="mt-3 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">{t(description)}</p>
           </div>
         ) : null}
-        <RegistrationWizard initialType={initialType} initialSport={initialSport} />
+        <RegistrationWizard
+          initialType={initialType}
+          initialSport={initialSport}
+          initialEventInterest={initialEventInterest}
+        />
       </div>
     </div>
   );

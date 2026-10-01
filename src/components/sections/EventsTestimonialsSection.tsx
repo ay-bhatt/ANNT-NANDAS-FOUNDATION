@@ -52,7 +52,7 @@ export default function EventsTestimonialsSection({
             title="Be part of our next initiatives"
           />
           <div className="flex flex-1 flex-col gap-4">
-            {upcomingEvents.slice(0, 3).map((event, index) => (
+            {upcomingEvents.slice(0, 4).map((event, index) => (
               <motion.article
                 key={event.title}
                 className="surface-card overflow-hidden"

@@ -2,7 +2,11 @@ import type { Attachment } from "nodemailer/lib/mailer";
 import { isValidEmail, typeLabel } from "./validation";
 import { buildPrintableHtml } from "./printable";
 import { parseImageDataUrl } from "./image-bytes";
-import type { RegistrationFormState } from "./types";
+import type { RegistrationFormState, RegistrationType } from "./types";
+
+function registrationTypeLabel(state: RegistrationFormState) {
+  return typeLabel((state.type || "event") as RegistrationType);
+}
 import { isSmtpConfigured, mailFromAddress, officeEmailAddresses, sendMail } from "@/lib/mail";
 
 export interface RegistrationEmailResult {
@@ -37,7 +41,7 @@ function applicantConfirmationHtml(options: {
             <td style="padding:24px;">
               <p style="margin:0 0 12px;font-size:15px;line-height:1.6;">Dear ${escapeText(name)},</p>
               <p style="margin:0 0 16px;font-size:15px;line-height:1.6;">
-                Thank you. Your ${escapeText(typeLabel(state.type))} application has been received.
+                Thank you. Your ${escapeText(registrationTypeLabel(state))} application has been received.
                 A PDF copy of your registration form is attached to this email.
               </p>
               <p style="margin:0 0 6px;font-size:13px;color:#475569;">Reference number</p>
@@ -164,7 +168,7 @@ export async function sendRegistrationEmails(options: {
   });
 
   const officeTo = officeEmailAddresses();
-  const subject = `New ${typeLabel(state.type)} Registration · ${registrationId} · ANNT NANDAS FOUNDATION`;
+  const subject = `New ${registrationTypeLabel(state)} Registration · ${registrationId} · ANNT NANDAS FOUNDATION`;
   const from = mailFromAddress();
   const applicantEmail = state.personal.email.trim();
   const applicantIsOffice = officeTo.some((email) => email.toLowerCase() === applicantEmail.toLowerCase());
@@ -209,7 +213,7 @@ export async function sendRegistrationEmails(options: {
       await sendMail({
         from,
         to: applicantEmail,
-        subject: `Your ${typeLabel(state.type)} registration · ${registrationId} · ANNT NANDAS FOUNDATION`,
+        subject: `Your ${registrationTypeLabel(state)} registration · ${registrationId} · ANNT NANDAS FOUNDATION`,
         html: applicantConfirmationHtml({ state, registrationId, submittedAt }),
         attachments: [formCopy.attachment],
       });

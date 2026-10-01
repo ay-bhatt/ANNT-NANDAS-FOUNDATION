@@ -64,11 +64,18 @@ function dataUrlToFile(image: { dataUrl: string; name?: string; mime?: string },
 export default function RegistrationWizard({
   initialType = "",
   initialSport = "",
+  initialEventInterest = "",
 }: {
   initialType?: RegistrationType | "";
   initialSport?: SportKind | "";
+  initialEventInterest?: string;
 }) {
-  const [state, setState] = useState<RegistrationFormState>(() => createEmptyForm(initialType, initialSport));
+  const [state, setState] = useState<RegistrationFormState>(() => {
+    const initialState = createEmptyForm(initialType, initialSport);
+    return initialEventInterest
+      ? { ...initialState, event: { ...initialState.event, eventInterest: initialEventInterest } }
+      : initialState;
+  });
   const [step, setStep] = useState<WizardStep>(initialType ? "personal" : "type");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [submitting, setSubmitting] = useState(false);

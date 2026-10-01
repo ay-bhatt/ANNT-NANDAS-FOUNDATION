@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import type { NewsItem, UpcomingEvent } from "@/lib/types";
@@ -15,10 +16,15 @@ interface SidePeekRailProps {
 export default function SidePeekRail({ events, newsItems }: SidePeekRailProps) {
   const [open, setOpen] = useState<PeekPanel | null>(null);
   const [canHover, setCanHover] = useState(false);
+  const [portalReady, setPortalReady] = useState(false);
   const closeTimer = useRef<number | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const eventsId = useId();
   const newsId = useId();
+
+  useEffect(() => {
+    setPortalReady(true);
+  }, []);
 
   useEffect(() => {
     const media = window.matchMedia("(hover: hover) and (pointer: fine)");
@@ -80,16 +86,18 @@ export default function SidePeekRail({ events, newsItems }: SidePeekRailProps) {
     onFocus: canHover ? () => openPanel(panel) : undefined,
   });
 
-  return (
+  if (!portalReady) return null;
+
+  return createPortal(
     <div
       ref={rootRef}
-      className="pointer-events-none fixed left-0 z-40 flex items-start bottom-[calc(var(--site-bottom-nav-h)+4.75rem)] top-auto xl:bottom-auto xl:top-[calc(var(--site-header-h)+12px)]"
+      className="pointer-events-none fixed right-0 z-40 flex flex-row-reverse items-start bottom-[calc(var(--site-bottom-nav-h)+4.75rem)] top-auto xl:bottom-auto xl:top-[calc(var(--site-header-h)+12px)]"
       onMouseLeave={canHover ? scheduleClose : undefined}
     >
       <div className="pointer-events-auto flex flex-col gap-2">
         <button
           {...tabProps("events")}
-          className={`rounded-r-xl border border-l-0 px-1.5 py-2.5 text-[9px] font-bold uppercase tracking-[0.14em] shadow-lg transition min-[390px]:px-2 min-[390px]:py-3 min-[390px]:text-[10px] sm:px-2.5 sm:py-4 sm:text-[11px] ${
+          className={`rounded-l-xl border border-r-0 px-1.5 py-2.5 text-[9px] font-bold uppercase tracking-[0.14em] shadow-lg transition min-[390px]:px-2 min-[390px]:py-3 min-[390px]:text-[10px] sm:px-2.5 sm:py-4 sm:text-[11px] ${
             open === "events"
               ? "border-emerald-200 bg-emerald-600 text-white"
               : "border-slate-200 bg-white/95 text-slate-800 backdrop-blur-sm hover:bg-emerald-50"
@@ -99,7 +107,7 @@ export default function SidePeekRail({ events, newsItems }: SidePeekRailProps) {
         </button>
         <button
           {...tabProps("news")}
-          className={`rounded-r-xl border border-l-0 px-1.5 py-2.5 text-[9px] font-bold uppercase tracking-[0.14em] shadow-lg transition min-[390px]:px-2 min-[390px]:py-3 min-[390px]:text-[10px] sm:px-2.5 sm:py-4 sm:text-[11px] ${
+          className={`rounded-l-xl border border-r-0 px-1.5 py-2.5 text-[9px] font-bold uppercase tracking-[0.14em] shadow-lg transition min-[390px]:px-2 min-[390px]:py-3 min-[390px]:text-[10px] sm:px-2.5 sm:py-4 sm:text-[11px] ${
             open === "news"
               ? "border-blue-200 bg-blue-950 text-white"
               : "border-slate-200 bg-white/95 text-slate-800 backdrop-blur-sm hover:bg-slate-50"
@@ -108,11 +116,10 @@ export default function SidePeekRail({ events, newsItems }: SidePeekRailProps) {
           <span className="block [writing-mode:vertical-rl] rotate-180">Current News</span>
         </button>
       </div>
-
       {open ? (
         <aside
           id={open === "events" ? eventsId : newsId}
-          className="pointer-events-auto ml-0 max-h-[min(62svh,32rem)] w-[min(calc(100vw-3rem),22rem)] overflow-y-auto rounded-r-2xl border border-slate-200 bg-white p-3 shadow-[0_20px_50px_rgba(15,23,42,0.18)] sm:max-h-[min(72vh,34rem)] sm:p-4"
+          className="pointer-events-auto mr-0 max-h-[min(62svh,32rem)] w-[min(calc(100vw-3rem),22rem)] overflow-y-auto rounded-l-2xl border border-slate-200 bg-white p-3 shadow-[0_20px_50px_rgba(15,23,42,0.18)] sm:max-h-[min(72vh,34rem)] sm:p-4"
           onMouseEnter={canHover ? cancelClose : undefined}
         >
           {open === "events" ? (
@@ -148,7 +155,8 @@ export default function SidePeekRail({ events, newsItems }: SidePeekRailProps) {
           )}
         </aside>
       ) : null}
-    </div>
+    </div>,
+    document.body,
   );
 }
 
