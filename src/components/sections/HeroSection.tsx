@@ -13,8 +13,7 @@ import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type { HeroContent, ImpactStat, SlideshowPhoto } from "@/lib/types";
 import { PunchLine } from "@/components/site/SectionBlocks";
-import logoImg from "@/assets/logo.webp";
-import { ORG_NAME_EN, ORG_NAME_HI } from "@/lib/i18n";
+import logoImg from "@/assets/logo/logobig.png";
 
 const SLIDE_INTERVAL_MS = 5000;
 const AUTO_HIDE_AFTER_SLIDES = 2;
@@ -40,9 +39,13 @@ export default function HeroSection({
   const [autoHidden, setAutoHidden] = useState(false);
   const [manualVisible, setManualVisible] = useState<boolean | null>(null);
   const timerRef = useRef<number | null>(null);
-  const total = slideshowPhotos.length;
-  const showContext = manualVisible ?? !autoHidden;
-  const current = slideshowPhotos[index] ?? slideshowPhotos[0];
+  const slides = slideshowPhotos.flatMap((photo) => [
+    { src: photo.src, label: photo.label, isLogo: false },
+    { src: logoImg, label: "ANNT Nandas Foundation logo", isLogo: true },
+  ]);
+  const total = slides.length;
+  const current = slides[index] ?? slides[0];
+  const showContext = !current?.isLogo && (manualVisible ?? !autoHidden);
 
   const clearTimer = useCallback(() => {
     if (timerRef.current !== null) {
@@ -74,7 +77,7 @@ export default function HeroSection({
   }, [clearTimer, startTimer]);
 
   useEffect(() => {
-    if (index >= AUTO_HIDE_AFTER_SLIDES) {
+    if (index >= AUTO_HIDE_AFTER_SLIDES * 2) {
       setAutoHidden(true);
     }
   }, [index]);
@@ -92,7 +95,7 @@ export default function HeroSection({
       <div className="absolute inset-0 -z-20">
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
-            key={current.src + index}
+            key={index}
             className="absolute inset-0"
             initial={{ opacity: reduceMotion ? 1 : 0 }}
             animate={{ opacity: 1 }}
@@ -107,13 +110,15 @@ export default function HeroSection({
               fetchPriority={index === 0 ? "high" : "auto"}
               sizes="100vw"
               data-critical-hero={index === 0 ? "true" : undefined}
-              className="object-cover object-center"
+              className={current.isLogo ? "bg-white object-contain" : "object-cover object-center"}
             />
           </motion.div>
         </AnimatePresence>
         <div
           className={`absolute inset-0 transition-opacity duration-500 ${
-            showContext
+            current.isLogo
+              ? "bg-transparent"
+              : showContext
               ? "bg-[linear-gradient(90deg,rgba(3,15,40,0.92)_0%,rgba(5,25,56,0.70)_45%,rgba(5,25,56,0.16)_78%),linear-gradient(0deg,rgba(3,15,40,0.78)_0%,transparent_48%)] max-sm:bg-[linear-gradient(180deg,rgba(3,15,40,0.32)_0%,rgba(3,15,40,0.78)_52%,rgba(3,15,40,0.96)_100%)]"
               : "bg-[linear-gradient(180deg,rgba(3,15,40,0.22)_0%,rgba(3,15,40,0.08)_38%,rgba(3,15,40,0.55)_100%)]"
           }`}
@@ -123,26 +128,6 @@ export default function HeroSection({
       <p className="sr-only" aria-live="polite">
         Slide {index + 1} of {total}: {current.label}
       </p>
-
-      <div
-        className={`pointer-events-none absolute inset-0 z-10 flex flex-col ${
-          showContext ? "items-center sm:items-end sm:pr-[7%] lg:pr-[10%]" : "items-center"
-        }`}
-      >
-        <div className="flex min-h-0 flex-1 items-center justify-center px-4 pt-14 sm:pt-10">
-          <div className="rounded-[1.75rem] bg-white/88 p-2.5 shadow-[0_18px_50px_rgba(2,8,23,0.28)] ring-1 ring-white/70 backdrop-blur-md sm:rounded-[2rem] sm:p-3.5">
-            <Image
-              src={logoImg}
-              alt={`${ORG_NAME_EN} / ${ORG_NAME_HI}`}
-              width={320}
-              height={320}
-              priority
-              sizes="(max-width: 639px) 7.5rem, (max-width: 1023px) 10rem, 13rem"
-              className="h-[7.25rem] w-[7.25rem] object-contain sm:h-40 sm:w-40 lg:h-52 lg:w-52"
-            />
-          </div>
-        </div>
-      </div>
 
       <AnimatePresence initial={false}>
         {showContext ? (
@@ -213,39 +198,49 @@ export default function HeroSection({
         )}
       </AnimatePresence>
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-slate-950/80 via-slate-950/25 to-transparent pt-24">
-        <p
-          className="px-5 pb-3 text-center text-[1.15rem] font-semibold leading-snug tracking-wide text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] min-[390px]:text-xl sm:pb-4 sm:text-2xl md:text-3xl lg:text-[2rem]"
-          style={{ fontFamily: "var(--font-devanagari), sans-serif" }}
-        >
-          {HERO_HEADLINE_HI}
-        </p>
+      <div
+        className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 pt-24 ${
+          current.isLogo ? "flex justify-center pt-4" : "bg-gradient-to-t from-slate-950/80 via-slate-950/25 to-transparent"
+        }`}
+      >
+        {!current.isLogo ? (
+          <p
+            className="px-5 pb-3 text-center text-[1.15rem] font-semibold leading-snug tracking-wide text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] min-[390px]:text-xl sm:pb-4 sm:text-2xl md:text-3xl lg:text-[2rem]"
+            style={{ fontFamily: "var(--font-devanagari), sans-serif" }}
+          >
+            {HERO_HEADLINE_HI}
+          </p>
+        ) : null}
         <div className="pointer-events-auto flex flex-wrap justify-center gap-1.5 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-5">
-          {slideshowPhotos.map((photo, photoIndex) => (
+          {slides.map((slide, slideIndex) => (
             <button
-              key={`${photo.label}-${photoIndex}`}
+              key={`${slide.label}-${slideIndex}`}
               type="button"
-              aria-label={`Show slide ${photoIndex + 1}: ${photo.label}`}
-              aria-current={photoIndex === index ? true : undefined}
-              onClick={() => goTo(photoIndex)}
+              aria-label={`Show ${slide.isLogo ? "foundation logo" : `slide ${slideIndex / 2 + 1}: ${slide.label}`}`}
+              aria-current={slideIndex === index ? true : undefined}
+              onClick={() => goTo(slideIndex)}
               className={`h-2 rounded-full transition-all ${
-                photoIndex === index ? "w-6 bg-white" : "w-2 bg-white/45 hover:bg-white/70"
+                slideIndex === index
+                  ? `w-6 ${current.isLogo ? "bg-slate-800" : "bg-white"}`
+                  : `w-2 ${current.isLogo ? "bg-slate-400 hover:bg-slate-600" : "bg-white/45 hover:bg-white/70"}`
               }`}
             />
           ))}
         </div>
       </div>
 
-      <button
-        type="button"
-        onClick={() => setManualVisible((currentValue) => !(currentValue ?? !autoHidden))}
-        aria-pressed={showContext}
-        aria-label={showContext ? "Hide hero text" : "Show hero text"}
-        className="absolute right-3 top-3 z-20 inline-flex items-center gap-2 rounded-full border border-white/20 bg-slate-950/55 px-3 py-2 text-xs font-semibold text-white backdrop-blur-md transition hover:bg-slate-950/75 sm:right-6 sm:top-6"
-      >
-        <span aria-hidden="true">{showContext ? "✕" : "☰"}</span>
-        {showContext ? "Hide text" : "Show text"}
-      </button>
+      {!current.isLogo ? (
+        <button
+          type="button"
+          onClick={() => setManualVisible((currentValue) => !(currentValue ?? !autoHidden))}
+          aria-pressed={showContext}
+          aria-label={showContext ? "Hide hero text" : "Show hero text"}
+          className="absolute right-3 top-3 z-20 inline-flex items-center gap-2 rounded-full border border-white/20 bg-slate-950/55 px-3 py-2 text-xs font-semibold text-white backdrop-blur-md transition hover:bg-slate-950/75 sm:right-6 sm:top-6"
+        >
+          <span aria-hidden="true">{showContext ? "✕" : "☰"}</span>
+          {showContext ? "Hide text" : "Show text"}
+        </button>
+      ) : null}
     </section>
   );
 }
