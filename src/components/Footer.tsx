@@ -8,6 +8,7 @@ import type { SiteConfig, NavItem, ImpactArea } from "@/lib/types";
 import { toTelHref } from "@/lib/utils";
 import { useI18n } from "@/components/i18n/LanguageProvider";
 import BrandMark from "@/components/site/BrandMark";
+import RotatingPunchLine from "@/components/site/RotatingPunchLine";
 import { ORG_NAME_EN, ORG_NAME_HI } from "@/lib/i18n";
 
 interface FooterProps {
@@ -64,15 +65,11 @@ export default function Footer({ siteConfig }: FooterProps) {
 
       <div className="container-premium relative w-full max-w-full py-14 pb-10 sm:py-16 xl:py-20">
         <div className="mb-10 text-center sm:mb-12">
-          <p className="text-2xl font-semibold tracking-[-0.03em] text-white sm:text-3xl md:text-4xl">
-            Our Efforts, Discover Talents
-          </p>
-          <p
-            className="mt-3 text-xl font-semibold leading-snug text-emerald-100 sm:mt-4 sm:text-2xl md:text-3xl"
-            style={{ fontFamily: "var(--font-devanagari), sans-serif" }}
-          >
-            हमारा प्रयास, हुनर की तलाश
-          </p>
+          <RotatingPunchLine
+            english={siteConfig.motto}
+            hindi={siteConfig.mottoHi}
+            className="min-h-10 text-2xl font-semibold tracking-[-0.03em] text-white sm:min-h-12 sm:text-3xl md:min-h-14 md:text-4xl"
+          />
         </div>
 
         <div className="grid w-full min-w-0 gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-10">

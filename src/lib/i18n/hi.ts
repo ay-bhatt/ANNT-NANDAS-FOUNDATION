@@ -208,8 +208,10 @@ export const HI: Record<string, string> = {
 
   // Stats
   "Villages Connected": "जुड़े गाँव",
+  "Children Connected": "जुड़े बच्चे",
   "Children Supported": "सहायता प्राप्त बच्चे",
   "Events Conducted": "आयोजित कार्यक्रम",
+  "Volunteers Connected": "जुड़े स्वयंसेवक",
   "Volunteers Engaged": "जुड़े स्वयंसेवक",
   "Trees Planted": "लगाए गए वृक्ष",
   "Community Partners": "सामुदायिक साझेदार",

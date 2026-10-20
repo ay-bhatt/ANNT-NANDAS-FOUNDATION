@@ -14,14 +14,14 @@ export default function BrandMark({
       <div className="min-w-0 leading-tight">
         <p
           className={`font-extrabold uppercase tracking-[0.04em] ${
-            compact ? "text-[9px] sm:text-[11px] xl:text-xs 2xl:text-[13px]" : "text-base sm:text-lg"
+            compact ? "text-[10px] sm:text-xs xl:text-[13px] 2xl:text-sm" : "text-base sm:text-lg"
           } ${inverted ? "text-white" : "text-slate-900"}`}
         >
           {ORG_NAME_EN}
         </p>
         <p
           className={`mt-0.5 break-words font-devanagari font-semibold ${
-            compact ? "text-[9px] sm:text-[11px]" : "text-xs sm:text-sm"
+            compact ? "text-[10px] sm:text-xs" : "text-xs sm:text-sm"
           } ${inverted ? "text-slate-300" : "text-slate-600"}`}
         >
           {ORG_NAME_HI}

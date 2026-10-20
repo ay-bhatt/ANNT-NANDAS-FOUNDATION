@@ -102,8 +102,6 @@ export default async function RootLayout({
           <AppShell>
             <Navbar
               navigationItems={data.navigationItems}
-              motto={data.siteConfig.motto}
-              mottoHi={data.siteConfig.mottoHi}
             />
             <RouteProgress />
             <main id="main-content" className="relative min-w-0 overflow-x-clip">{children}</main>

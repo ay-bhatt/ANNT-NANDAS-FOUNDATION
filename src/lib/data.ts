@@ -148,10 +148,10 @@ export const heroContent = {
 };
 
 export const impactStats = [
-  { label: "Villages Connected", value: "45+", icon: "villages" },
-  { label: "Children Supported", value: "1,250+", icon: "children" },
+  { label: "Villages Connected", value: "55", icon: "villages" },
+  { label: "Children Connected", value: "1,153", icon: "children" },
   { label: "Events Conducted", value: "120+", icon: "events" },
-  { label: "Volunteers Engaged", value: "350+", icon: "volunteers" },
+  { label: "Volunteers Connected", value: "351", icon: "volunteers" },
   { label: "Trees Planted", value: "5,000+", icon: "trees" },
   { label: "Community Partners", value: "25+", icon: "partners" },
 ];

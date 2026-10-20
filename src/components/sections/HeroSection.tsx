@@ -13,11 +13,10 @@ import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import type { HeroContent, ImpactStat, SlideshowPhoto } from "@/lib/types";
 import { PunchLine } from "@/components/site/SectionBlocks";
-import logoImg from "@/assets/logo/logobig.png";
+import RotatingPunchLine from "@/components/site/RotatingPunchLine";
 
 const SLIDE_INTERVAL_MS = 5000;
 const AUTO_HIDE_AFTER_SLIDES = 2;
-const HERO_HEADLINE_HI = "हमारा प्रयास, हुनर की तलाश";
 
 interface HeroSectionProps {
   heroContent: HeroContent;
@@ -39,13 +38,10 @@ export default function HeroSection({
   const [autoHidden, setAutoHidden] = useState(false);
   const [manualVisible, setManualVisible] = useState<boolean | null>(null);
   const timerRef = useRef<number | null>(null);
-  const slides = slideshowPhotos.flatMap((photo) => [
-    { src: photo.src, label: photo.label, isLogo: false },
-    { src: logoImg, label: "ANNT Nandas Foundation logo", isLogo: true },
-  ]);
+  const slides = slideshowPhotos;
   const total = slides.length;
   const current = slides[index] ?? slides[0];
-  const showContext = !current?.isLogo && (manualVisible ?? !autoHidden);
+  const showContext = manualVisible ?? !autoHidden;
 
   const clearTimer = useCallback(() => {
     if (timerRef.current !== null) {
@@ -77,7 +73,7 @@ export default function HeroSection({
   }, [clearTimer, startTimer]);
 
   useEffect(() => {
-    if (index >= AUTO_HIDE_AFTER_SLIDES * 2) {
+    if (index >= AUTO_HIDE_AFTER_SLIDES) {
       setAutoHidden(true);
     }
   }, [index]);
@@ -110,17 +106,15 @@ export default function HeroSection({
               fetchPriority={index === 0 ? "high" : "auto"}
               sizes="100vw"
               data-critical-hero={index === 0 ? "true" : undefined}
-              className={current.isLogo ? "bg-white object-contain" : "object-cover object-center"}
+              className="object-cover object-center"
             />
           </motion.div>
         </AnimatePresence>
         <div
           className={`absolute inset-0 transition-opacity duration-500 ${
-            current.isLogo
-              ? "bg-transparent"
-              : showContext
-              ? "bg-[linear-gradient(90deg,rgba(3,15,40,0.92)_0%,rgba(5,25,56,0.70)_45%,rgba(5,25,56,0.16)_78%),linear-gradient(0deg,rgba(3,15,40,0.78)_0%,transparent_48%)] max-sm:bg-[linear-gradient(180deg,rgba(3,15,40,0.32)_0%,rgba(3,15,40,0.78)_52%,rgba(3,15,40,0.96)_100%)]"
-              : "bg-[linear-gradient(180deg,rgba(3,15,40,0.22)_0%,rgba(3,15,40,0.08)_38%,rgba(3,15,40,0.55)_100%)]"
+            showContext
+              ? "bg-[linear-gradient(90deg,rgba(3,15,40,0.78)_0%,rgba(5,25,56,0.48)_45%,rgba(5,25,56,0.08)_78%),linear-gradient(0deg,rgba(3,15,40,0.58)_0%,transparent_48%)] max-sm:bg-[linear-gradient(180deg,rgba(3,15,40,0.16)_0%,rgba(3,15,40,0.45)_52%,rgba(3,15,40,0.78)_100%)]"
+              : "bg-[linear-gradient(180deg,rgba(3,15,40,0.12)_0%,rgba(3,15,40,0.04)_38%,rgba(3,15,40,0.35)_100%)]"
           }`}
         />
       </div>
@@ -199,48 +193,41 @@ export default function HeroSection({
       </AnimatePresence>
 
       <div
-        className={`pointer-events-none absolute inset-x-0 bottom-0 z-20 pt-24 ${
-          current.isLogo ? "flex justify-center pt-4" : "bg-gradient-to-t from-slate-950/80 via-slate-950/25 to-transparent"
-        }`}
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-slate-950/65 via-slate-950/20 to-transparent pt-24"
       >
-        {!current.isLogo ? (
-          <p
-            className="px-5 pb-3 text-center text-[1.15rem] font-semibold leading-snug tracking-wide text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] min-[390px]:text-xl sm:pb-4 sm:text-2xl md:text-3xl lg:text-[2rem]"
-            style={{ fontFamily: "var(--font-devanagari), sans-serif" }}
-          >
-            {HERO_HEADLINE_HI}
-          </p>
-        ) : null}
+        <RotatingPunchLine
+          english={motto}
+          hindi={mottoHi}
+          className="px-5 pb-3 text-center text-[1.15rem] font-semibold leading-snug tracking-wide text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] min-[390px]:text-xl sm:pb-4 sm:text-2xl md:text-3xl lg:text-[2rem]"
+        />
         <div className="pointer-events-auto flex flex-wrap justify-center gap-1.5 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-5">
           {slides.map((slide, slideIndex) => (
             <button
-              key={`${slide.label}-${slideIndex}`}
+              key={`${slide.src}-${slideIndex}`}
               type="button"
-              aria-label={`Show ${slide.isLogo ? "foundation logo" : `slide ${slideIndex / 2 + 1}: ${slide.label}`}`}
+              aria-label={`Show slide ${slideIndex + 1}: ${slide.label}`}
               aria-current={slideIndex === index ? true : undefined}
               onClick={() => goTo(slideIndex)}
               className={`h-2 rounded-full transition-all ${
                 slideIndex === index
-                  ? `w-6 ${current.isLogo ? "bg-slate-800" : "bg-white"}`
-                  : `w-2 ${current.isLogo ? "bg-slate-400 hover:bg-slate-600" : "bg-white/45 hover:bg-white/70"}`
+                  ? "w-6 bg-white"
+                  : "w-2 bg-white/45 hover:bg-white/70"
               }`}
             />
           ))}
         </div>
       </div>
 
-      {!current.isLogo ? (
-        <button
-          type="button"
-          onClick={() => setManualVisible((currentValue) => !(currentValue ?? !autoHidden))}
-          aria-pressed={showContext}
-          aria-label={showContext ? "Hide hero text" : "Show hero text"}
-          className="absolute right-3 top-3 z-20 inline-flex items-center gap-2 rounded-full border border-white/20 bg-slate-950/55 px-3 py-2 text-xs font-semibold text-white backdrop-blur-md transition hover:bg-slate-950/75 sm:right-6 sm:top-6"
-        >
-          <span aria-hidden="true">{showContext ? "✕" : "☰"}</span>
-          {showContext ? "Hide text" : "Show text"}
-        </button>
-      ) : null}
+      <button
+        type="button"
+        onClick={() => setManualVisible((currentValue) => !(currentValue ?? !autoHidden))}
+        aria-pressed={showContext}
+        aria-label={showContext ? "Hide hero text" : "Show hero text"}
+        className="absolute right-3 top-3 z-20 inline-flex items-center gap-2 rounded-full border border-white/20 bg-slate-950/55 px-3 py-2 text-xs font-semibold text-white backdrop-blur-md transition hover:bg-slate-950/75 sm:right-6 sm:top-6"
+      >
+        <span aria-hidden="true">{showContext ? "✕" : "☰"}</span>
+        {showContext ? "Hide text" : "Show text"}
+      </button>
     </section>
   );
 }
