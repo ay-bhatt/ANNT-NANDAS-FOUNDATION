@@ -97,20 +97,6 @@ export default function PhotoSlideshow({ photos, fill = false, showThumbs = fals
           <span aria-hidden="true">›</span>
         </button>
 
-        <div className="absolute bottom-3 left-0 right-0 z-10 flex justify-center gap-1.5 px-4">
-          {photos.map((photo, photoIndex) => (
-            <button
-              key={`${photo.label}-${photoIndex}`}
-              type="button"
-              aria-label={`Show photo ${photoIndex + 1}: ${photo.label}`}
-              aria-current={photoIndex === index ? true : undefined}
-              onClick={() => goTo(photoIndex)}
-              className={`h-2 rounded-full transition-all ${
-                photoIndex === index ? "w-6 bg-white" : "w-2 bg-white/45 hover:bg-white/70"
-              }`}
-            />
-          ))}
-        </div>
       </div>
 
       {showThumbs ? (

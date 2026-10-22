@@ -44,7 +44,7 @@ export default function MobileBottomNav({ navigationItems }: MobileBottomNavProp
   const tabs = [
     { href: "/", label: "Home", icon: HomeIcon },
     { href: "/programs", label: "Programs", icon: ProgramsIcon },
-    { href: "/events", label: "Events", icon: EventsIcon },
+    { href: "/events", label: "Registrations", icon: EventsIcon },
     { href: "/donate", label: "Donate", icon: DonateIcon },
   ];
 

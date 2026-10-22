@@ -121,7 +121,7 @@ export const navigationItems = [
   { label: "About Us", href: "/about" },
   { label: "Our Work", href: "/our-work" },
   { label: "Programs", href: "/programs" },
-  { label: "Events", href: "/events" },
+  { label: "Registrations", href: "/events" },
   { label: "Gallery", href: "/gallery" },
   { label: "News", href: "/news" },
   { label: "Contact Us", href: "/contact" },

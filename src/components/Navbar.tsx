@@ -62,13 +62,13 @@ export default function Navbar({ navigationItems }: NavbarProps) {
               href="/"
               className="flex shrink-0 items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 sm:gap-2.5"
             >
-              <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-white sm:h-11 sm:w-11">
+              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-white md:h-16 md:w-16">
                 <Image
                   src={logoImg}
                   alt={`${ORG_NAME_EN} / ${ORG_NAME_HI}`}
                   fill
                   priority
-                  sizes="48px"
+                  sizes="64px"
                   className="object-contain p-0.5"
                 />
               </div>

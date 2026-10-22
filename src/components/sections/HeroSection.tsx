@@ -58,15 +58,6 @@ export default function HeroSection({
     }, SLIDE_INTERVAL_MS);
   }, [clearTimer, total]);
 
-  const goTo = useCallback(
-    (nextIndex: number) => {
-      if (total === 0) return;
-      setIndex(((nextIndex % total) + total) % total);
-      startTimer();
-    },
-    [startTimer, total],
-  );
-
   useEffect(() => {
     startTimer();
     return clearTimer;
@@ -200,22 +191,6 @@ export default function HeroSection({
           hindi={mottoHi}
           className="px-5 pb-3 text-center text-[1.15rem] font-semibold leading-snug tracking-wide text-white drop-shadow-[0_2px_12px_rgba(0,0,0,0.55)] min-[390px]:text-xl sm:pb-4 sm:text-2xl md:text-3xl lg:text-[2rem]"
         />
-        <div className="pointer-events-auto flex flex-wrap justify-center gap-1.5 px-4 pb-[calc(1rem+env(safe-area-inset-bottom))] sm:pb-5">
-          {slides.map((slide, slideIndex) => (
-            <button
-              key={`${slide.src}-${slideIndex}`}
-              type="button"
-              aria-label={`Show slide ${slideIndex + 1}: ${slide.label}`}
-              aria-current={slideIndex === index ? true : undefined}
-              onClick={() => goTo(slideIndex)}
-              className={`h-2 rounded-full transition-all ${
-                slideIndex === index
-                  ? "w-6 bg-white"
-                  : "w-2 bg-white/45 hover:bg-white/70"
-              }`}
-            />
-          ))}
-        </div>
       </div>
 
       <button
