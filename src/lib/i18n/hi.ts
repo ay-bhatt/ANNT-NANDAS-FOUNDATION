@@ -1020,4 +1020,62 @@ export const HI: Record<string, string> = {
   "Send message": "संदेश भेजें",
   "Sending...": "भेजा जा रहा है...",
   "Tell us how you’d like to connect": "बताएँ कि आप कैसे जुड़ना चाहते हैं",
+
+  // Donation terminology & enhanced sections
+  Donation: "दान",
+  DONATION: "दान",
+  "Make a Donation": "दान करें",
+  "Donation Section": "दान अनुभाग",
+  "Support Through Donation": "दान के माध्यम से सहयोग करें",
+  "Donation Through UPI": "यूपीआई के माध्यम से दान",
+  "Choose an amount for your donation through Google Pay or any UPI app. If a payment app does not open, scan the QR code or copy the UPI ID.":
+    "Google Pay या किसी भी यूपीआई ऐप से अपने दान की राशि चुनें। यदि भुगतान ऐप न खुले, तो क्यूआर कोड स्कैन करें या यूपीआई आईडी कॉपी करें।",
+  "Select an amount for your donation through Google Pay or any UPI app. If a payment app does not open, scan the QR or copy the UPI ID.":
+    "Google Pay या किसी भी यूपीआई ऐप से अपने दान की राशि चुनें। यदि भुगतान ऐप न खुले, तो क्यूआर स्कैन करें या यूपीआई आईडी कॉपी करें।",
+  "Tap Make a Donation to open Google Pay or your UPI app on a supported phone.":
+    "समर्थित फ़ोन पर Google Pay या अपना यूपीआई ऐप खोलने के लिए «दान करें» पर टैप करें।",
+  "Whether you volunteer, make a donation, or collaborate, your support helps create meaningful long-term change.":
+    "चाहे आप स्वयंसेवा करें, दान करें या सहयोग करें, आपका साथ दीर्घकालिक सार्थक बदलाव बनाता है।",
+  "Purpose-Based Donation": "उद्देश्य-आधारित दान",
+  "See how your donation supports specific Foundation activities":
+    "देखें कि आपका दान फाउण्डेशन की किन विशिष्ट गतिविधियों का समर्थन करता है",
+  "Every contribution helps strengthen grassroots work across sports, education, mobility, environmental care, and community development.":
+    "प्रत्येक योगदान खेल, शिक्षा, परिवहन सुविधा, पर्यावरण संरक्षण और सामुदायिक विकास के जमीनी कार्यों को मज़बूत करता है।",
+  "Supported Activities": "समर्थित गतिविधियाँ",
+  Category: "श्रेणी",
+  "Donation Planning Scenarios": "दान योजना परिदृश्य",
+  "How ₹1 Crore Can Create Community Impact": "₹1 करोड़ से सामुदायिक प्रभाव कैसे बन सकता है",
+  "Illustrative Donation Allocation Scenarios – Subject to Foundation Planning and Approval.":
+    "उदाहरणात्मक दान आवंटन परिदृश्य – फाउण्डेशन की योजना एवं अनुमोदन के अधीन।",
+  "Compare All Scenarios": "सभी परिदृश्यों की तुलना करें",
+  "Visual Allocation Comparison": "दृश्य आवंटन तुलना",
+  "Total per scenario": "प्रति परिदृश्य कुल",
+  TOTAL: "कुल योग",
+  "TOTAL ALLOCATION": "कुल आवंटन",
+  "Select allocation scenario": "आवंटन परिदृश्य चुनें",
+
+  // Desktop Grid Bar & News/Events interactions
+  Overview: "अवलोकन",
+  Navigation: "नेविगेशन",
+  "₹1 Cr Impact": "₹1 करोड़ प्रभाव",
+  "UPI Payment": "यूपीआई भुगतान",
+  "Read More": "और पढ़ें",
+  "Show Less": "कम दिखाएँ",
+  "All News": "सभी समाचार",
+  "Learn More": "अधिक जानें",
+  "Planned Event": "नियोजित आयोजन",
+  Expected: "अपेक्षित अवधि",
+  Upcoming: "आगामी",
+  Enquire: "पूछताछ करें",
+  Register: "पंजीकरण करें",
+  "Leave a comment": "टिप्पणी लिखें",
+  "Share your experience and rate your interaction with the foundation.":
+    "अपना अनुभव साझा करें और फाउण्डेशन के साथ अपने जुड़ाव को रेट करें।",
+  "Awareness Initiatives": "जागरूकता पहल",
+  "Running – Olympics (12–14)": "रनिंग – ओलंपिक्स (12–14)",
+  "State MTB Cycling Team Selection": "राज्य एमटीबी साइकिलिंग टीम चयन",
+  "Talent Hunt Program": "टैलेंट हंट प्रोग्राम",
+  "Aviral Nand Foundation": "अविरल नन्द फाउण्डेशन",
+  "International Ultra Trail Run": "इंटरनेशनल अल्ट्रा ट्रेल रन",
+  "Talent Hunt – Rat Goan": "टैलेंट हंट – राट गाँव",
 };

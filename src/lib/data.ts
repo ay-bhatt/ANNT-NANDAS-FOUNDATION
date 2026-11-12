@@ -26,16 +26,11 @@ import womenImageThree from "@/assets/women empowerment/image.webp";
 import healthcareImage from "@/assets/healthcare/event (4).webp";
 import environmentImage from "@/assets/environment/gallery-049.jpg.webp";
 import eventOne from "@/assets/events/event (1).webp";
-import eventTwo from "@/assets/events/event (4).webp";
 import eventThree from "@/assets/events/event (10).webp";
 import eventFour from "@/assets/events/event (14).webp";
 import newsHero from "@/assets/news/news.webp";
-import newsOne from "@/assets/news/news (1).webp";
 import newsTwo from "@/assets/news/news (2).webp";
-import newsThree from "@/assets/news/news (3).webp";
 import newsFour from "@/assets/news/news (4).webp";
-import newsFive from "@/assets/news/news (5).webp";
-import newsSix from "@/assets/news/news (6).webp";
 import galleryOne from "@/assets/gallery/gallery (1).webp";
 import galleryTwo from "@/assets/gallery/gallery (2).webp";
 import galleryThree from "@/assets/gallery/gallery (3).webp";
@@ -457,167 +452,86 @@ export const featureCards = impactAreas.map((area) => ({
 
 export const upcomingEvents = [
   {
-    title: "Ultra Trail Run",
-    date: "12 Oct 2026",
-    day: "12",
-    month: "Oct",
-    location: "Chamoli, Uttarakhand",
-    time: "05:00 AM start",
+    id: "aviral-nand-foundation",
+    title: "Aviral Nand Foundation",
+    period: "May",
+    status: "Planned Event",
     description:
-      "A Himalayan ultra trail run for endurance athletes and youth. Register to take part in this upcoming foundation event.",
-    type: "Sports",
+      "A planned Foundation gathering and community engagement event scheduled for May, bringing together youth, families, and local supporters.",
+    details:
+      "This planned event focuses on community participation, awareness, and grassroots outreach across our programme areas. Exact date, venue, and participation details will be updated once finalised.",
+    type: "Foundation Event",
+    image: eventOne,
+  },
+  {
+    id: "international-ultra-trail-run",
+    title: "International Ultra Trail Run",
+    period: "March–April",
+    status: "Planned Event",
+    description:
+      "A planned international-level ultra trail running event targeted for March–April, celebrating mountain endurance and Himalayan trail running.",
+    details:
+      "Designed to connect endurance athletes and aspiring mountain runners with high-altitude trail running culture. Route schedule, categories, and official dates will be shared when announced.",
+    type: "Endurance & Trail Running",
     image: heroImage,
-    href: "/running-registration",
   },
   {
-    title: "Runner Talent Hunt Program",
-    date: "18 Oct 2026",
-    day: "18",
-    month: "Oct",
-    location: "Mundoli, Chamoli",
-    time: "09:00 AM – 04:00 PM",
+    id: "talent-hunt-rat-goan",
+    title: "Talent Hunt – Rat Goan",
+    location: "Rat Goan",
+    status: "Planned Event",
     description:
-      "रनर टैलेंट हंट प्रोग्राम — search for future Olympic long-distance athletes. Age group 12–14 years (registration 11½ to 14½). Selected athletes receive free running shoes, nutrition support, and advanced training. Limited seats.",
-    type: "Competition",
-    image: PHOTO.womanRunner,
-    href: "/talent-hunt-registration",
-  },
-  {
-    title: "Agniveer Aspirant Physical & Written Prep Camp",
-    date: "25 Oct 2026",
-    day: "25",
-    month: "Oct",
-    location: "Mundoli Ground, Chamoli",
-    time: "05:30 AM – 11:30 AM",
-    description:
-      "अग्निवीर भर्ती तैयारी शिविर — Guided by Ex-Serviceman Naik Kalam Singh Bisht. Focused physical endurance training (1600m run, beam, ditch, zig-zag balance), medical guidance, and written exam preparation for defence aspirants.",
-    type: "Defence Prep",
-    image: founderImage,
-    href: "/agniveer-registration",
-  },
-  {
-    title: "Foundation Registration Trainees Enrollment",
-    date: "01 Nov 2026",
-    day: "01",
-    month: "Nov",
-    location: "Mundoli, Chamoli",
-    time: "09:00 AM – 04:00 PM",
-    description:
-      "Regular batch enrollment for Registration Trainees across athletics, cycling, skill development, computer literacy, and youth leadership programmes.",
-    type: "Training",
-    image: galleryPhotoCycling,
-    href: "/trainee-registration",
-  },
-  {
-    title: "Volunteer Drive · Mundoli Village",
-    date: "15 Jun 2026",
-    day: "15",
-    month: "Jun",
-    location: "Mundoli, Chamoli",
-    time: "08:00 AM – 05:00 PM",
-    description:
-      "A grassroots volunteer day focused on community support, mentorship, and direct participation in local initiatives.",
-    type: "Volunteer",
-    image: galleryPhotoSportsMeet,
-    href: "/volunteer-registration",
-  },
-  {
-    title: "Himalayan Run Cycling Event",
-    date: "22 Jun 2026",
-    day: "22",
-    month: "Jun",
-    location: "Chamoli, Uttarakhand",
-    time: "06:00 AM – 12:00 PM",
-    description:
-      "A community-led event celebrating endurance, discipline, and the spirit of youth participation in the hills.",
-    type: "Sports",
-    image: eventThree,
-    href: "/sports-registration",
-  },
-  {
-    title: "Education Outreach Workshop",
-    date: "10 Jul 2026",
-    day: "10",
-    month: "Jul",
-    location: "Village Learning Centre",
-    time: "10:00 AM – 02:00 PM",
-    description:
-      "Interactive sessions for children and families focused on learning support, guidance, and skill-building.",
-    type: "Education",
-    image: educationImageThree,
-    href: "/general-registration",
-  },
-  {
-    title: "Community Health Support Camp",
-    date: "26 Jul 2026",
-    day: "26",
-    month: "Jul",
-    location: "Mundoli Community Ground",
-    time: "09:00 AM – 03:00 PM",
-    description:
-      "Preventive care, health awareness, and community wellness support through a local outreach camp.",
-    type: "Healthcare",
-    image: eventTwo,
-    href: "/general-registration",
+      "A planned grassroots Talent Hunt initiative in Rat Goan to identify and encourage emerging young talent from rural communities.",
+    details:
+      "Focused on reaching youth directly in Rat Goan and surrounding areas to discover athletic and creative potential and connect participants with Foundation mentorship. Dates and schedule will be updated once confirmed.",
+    type: "Talent Development",
+    image: eventUltraCamp,
   },
 ];
 
 export const newsItems = [
   {
-    title: "Latest update from ANNT NANDAS FOUNDATION",
-    date: "28 Aug 2026",
+    id: "awareness-initiatives",
+    title: "Awareness Initiatives",
     summary:
-      "Stay informed with the newest programmes, events, and community work from ANNT NANDAS FOUNDATION across the Himalayas.",
-    category: "Foundation",
-    image: newsHero,
-  },
-  {
-    title: "Sports Training Program Expands to 16 New Villages",
-    date: "16 May 2025",
-    summary:
-      "The foundation strengthened grassroots access to sports training by extending its presence into additional Himalayan villages.",
-    category: "Sports",
-    image: newsOne,
-  },
-  {
-    title: "Free Health Camp Organized in Mundoli",
-    date: "26 Apr 2025",
-    summary:
-      "A village-focused health initiative brought wellness support, awareness, and essential consultation closer to families.",
-    category: "Healthcare",
-    image: newsTwo,
-  },
-  {
-    title: "Students Excel in District-Level Competitions",
-    date: "14 Apr 2025",
-    summary:
-      "Children supported through the foundation’s academic and development initiatives delivered inspiring performance at district events.",
-    category: "Education",
-    image: newsThree,
-  },
-  {
-    title: "Women-Led Community Sessions Build Confidence",
-    date: "09 Mar 2025",
-    summary:
-      "Women empowerment activities continue to create safe, collaborative, and motivating spaces in local communities.",
-    category: "Women Empowerment",
+      "Showcasing ANNT NANDAS FOUNDATION's ongoing awareness initiatives and community engagement activities across Himalayan villages.",
+    details:
+      "Through village outreach sessions, youth interactions, and community gatherings, the Foundation works closely with families on education, health, hygiene, cleanliness, and civic responsibility—building shared awareness at the grassroots level.",
+    category: "Awareness",
     image: newsFour,
   },
   {
-    title: "Tree Plantation Drive Strengthens Local Awareness",
-    date: "02 Aug 2025",
+    id: "running-olympics-12-14",
+    title: "Running – Olympics (12–14)",
     summary:
-      "Environmental outreach combined plantation work with awareness on sustainability and shared responsibility.",
-    category: "Environment",
-    image: newsFive,
+      "Highlighting the Foundation's running initiative focused on the 12–14 age group to encourage disciplined long-distance running from an early age.",
+    details:
+      "Focused on children in the 12–14 age group, this initiative introduces structured running habits, home-based practice under parental supervision, and guided athletic assessments to help young runners grow steadily.",
+    category: "Sports / Running",
+    image: PHOTO.womanRunner,
+    href: "/talent-hunt-registration",
   },
   {
-    title: "Youth Leadership Activities Inspire New Participation",
-    date: "11 Sep 2025",
+    id: "state-mtb-cycling-team-selection",
+    title: "State MTB Cycling Team Selection",
     summary:
-      "Mentorship and structured activity programmes helped more young people step into leadership and service roles.",
-    category: "Youth Development",
-    image: newsSix,
+      "Highlighting the State MTB Cycling Team Selection initiative, creating structured sporting pathways for mountain biking talent in the region.",
+    details:
+      "Mountain biking is central to the Foundation's origin story, which began with two bicycles in Mundoli. The State MTB Cycling Team Selection initiative highlights opportunities for aspiring cyclists to build endurance, technique, and competitive readiness.",
+    category: "Sports / Cycling",
+    image: galleryTen,
+    href: "/sports-registration",
+  },
+  {
+    id: "talent-hunt-program",
+    title: "Talent Hunt Program",
+    summary:
+      "Showcasing the Foundation's Talent Hunt Program and its objective of identifying, nurturing, and encouraging emerging talent across rural communities.",
+    details:
+      "Designed to ensure promising young individuals in remote settlements are not overlooked due to lack of access, the Talent Hunt Program reaches into villages to discover ability and support guided training and mentorship.",
+    category: "Talent Development",
+    image: galleryPhotoAward,
+    href: "/talent-hunt-registration",
   },
 ];
 
@@ -668,12 +582,12 @@ export const donationInfo = {
   qrImage: donationQr,
   upiId: "sbibhim.instant40718938615865236@sbipay",
   payeeName: "ANNT NANDAS FOUNDATION",
-  title: "Donate Through UPI",
+  title: "Donation Through UPI",
   description:
-    "Choose an amount and donate through Google Pay or any UPI app. If a payment app does not open, scan the QR code or copy the UPI ID.",
+    "Choose an amount for your donation through Google Pay or any UPI app. If a payment app does not open, scan the QR code or copy the UPI ID.",
   instructions: [
     "Select a donation amount.",
-    "Tap Donate Now to open Google Pay or your UPI app on a supported phone.",
+    "Tap Make a Donation to open Google Pay or your UPI app on a supported phone.",
     "If a payment app does not open, scan the amount-specific QR or copy the UPI ID.",
     "Confirm the payee name: ANNT NANDAS FOUNDATION.",
     "Save the transaction reference for acknowledgement.",
@@ -682,14 +596,157 @@ export const donationInfo = {
 
 export const donationAmounts = [500, 1000, 5000, 10000];
 
+export const donationCategories = [
+  {
+    id: "sports-athlete-development",
+    code: "A",
+    title: "Sports & Athlete Development",
+    description:
+      "Helps equip young rural athletes with essential training gear, nutrition support, and participation opportunities across running and cycling programmes.",
+    activities: [
+      "Running shoes",
+      "Sports nutrition",
+      "Tracksuits",
+      "Sports events",
+      "Cycling equipment",
+    ],
+    image: galleryPhotoCycling,
+    ctaLabel: "Support Through Donation",
+  },
+  {
+    id: "education-skill-development",
+    code: "B",
+    title: "Education & Skill Development",
+    description:
+      "Contributes toward academic resources, digital literacy access, and practical skill-building opportunities for children and youth in Himalayan villages.",
+    activities: [
+      "Educational support",
+      "Computers",
+      "Learning resources",
+      "Skill-development opportunities",
+    ],
+    image: educationImage,
+    ctaLabel: "Support Through Donation",
+  },
+  {
+    id: "transportation-accessibility",
+    code: "C",
+    title: "Transportation & Accessibility",
+    description:
+      "Helps reduce distance barriers in hilly settlements by supporting bicycles, local travel assistance, and mobility access for learners and athletes.",
+    activities: [
+      "Cycles",
+      "Transportation support",
+      "Mobility-related assistance",
+    ],
+    image: galleryTwelve,
+    ctaLabel: "Support Through Donation",
+  },
+  {
+    id: "environment-sustainability",
+    code: "D",
+    title: "Environment & Sustainability",
+    description:
+      "Supports ecological stewardship across the Himalayan belt through plantation initiatives, cleanliness drives, and community conservation efforts.",
+    activities: [
+      "Tree planting",
+      "Himalayan cleaning initiatives",
+      "Environmental conservation",
+      "Community cleanliness drives",
+    ],
+    image: environmentImage,
+    ctaLabel: "Support Through Donation",
+  },
+  {
+    id: "social-awareness-community",
+    code: "E",
+    title: "Social Awareness & Community Development",
+    description:
+      "Supports grassroots awareness drives, community gatherings, shared celebrations, and inclusive village-level development activities.",
+    activities: [
+      "Social awareness campaigns",
+      "Community engagement",
+      "Happiness and celebration functions",
+      "Community development activities",
+    ],
+    image: galleryPhotoMeal,
+    ctaLabel: "Support Through Donation",
+  },
+];
+
+export const croreImpactPlan = {
+  title: "How ₹1 Crore Can Create Community Impact",
+  disclaimer:
+    "Illustrative Donation Allocation Scenarios – Subject to Foundation Planning and Approval.",
+  targetTotal: 10000000,
+  scenarios: [
+    {
+      id: "scenarioA",
+      label: "Scenario A",
+      subtitle: "Sports & Athlete Priority",
+      accentColor: "#2563eb",
+    },
+    {
+      id: "scenarioB",
+      label: "Scenario B",
+      subtitle: "Education & Digital Priority",
+      accentColor: "#059669",
+    },
+    {
+      id: "scenarioC",
+      label: "Scenario C",
+      subtitle: "Environment & Cleaning Priority",
+      accentColor: "#0284c7",
+    },
+  ],
+  rows: [
+    {
+      id: "sports-athlete",
+      category: "Sports & Athlete Development",
+      color: "#2563eb",
+      allocations: { scenarioA: 2500000, scenarioB: 2000000, scenarioC: 1500000 },
+    },
+    {
+      id: "education-computers",
+      category: "Education & Computers",
+      color: "#059669",
+      allocations: { scenarioA: 2000000, scenarioB: 2500000, scenarioC: 2000000 },
+    },
+    {
+      id: "environment-planting",
+      category: "Environment & Planting",
+      color: "#16a34a",
+      allocations: { scenarioA: 1500000, scenarioB: 1500000, scenarioC: 2000000 },
+    },
+    {
+      id: "himalayan-cleaning",
+      category: "Himalayan Cleaning",
+      color: "#0284c7",
+      allocations: { scenarioA: 1000000, scenarioB: 1000000, scenarioC: 1500000 },
+    },
+    {
+      id: "transportation-cycles",
+      category: "Transportation & Cycles",
+      color: "#0d9488",
+      allocations: { scenarioA: 1500000, scenarioB: 1500000, scenarioC: 1500000 },
+    },
+    {
+      id: "social-awareness",
+      category: "Social Awareness & Community Functions",
+      color: "#1d4ed8",
+      allocations: { scenarioA: 1500000, scenarioB: 1500000, scenarioC: 1500000 },
+    },
+  ],
+};
+
 export const siteNotices = [
   {
     id: "talent-hunt",
     kind: "event" as const,
-    eyebrow: "Upcoming event",
+    eyebrow: "Upcoming Program",
     title: "Runner Talent Hunt Program",
-    summary: "Olympic long-distance talent hunt. Ages 12–14. Free shoes and nutrition for selected athletes.",
-    meta: "Mundoli · Ages 12–14",
+    summary: "Running – Olympics (12–14) initiative & Talent Hunt Program for emerging young runners.",
+    meta: "Ages 12–14 · Talent Development",
     cta: "Fill the talent hunt form",
     href: "/talent-hunt-registration",
   },
@@ -714,22 +771,22 @@ export const siteNotices = [
     href: "/trainee-registration",
   },
   {
-    id: "ultra-trail-run",
+    id: "planned-events",
     kind: "event" as const,
-    eyebrow: "Upcoming event",
-    title: "Ultra Trail Run",
-    summary: "Register now for the Himalayan ultra trail run. Open for endurance athletes and youth supported by the foundation.",
-    meta: "12 Oct 2026 · Chamoli · 05:00 AM",
-    cta: "Register for the run",
-    href: "/running-registration",
+    eyebrow: "Upcoming Events",
+    title: "International Ultra Trail Run & Planned Events",
+    summary: "View planned Foundation events including Aviral Nand Foundation (May), International Ultra Trail Run (March–April), and Talent Hunt – Rat Goan.",
+    meta: "Planned Schedule",
+    cta: "View upcoming events",
+    href: "/events",
   },
   {
     id: "latest-news",
     kind: "news" as const,
     eyebrow: "Latest news",
-    title: "Latest update from ANNT NANDAS FOUNDATION",
-    summary: "Stay informed with the newest programmes, events, and community work from the foundation.",
-    meta: "28 Aug 2026 · Foundation",
+    title: "Awareness, Running (12–14), MTB Cycling & Talent Hunt",
+    summary: "Read the latest Foundation updates across awareness initiatives, youth running, State MTB Cycling Team Selection, and Talent Hunt.",
+    meta: "News & Updates",
     cta: "Open news page",
     href: "/news",
   },
@@ -737,8 +794,8 @@ export const siteNotices = [
     id: "volunteer-drive",
     kind: "volunteer" as const,
     eyebrow: "Volunteer",
-    title: "Volunteer Drive · Mundoli Village",
-    summary: "Join a grassroots volunteer day focused on community support, mentorship, and local initiatives.",
+    title: "Volunteer With ANNT NANDAS FOUNDATION",
+    summary: "Join community initiatives across teaching, sports coaching, environment drives, and village outreach.",
     meta: "Mundoli · Join the team",
     cta: "Volunteer with us",
     href: "/volunteer-registration",

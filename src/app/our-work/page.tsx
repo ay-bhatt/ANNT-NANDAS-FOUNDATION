@@ -116,7 +116,7 @@ export default async function OurWorkPage() {
       <CTASection
         title="Want to support our work?"
         description="Your contribution helps us reach more villages, strengthen more programmes, and create greater community-led impact."
-        primary={{ label: "Donate Now", href: "/donate" }}
+        primary={{ label: "Make a Donation", href: "/donate" }}
         secondary={{ label: "Volunteer With Us", href: "/volunteer-registration" }}
         image={pageVisuals.ourWorkCta}
       />

@@ -8,12 +8,13 @@
 
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { SectionHeading } from "@/components/site/SectionBlocks";
 import CommentForm from "@/components/CommentForm";
 import { StarRatingDisplay } from "@/components/StarRating";
+import UpcomingEventCards from "@/components/events/UpcomingEventCards";
 import type { UpcomingEvent, Testimonial, CommunityComment } from "@/lib/types";
+import { useI18n } from "@/components/i18n/LanguageProvider";
 
 interface EventsTestimonialsSectionProps {
   upcomingEvents: UpcomingEvent[];
@@ -24,6 +25,7 @@ export default function EventsTestimonialsSection({
   upcomingEvents,
   testimonials,
 }: EventsTestimonialsSectionProps) {
+  const { t } = useI18n();
   const [communityComments, setCommunityComments] = useState<CommunityComment[]>([]);
 
   useEffect(() => {
@@ -52,48 +54,12 @@ export default function EventsTestimonialsSection({
             title="Be part of our next initiatives"
           />
           <div className="flex flex-1 flex-col gap-4">
-            {upcomingEvents.slice(0, 4).map((event, index) => (
-              <motion.article
-                key={event.title}
-                className="surface-card overflow-hidden"
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: index * 0.08 }}
-              >
-                <div className="flex flex-col min-[480px]:flex-row">
-                  <div className="relative h-44 min-[480px]:h-auto min-[480px]:w-40 min-[480px]:shrink-0 lg:w-44">
-                    <Image
-                      src={event.image}
-                      alt={event.title}
-                      fill
-                      sizes="(max-width: 479px) 100vw, 176px"
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-1 flex-col justify-center p-4 sm:p-5">
-                    <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
-                      {event.date}
-                    </p>
-                    <h3 className="mt-2 text-lg font-semibold text-slate-950">{event.title}</h3>
-                    <p className="mt-2 text-sm leading-6 text-slate-600">
-                      {event.location} · {event.time}
-                    </p>
-                    <Link
-                      href={event.href}
-                      className="mt-4 inline-flex w-fit rounded-full bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
-                    >
-                      Register now
-                    </Link>
-                  </div>
-                </div>
-              </motion.article>
-            ))}
+            <UpcomingEventCards events={upcomingEvents} variant="compact" />
 
             <div className="surface-card mt-auto p-5 sm:p-6">
-              <h3 className="text-lg font-semibold text-slate-950">Leave a comment</h3>
+              <h3 className="text-lg font-semibold text-slate-950">{t("Leave a comment")}</h3>
               <p className="mt-2 mb-5 text-sm leading-6 text-slate-600">
-                Share your experience and rate your interaction with the foundation.
+                {t("Share your experience and rate your interaction with the foundation.")}
               </p>
               <CommentForm
                 onSubmitted={(comment) => {

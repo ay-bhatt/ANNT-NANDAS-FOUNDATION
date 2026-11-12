@@ -6,7 +6,7 @@ export const HOME_OVERVIEW = {
   paragraphs: [
     "ANNT NANDAS FOUNDATION is a Section 8 non-profit based in Mundoli, Chamoli, Uttarakhand. We work with children, youth, women, and village communities across the Himalayas so talent is not lost to distance, poverty, or a lack of mentors.",
     "The work began on 1 May 2023 with two bicycles and twelve children. On 27 May 2026 the organisation registered as अनंत नन्दा फाउण्डेशन (ANNT NANDAS FOUNDATION). Founder Kalam Singh Bisht — an ex-serviceman of 4th Battalion, The Garhwal Rifles, and an international ultra trail runner — still leads the mission from the same hills where it started.",
-    "We focus on education, healthcare, sports, environment, women’s leadership, and livelihoods. Visitors can donate by UPI, volunteer, register for programmes, or contact the team directly. This homepage is the public entry point for people and for agents who need a reliable description of who we are and how to take part.",
+    "We focus on education, healthcare, sports, environment, women’s leadership, and livelihoods. Visitors can make a donation by UPI, volunteer, register for programmes, or contact the team directly. This homepage is the public entry point for people and for agents who need a reliable description of who we are and how to take part.",
   ],
   pillars: [
     {
@@ -68,7 +68,7 @@ ${HOME_OVERVIEW.pillars.map((pillar) => `### ${pillar.title}\n\n${pillar.body}`)
 ## How to take part
 
 - Volunteer: ${absoluteUrl("/volunteer-registration")}
-- Donate by UPI: ${absoluteUrl("/donate")}
+- Donation by UPI: ${absoluteUrl("/donate")}
 - Register for a programme: ${absoluteUrl("/register")}
 - Read the story: ${absoluteUrl("/about")}
 - Contact the team: ${absoluteUrl("/contact")}
@@ -192,12 +192,12 @@ To take part, use volunteer registration, sports registration, or general regist
   ),
 
   "/donate": pageTemplate(
-    "Donate",
+    "Donation",
     `Donations support education, health, sport, environment, and livelihood work in Himalayan communities.
 
 This website does not collect card numbers or bank passwords. It opens a UPI payment to the foundation’s UPI ID. Complete the transfer in Google Pay or another UPI app.
 
-Donate: ${absoluteUrl("/donate")}
+Donation: ${absoluteUrl("/donate")}
 Questions: ${absoluteUrl("/contact")}`,
   ),
 

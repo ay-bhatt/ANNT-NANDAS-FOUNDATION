@@ -1,14 +1,13 @@
-import Image from "next/image";
 import type { Metadata } from "next";
 import { getAllData } from "@/lib/api";
 
 export const metadata: Metadata = {
   title: "News & Updates | ANNT NANDAS FOUNDATION",
-  description: "Follow recent foundation activities, field updates, achievements, and stories from Himalayan communities.",
+  description: "Follow recent foundation activities, awareness initiatives, running, MTB cycling, and talent hunt updates from Himalayan communities.",
   alternates: { canonical: "/news" },
 };
 import { CTASection, PageHero, SectionHeading } from "@/components/site/SectionBlocks";
-import { T } from "@/components/i18n/T";
+import NewsCardGrid from "@/components/news/NewsCardGrid";
 
 export default async function NewsPage() {
   const data = await getAllData();
@@ -18,7 +17,7 @@ export default async function NewsPage() {
       <PageHero
         eyebrow="Latest News"
         title="Stories, updates, and progress from the field"
-        description="Stay connected with the foundation’s latest activities, milestones, village outreach, and programme moments."
+        description="Stay connected with the foundation’s latest activities, awareness initiatives, sports programmes, and talent development updates."
         image={newsHeroImage}
         actions={[
           { label: "Contact the Team", href: "/contact" },
@@ -31,26 +30,10 @@ export default async function NewsPage() {
           <SectionHeading
             eyebrow="News & Updates"
             title="A closer look at recent momentum"
-            description="A curated collection of stories that reflect the foundation’s grassroots work across communities and programmes."
+            description="Explore individual updates across our awareness initiatives, youth running, State MTB Cycling Team Selection, and Talent Hunt Program."
             centered
           />
-          <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {newsItems.map((item) => (
-              <article key={item.title} className="surface-card overflow-hidden">
-                <div className="relative aspect-[16/10]">
-                  <Image src={item.image} alt={item.title} fill sizes="(max-width: 767px) 100vw, (max-width: 1279px) 50vw, 33vw" className="object-cover" />
-                </div>
-                <div className="p-6">
-                  <div className="flex flex-wrap items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em]">
-                    <span className="rounded-full bg-emerald-50 px-3 py-1 text-emerald-700"><T>{item.category}</T></span>
-                    <span className="text-slate-400"><T>{item.date}</T></span>
-                  </div>
-                  <h2 className="mt-4 text-xl font-semibold text-slate-950"><T>{item.title}</T></h2>
-                  <p className="mt-3 text-sm leading-7 text-slate-600"><T>{item.summary}</T></p>
-                </div>
-              </article>
-            ))}
-          </div>
+          <NewsCardGrid items={newsItems} variant="grid" />
         </div>
       </section>
 

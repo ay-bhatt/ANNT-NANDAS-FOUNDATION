@@ -169,16 +169,21 @@ export interface FeatureCard {
 // ─────────────────────────
 
 export interface UpcomingEvent {
+  id?: string;
   title: string;
-  date: string;
-  day: string;
-  month: string;
-  location: string;
-  time: string;
+  period?: string;
+  date?: string;
+  day?: string;
+  month?: string;
+  location?: string;
+  time?: string;
   description: string;
+  details?: string;
   type: string;
+  status?: string;
   image: ImageSrc;
-  href: string;
+  href?: string;
+  ctaLabel?: string;
 }
 
 // ─────────────────────────
@@ -197,11 +202,14 @@ export interface SiteNotice {
 }
 
 export interface NewsItem {
+  id?: string;
   title: string;
-  date: string;
+  date?: string;
   summary: string;
+  details?: string;
   category: string;
   image: ImageSrc;
+  href?: string;
 }
 
 // ─────────────────────────
@@ -241,6 +249,38 @@ export interface DonationInfo {
   title: string;
   description: string;
   instructions: string[];
+}
+
+export interface DonationCategory {
+  id: string;
+  code: string;
+  title: string;
+  description: string;
+  activities: string[];
+  image: ImageSrc;
+  ctaLabel: string;
+}
+
+export interface CroreAllocationScenario {
+  id: string;
+  label: string;
+  subtitle: string;
+  accentColor: string;
+}
+
+export interface CroreAllocationRow {
+  id: string;
+  category: string;
+  color: string;
+  allocations: Record<string, number>;
+}
+
+export interface CroreImpactPlan {
+  title: string;
+  disclaimer: string;
+  targetTotal: number;
+  scenarios: CroreAllocationScenario[];
+  rows: CroreAllocationRow[];
 }
 
 export interface VolunteerOpportunity {
@@ -339,6 +379,8 @@ export interface AllData {
   donationImpacts: DonationImpact[];
   donationInfo: DonationInfo;
   donationAmounts: number[];
+  donationCategories: DonationCategory[];
+  croreImpactPlan: CroreImpactPlan;
   volunteerOpportunities: VolunteerOpportunity[];
   galleryCategories: string[];
   galleryItems: GalleryItem[];

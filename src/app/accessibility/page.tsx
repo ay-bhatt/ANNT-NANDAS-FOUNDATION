@@ -11,7 +11,7 @@ export default function AccessibilityPage() {
   return (
     <LegalPage
       title="Accessibility Statement"
-      description="We want people of all abilities to be able to learn about the foundation, register, donate, and contact us."
+      description="We want people of all abilities to be able to learn about the foundation, register, make a donation, and contact us."
     >
       <LegalSection title="Our commitment">
         <p>

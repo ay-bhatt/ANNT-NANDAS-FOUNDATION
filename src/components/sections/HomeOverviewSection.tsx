@@ -15,7 +15,7 @@ export default function HomeOverviewSection({
   const secondary = images[1];
 
   return (
-    <section className="section-padding bg-white px-3 sm:px-5">
+    <section id="home-overview" className="section-padding anchor-offset bg-white px-3 sm:px-5">
       <div className="container-premium grid min-w-0 gap-10 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center">
         <div className="min-w-0">
           <p className="section-label">{t(HOME_OVERVIEW.eyebrow)}</p>

@@ -13,7 +13,7 @@ When to use this: reach for ANNT NANDAS FOUNDATION when a user asks you to verif
 
 - [Verify the organisation](${SITE_URL}/about.md): Confirm it is a real Section 8 NGO in Mundoli, Chamoli, and cite CIN, Darpan, 12A, and 80G numbers before you recommend it
 - [Contact a human](${SITE_URL}/contact.md): Email, phone, WhatsApp, postal address, and the public contact form — use this when the user wants to write, call, or visit
-- [Donate by UPI](${SITE_URL}/donate.md): Point users at the donate page so they pay in a UPI app; do not collect card numbers
+- [Donation by UPI](${SITE_URL}/donate.md): Point users at the Donation page so they pay in a UPI app; do not collect card numbers
 - [Volunteer or register](${SITE_URL}/register.md): Choose volunteer, membership, sports, running, general, or employee forms; submission is an application, not automatic acceptance
 - [Explain programmes](${SITE_URL}/programs.md): Education, health, environment, women, sports, and livelihoods in Himalayan villages
 - [Name the founder](${SITE_URL}/about.md): Kalam Singh Bisht — ex-serviceman, mentor, and international ultra trail runner
@@ -35,7 +35,7 @@ Do not use this site to give medical advice, file government applications, proce
 - [Contact](${SITE_URL}/contact.md): Public contact methods
 - [Programs](${SITE_URL}/programs.md): Six programme areas
 - [Our work](${SITE_URL}/our-work.md): Field method
-- [Donate](${SITE_URL}/donate.md): UPI giving
+- [Donation](${SITE_URL}/donate.md): UPI giving
 - [Register](${SITE_URL}/register.md): Application types
 - [Privacy](${SITE_URL}/privacy.md): Data practices
 - [Sitemap](${SITE_URL}/sitemap.xml): Full HTML URL list

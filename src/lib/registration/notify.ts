@@ -124,7 +124,7 @@ export async function sendRegistrationEmails(options: {
   const signatureCid = "signature@registration";
   const formCopy = await buildPdfOrHtml(state, registrationId, submittedAt);
 
-  const officeAttachments: Attachment[] = [
+  const attachmentCandidates: Array<Attachment | null> = [
     photoParsed
       ? {
           filename: `${registrationId}-photograph.${photoParsed.ext}`,
@@ -156,7 +156,10 @@ export async function sendRegistrationEmails(options: {
         }
       : null,
     formCopy.attachment,
-  ].filter((item): item is Attachment => Boolean(item));
+  ];
+  const officeAttachments: Attachment[] = attachmentCandidates.filter(
+    (item): item is Attachment => item !== null,
+  );
 
   const officeHtml = buildPrintableHtml({
     state,

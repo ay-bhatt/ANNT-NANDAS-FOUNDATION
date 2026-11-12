@@ -11,6 +11,8 @@ import ImpactStatsSection from "@/components/sections/ImpactStatsSection";
 import EventsTestimonialsSection from "@/components/sections/EventsTestimonialsSection";
 import NewsGalleryPreviewSection from "@/components/sections/NewsGalleryPreviewSection";
 import HomeDonationSection from "@/components/sections/HomeDonationSection";
+import DonationCategoriesSection from "@/components/donation/DonationCategoriesSection";
+import CroreImpactSection from "@/components/donation/CroreImpactSection";
 import VolunteerOpportunitiesSection from "@/components/sections/VolunteerOpportunitiesSection";
 import HomeOverviewSection from "@/components/sections/HomeOverviewSection";
 import SidePeekRail from "@/components/SidePeekRail";
@@ -46,6 +48,8 @@ export default async function Home() {
     pageVisuals,
     donationInfo,
     donationAmounts,
+    donationCategories,
+    croreImpactPlan,
     volunteerOpportunities,
     siteConfig,
   } = data;
@@ -90,12 +94,20 @@ export default async function Home() {
         newsItems={newsItems}
         slideshowPhotos={homeSlideshowPhotos}
       />
+      <DonationCategoriesSection
+        categories={donationCategories}
+        paymentHref="#upi-donation-widget"
+      />
       <HomeDonationSection donation={donationInfo} amounts={donationAmounts} />
+      <CroreImpactSection
+        plan={croreImpactPlan}
+        paymentHref="#upi-donation-widget"
+      />
       <CTASection
         title="Help us build brighter futures in the Himalayas"
-        description="Whether you volunteer, donate, or collaborate, your support helps create meaningful long-term change."
+        description="Whether you volunteer, make a donation, or collaborate, your support helps create meaningful long-term change."
         primary={{ label: "Become a Volunteer", href: "/volunteer-registration" }}
-        secondary={{ label: "Donate Today", href: "/donate" }}
+        secondary={{ label: "Make a Donation", href: "/donate" }}
         image={pageVisuals.homeCta}
       />
     </>

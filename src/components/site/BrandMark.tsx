@@ -13,16 +13,20 @@ export default function BrandMark({
     return (
       <div className="min-w-0 leading-tight">
         <p
-          className={`font-extrabold uppercase tracking-[0.04em] ${
-            compact ? "text-[10px] sm:text-xs xl:text-[13px] 2xl:text-sm" : "text-base sm:text-lg"
+          className={`font-extrabold uppercase tracking-[0.025em] leading-[1.14] ${
+            compact
+              ? "text-[12px] min-[375px]:text-[13px] min-[420px]:text-[13.5px] sm:text-sm xl:text-[13px] 2xl:text-sm"
+              : "text-base sm:text-lg"
           } ${inverted ? "text-white" : "text-slate-900"}`}
         >
           {ORG_NAME_EN}
         </p>
         <p
-          className={`mt-0.5 break-words font-devanagari font-semibold ${
-            compact ? "text-[10px] sm:text-xs" : "text-xs sm:text-sm"
-          } ${inverted ? "text-slate-300" : "text-slate-600"}`}
+          className={`mt-0.5 break-words font-devanagari font-semibold leading-[1.25] ${
+            compact
+              ? "text-[12.5px] min-[375px]:text-[13.5px] min-[420px]:text-sm sm:text-sm xl:text-xs 2xl:text-[13px]"
+              : "text-xs sm:text-sm"
+          } ${inverted ? "text-slate-300" : "text-emerald-800"}`}
         >
           {ORG_NAME_HI}
         </p>

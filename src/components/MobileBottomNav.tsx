@@ -45,7 +45,7 @@ export default function MobileBottomNav({ navigationItems }: MobileBottomNavProp
     { href: "/", label: "Home", icon: HomeIcon },
     { href: "/programs", label: "Programs", icon: ProgramsIcon },
     { href: "/events", label: "Registrations", icon: EventsIcon },
-    { href: "/donate", label: "Donate", icon: DonateIcon },
+    { href: "/donate", label: "Donation", icon: DonateIcon },
   ];
 
   return (

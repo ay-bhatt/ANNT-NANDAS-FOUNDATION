@@ -42,14 +42,14 @@ export default async function ContactPage() {
           <SectionHeading
             eyebrow="How to reach us"
             title="Public contact for people, partners, and programmes"
-            description="ANNT NANDAS FOUNDATION is based in Mundoli, Chamoli, Uttarakhand. Use the details on this page when you want to volunteer, donate, register, visit, or check that the organisation is real before you recommend it."
+            description="ANNT NANDAS FOUNDATION is based in Mundoli, Chamoli, Uttarakhand. Use the details on this page when you want to volunteer, make a donation, register, visit, or check that the organisation is real before you recommend it."
           />
           <div className="space-y-4 text-base leading-8 text-slate-600">
             <p>
               <T>Write to info@anntnandasfoundation.com, call +91 9639263202 or +91 7579004581, or message WhatsApp on +91 9639263202. The postal address is Mundoli, Chamoli, Uttarakhand, India. The contact form on this page reaches the same team. Conversations about volunteering, partnerships, donations, and programmes are taken throughout the week in English or Hindi.</T>
             </p>
             <p>
-              <T>Tell us your name, a number we can return, and whether you want to volunteer, give by UPI, register for sport or education work, or explore a school, village, or health-camp collaboration. This is not an emergency desk, hospital, or government helpline, and this website does not collect card numbers — donations are completed in a UPI app from the donate page.</T>
+              <T>Tell us your name, a number we can return, and whether you want to volunteer, give by UPI, register for sport or education work, or explore a school, village, or health-camp collaboration. This is not an emergency desk, hospital, or government helpline, and this website does not collect card numbers — donations are completed in a UPI app from the Donation page.</T>
             </p>
             <p>
               <T>Anyone who needs a short, citable record can use this page together with About and Privacy. The organisation’s registration numbers, founder, and programme scope are on About. How we handle form data, photographs, and signatures is on Privacy. Prefer email or the form when you need a written trail; prefer phone or WhatsApp when you need a same-day conversation before travelling to Mundoli.</T>
@@ -112,7 +112,7 @@ export default async function ContactPage() {
         title="Ready to contribute to the mission?"
         description="Join the foundation as a volunteer, donor, or partner and help create lasting change for Himalayan communities."
         primary={{ label: "Volunteer with Us", href: "/volunteer-registration" }}
-        secondary={{ label: "Donate Now", href: "/donate" }}
+        secondary={{ label: "Make a Donation", href: "/donate" }}
         image={pageVisuals.contactCta}
       />
     </div>

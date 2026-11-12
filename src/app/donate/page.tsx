@@ -2,31 +2,45 @@ import type { Metadata } from "next";
 import { getAllData } from "@/lib/api";
 import { CTASection, PageHero, SectionHeading } from "@/components/site/SectionBlocks";
 import DonationWidget from "@/components/donation/DonationWidget";
+import DonationCategoriesSection from "@/components/donation/DonationCategoriesSection";
+import CroreImpactSection from "@/components/donation/CroreImpactSection";
 import { T } from "@/components/i18n/T";
 
 export const metadata: Metadata = {
-  title: "Donate | ANNT NANDAS FOUNDATION",
-  description: "Support verified grassroots programs through UPI, Google Pay, or QR donation.",
+  title: "Donation | ANNT NANDAS FOUNDATION",
+  description: "Support verified grassroots programs through purpose-based donations via UPI, Google Pay, or QR.",
   alternates: { canonical: "/donate" },
 };
 
 export default async function DonatePage() {
   const data = await getAllData();
-  const { donationImpacts, donationInfo, donationAmounts, pageVisuals } = data;
+  const {
+    donationImpacts,
+    donationInfo,
+    donationAmounts,
+    donationCategories,
+    croreImpactPlan,
+    pageVisuals,
+  } = data;
   return (
     <div className="pb-8">
       <PageHero
-        eyebrow="Support Us"
+        eyebrow="Donation Section"
         title="Make a donation that reaches real communities"
-        description="Your contribution supports grassroots programmes across education, healthcare, environment, sports, youth development, and women empowerment."
+        description="Your contribution supports grassroots programmes across sports, education, mobility, environment conservation, and community development."
         image={pageVisuals.donateHero}
         actions={[
-          { label: "Contact for Partnership", href: "/contact" },
-          { label: "Become a Volunteer", href: "/volunteer-registration", variant: "secondary" },
+          { label: "Make a Donation", href: "#upi-donation-widget" },
+          { label: "Contact for Partnership", href: "/contact", variant: "secondary" },
         ]}
       />
 
-      <section className="section-padding px-3 sm:px-5">
+      <DonationCategoriesSection
+        categories={donationCategories}
+        paymentHref="#upi-donation-widget"
+      />
+
+      <section id="upi-donation-widget" className="section-padding anchor-offset px-3 sm:px-5">
         <div className="container-premium grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
           <div className="surface-card p-6 sm:p-8">
             <SectionHeading
@@ -53,9 +67,9 @@ export default async function DonatePage() {
 
           <div>
             <SectionHeading
-              eyebrow="Give With Purpose"
+              eyebrow="Support Through Donation"
               title="Every amount can support meaningful change"
-              description="Select an amount, then donate through Google Pay or any UPI app. If a payment app does not open, scan the QR or copy the UPI ID."
+              description="Select an amount for your donation through Google Pay or any UPI app. If a payment app does not open, scan the QR or copy the UPI ID."
             />
             <div className="grid gap-4 sm:grid-cols-2">
               {donationImpacts.map((item) => (
@@ -70,6 +84,11 @@ export default async function DonatePage() {
           </div>
         </div>
       </section>
+
+      <CroreImpactSection
+        plan={croreImpactPlan}
+        paymentHref="#upi-donation-widget"
+      />
 
       <CTASection
         title="Support the mission beyond a one-time donation"

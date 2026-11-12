@@ -191,7 +191,7 @@ export default async function AboutPage() {
         title="Ready to become part of our story?"
         description="Join the foundation as a volunteer, donor, or supporter and help create meaningful change across Himalayan communities."
         primary={{ label: "Become a Volunteer", href: "/volunteer-registration" }}
-        secondary={{ label: "Donate Now", href: "/donate" }}
+        secondary={{ label: "Make a Donation", href: "/donate" }}
         image={pageVisuals.aboutCta}
       />
     </div>

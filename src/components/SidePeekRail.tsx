@@ -129,12 +129,12 @@ export default function SidePeekRail({ events, newsItems }: SidePeekRailProps) {
               href="/events"
               actionLabel="Open events page"
               items={events.slice(0, 3).map((event) => ({
-                key: event.title,
+                key: event.id ?? event.title,
                 image: event.image,
-                eyebrow: event.date,
+                eyebrow: event.period || event.date || event.type,
                 title: event.title,
-                detail: `${event.location} · ${event.time}`,
-                href: event.href,
+                detail: [event.location, event.time].filter(Boolean).join(" · ") || event.description,
+                href: event.href || "/events",
               }))}
             />
           ) : (
@@ -143,13 +143,13 @@ export default function SidePeekRail({ events, newsItems }: SidePeekRailProps) {
               title="Latest from the field"
               href="/news"
               actionLabel="Open news page"
-              items={newsItems.slice(0, 3).map((item) => ({
-                key: item.title,
+              items={newsItems.slice(0, 4).map((item) => ({
+                key: item.id ?? item.title,
                 image: item.image,
-                eyebrow: item.date,
+                eyebrow: item.date ? `${item.category} · ${item.date}` : item.category,
                 title: item.title,
                 detail: item.summary,
-                href: "/news",
+                href: item.id ? `/news#${item.id}` : "/news",
               }))}
             />
           )}

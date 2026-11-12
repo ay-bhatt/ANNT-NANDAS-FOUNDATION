@@ -10,6 +10,7 @@ import LanguageToggle from "@/components/i18n/LanguageToggle";
 import { useI18n } from "@/components/i18n/LanguageProvider";
 import BrandMark from "@/components/site/BrandMark";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import DesktopGridBar from "@/components/DesktopGridBar";
 import { ORG_NAME_EN, ORG_NAME_HI } from "@/lib/i18n";
 
 interface NavbarProps {
@@ -56,23 +57,23 @@ export default function Navbar({ navigationItems }: NavbarProps) {
           {t("Skip to main content")}
         </a>
 
-        <div className="mx-auto w-full min-w-0 max-w-[1920px] px-3 sm:px-4 xl:px-5 2xl:px-8">
-          <nav aria-label={t("Primary navigation")} className="flex h-[var(--site-nav-h)] min-w-0 items-center gap-2 sm:gap-3 xl:gap-4">
+        <div className="mx-auto w-full min-w-0 max-w-[1920px] px-2.5 sm:px-4 xl:px-5 2xl:px-8">
+          <nav aria-label={t("Primary navigation")} className="flex min-h-[var(--site-nav-h)] min-w-0 items-center gap-2 py-1.5 sm:gap-3 xl:h-[var(--site-nav-h)] xl:gap-4 xl:py-0">
             <Link
               href="/"
-              className="flex shrink-0 items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 sm:gap-2.5"
+              className="flex min-w-0 flex-1 items-center gap-2 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 sm:gap-2.5 xl:flex-none"
             >
-              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg border border-slate-200 bg-white md:h-16 md:w-16">
+              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm min-[375px]:h-[60px] min-[375px]:w-[60px] md:h-16 md:w-16 xl:h-12 xl:w-12 2xl:h-14 2xl:w-14">
                 <Image
                   src={logoImg}
                   alt={`${ORG_NAME_EN} / ${ORG_NAME_HI}`}
                   fill
                   priority
                   sizes="64px"
-                  className="object-contain p-0.5"
+                  className="object-contain"
                 />
               </div>
-              <div className="min-w-0 max-w-[calc(100vw-13rem)] sm:max-w-[min(45vw,14rem)]">
+              <div className="min-w-0 flex-1 xl:flex-none">
                 <BrandMark compact inline />
               </div>
             </Link>
@@ -115,21 +116,22 @@ export default function Navbar({ navigationItems }: NavbarProps) {
                 href="/donate"
                 className="shrink-0 whitespace-nowrap rounded-full bg-blue-950 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-blue-900 2xl:px-4 2xl:text-sm"
               >
-                DONATION
+                {t("DONATION")}
               </Link>
             </div>
 
-            <div className="ml-auto flex shrink-0 items-center gap-1.5 xl:hidden">
+            <div className="ml-auto flex shrink-0 flex-col items-end gap-1 min-[480px]:flex-row min-[480px]:items-center min-[480px]:gap-2 xl:hidden">
               <LanguageToggle compact />
               <Link
                 href="/donate"
-                className="inline-flex min-h-10 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-blue-950 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-900 sm:px-4"
+                className="inline-flex h-7 shrink-0 items-center justify-center whitespace-nowrap rounded-full bg-blue-950 px-3 text-[11px] font-bold tracking-wide text-white transition hover:bg-blue-900 min-[480px]:h-9 min-[480px]:px-4 min-[480px]:text-xs"
               >
-                DONATION
+                {t("DONATION")}
               </Link>
             </div>
           </nav>
         </div>
+        <DesktopGridBar />
       </header>
       <MobileBottomNav navigationItems={navigationItems} />
     </>

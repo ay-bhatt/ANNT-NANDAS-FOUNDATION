@@ -117,6 +117,13 @@ function serializeDonationInfo(): AllData["donationInfo"] {
   };
 }
 
+function serializeDonationCategories(): AllData["donationCategories"] {
+  return D.donationCategories.map((cat) => ({
+    ...cat,
+    image: img(cat.image),
+  }));
+}
+
 function serializeGalleryItems(): AllData["galleryItems"] {
   return D.galleryItems.map((g) => ({
     label: g.label,
@@ -152,6 +159,8 @@ export async function GET() {
       donationImpacts: D.donationImpacts,
       donationInfo: serializeDonationInfo(),
       donationAmounts: D.donationAmounts,
+      donationCategories: serializeDonationCategories(),
+      croreImpactPlan: D.croreImpactPlan,
       volunteerOpportunities: D.volunteerOpportunities.map(({ image, ...item }) => ({
         ...item,
         ...(image ? { image: img(image) } : {}),

@@ -118,7 +118,7 @@ export default async function ProgramsPage() {
       <CTASection
         title="Your support keeps these programmes moving"
         description="Every contribution helps expand access to learning, health, opportunity, and local leadership across the communities we serve."
-        primary={{ label: "Donate Now", href: "/donate" }}
+        primary={{ label: "Make a Donation", href: "/donate" }}
         secondary={{ label: "Contact the Team", href: "/contact" }}
         image={pageVisuals.programsCta}
       />

@@ -15,7 +15,7 @@ export default function RefundPolicyPage() {
     >
       <LegalSection title="How donations work">
         <p>
-          You choose an amount on the Donate page and complete payment in Google Pay or another UPI app. The website does not charge cards on our own checkout page.
+          You choose an amount on the Donation page and complete payment in Google Pay or another UPI app. The website does not charge cards on our own checkout page.
         </p>
       </LegalSection>
 
